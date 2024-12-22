@@ -23,10 +23,11 @@ class SQLProvider:
         except mysql.connector.Error:
             print("Database {} does not exists.".format(dbName))
 
-    def insert(self, prompt: str):
+    def insert(self, prompt: str) -> int | None:
         try:
             self.cursor.execute(prompt)
             self.cnx.commit()
+            return self.cursor.lastrowid
         except mysql.connector.Error as err:
             print(err)
 
