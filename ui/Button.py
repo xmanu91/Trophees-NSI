@@ -1,10 +1,11 @@
+from typing import Callable
 import pygame
 
 class Button(): 
-    def __init__(self, default_color, hover_color, buttonRect, action, image, imageCoordinates, text, textCoordinates):
+    def __init__(self, default_color: pygame.Color, hover_color: pygame.Color, buttonRect: pygame.rect.RectType, action: Callable, image: str, imageCoordinates: tuple[int, int], text: str, textCoordinates: tuple[int, int]):
         self.default_color = default_color  
         self.hover_color = hover_color  
-        self.buttonRect = pygame.Rect(buttonRect)
+        self.buttonRect = buttonRect
         self.action = action
 
         # image + sa position :
