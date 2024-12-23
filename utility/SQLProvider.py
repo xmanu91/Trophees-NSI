@@ -24,6 +24,7 @@ class SQLProvider:
             print("Database {} does not exists.".format(dbName))
 
     def insert(self, prompt: str) -> int | None:
+        """Permits to execute INSERT and UPDATE statements"""
         try:
             self.cursor.execute(prompt)
             self.cnx.commit()
@@ -35,13 +36,15 @@ class SQLProvider:
         """Permits to execute SELECT statements"""
         try:
             self.cursor.execute(prompt)
-            return self.cursor.fetchall()
+            response = self.cursor.fetchall()
+            return response
         except mysql.connector.Error as err:
             print(err)
 
     def executeSQL(self, prompt: str):
         try:
             self.cursor.execute(prompt)
+            self.cnx.commit()
         except mysql.connector.Error as err:
             print(err)
 
