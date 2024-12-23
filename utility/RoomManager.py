@@ -2,8 +2,9 @@ import SQLProvider as sql
 from mysql.connector import Error as sqlError
 
 class RoomManager:
-    def __init__(self, SQLProvider: sql.SQLProvider):
+    def __init__(self, SQLProvider: sql.SQLProvider, username: str):
         self.SQLProvider = SQLProvider
+        self.username = username
         self.currentRoomID = None
     
     def getAllRooms(self):
@@ -11,17 +12,36 @@ class RoomManager:
         if response == None:
             return []
         rooms = [row for row in response] 
-        print(rooms)
         return rooms
     
-    def createRoom(self, roomName: str, username: str):
+    def createConnection(self, roomName: str):
         try:
-            roomId = self.SQLProvider.insert('INSERT INTO connected_users VALUES ({}, {})'.format(username, roomName))
+            rooms = self.getAllRooms()
+            for room in rooms:
+                if self.username in room:
+                    return Exception((201, "User already exists"))
+            self.SQLProvider.insert('INSERT INTO connected_users (username, roomName) VALUES ("{}", "{}")'.format(self.username, roomName))
         except sqlError as err:
             print(err)
-        self.currentRoomID = roomId
+        self.currentRoomID = roomName
 
-    def joinRoom(self, roomName: str, username: str):
-        rooms = self.getAllRooms()
-        if roomName in rooms:
-            pass
+    def closeConnection(self):
+        try:
+            self.SQLProvider.executeSQL('DELETE FROM connected_users WHERE username="{}"'.format(self.username))
+        except sqlError as err:
+            print(err)
+        self.currentRoomID = None
+    
+    def getUsersInCurrentRoom(self) -> list[str] | None:
+        try:
+            response = self.SQLProvider.get('SELECT username FROM connected_users WHERE roomName="{}"'.format(self.currentRoomID))
+            if response == None:
+                return []
+            users = [user[0] for user in response] # type: ignore
+            return users # type: ignore
+        except sqlError as err:
+            print(err)
+
+    def setUsername(self, newUsername: str):
+        self.username = newUsername
+
