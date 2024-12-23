@@ -13,7 +13,7 @@ class VotesManager:
             response = self.sqlManager.get('SELECT creator, pixels FROM drawings WHERE roomName="{}" AND creator<>"{}"'.format(self.roomName, self.username))
             if response == None:
                 return None
-            self.drawings = [drawing for drawing in response]
+            self.drawings = [(drawing[0], eval(drawing[1])) for drawing in response] # type: ignore
             return self.drawings
         except sqlError as err:
             print(err)
