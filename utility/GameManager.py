@@ -13,14 +13,17 @@ class GameManager:
     def drawTheme(self):
         theme = choice(self.loadThemes())
         try: 
-            self.sqlManager.insert("UPDATE rooms SET theme='{}' WHERE room_id={}".format(theme, self.roomId))
+            # Utilisation de paramètres dans la requête UPDATE
+            self.sqlManager.insert("UPDATE rooms SET theme=%s WHERE room_id=%s", (theme, self.roomId))
             self.drawingTheme = theme
         except sqlError as err:
             print(err)
 
     def sendDrawing(self, pixelList: list):
-        try: 
-            self.sqlManager.insert("INSERT INTO drawings (creator, pixels, room_id) VALUES ('{}', '{}','{}')".format(self.username, str(pixelList), self.roomId))
+        try:
+            # Utilisation de paramètres dans la requête INSERT
+            self.sqlManager.insert("INSERT INTO drawings (creator, pixels, room_id) VALUES (%s, %s, %s)", 
+                                   (self.username, str(pixelList), self.roomId))
         except sqlError as err:
             print(err)
 

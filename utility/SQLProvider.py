@@ -31,10 +31,10 @@ class SQLProvider:
         except mysql.connector.Error:
             print("Database {} does not exists.".format(dbName))
 
-    def insert(self, prompt: str, returnedValue: str | None = None) -> int | None:
+    def insert(self, prompt: str, parameters: tuple | None = None, returnedValue: str | None = None) -> int | None:
         """Permits to execute INSERT and UPDATE statements"""
         try:
-            self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue) if returnedValue else ""))
+            self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue) if returnedValue else ""), parameters)
             self.cnx.commit()
             if self.connectionType == 'online' and returnedValue:
                 return self.cursor.fetchone()[0]
@@ -42,18 +42,18 @@ class SQLProvider:
         except mysql.connector.Error as err:
             print(err)
 
-    def get(self, prompt: str):
+    def get(self, prompt: str, parameters: tuple | None = None):
         """Permits to execute SELECT statements"""
         try:
-            self.cursor.execute(prompt)
+            self.cursor.execute(prompt, parameters)
             response = self.cursor.fetchall()
             return response
         except mysql.connector.Error as err:
             print(err)
 
-    def executeSQL(self, prompt: str):
+    def executeSQL(self, prompt: str, parameters: tuple | None = None):
         try:
-            self.cursor.execute(prompt)
+            self.cursor.execute(prompt, parameters)
             self.cnx.commit()
         except mysql.connector.Error as err:
             print(err)

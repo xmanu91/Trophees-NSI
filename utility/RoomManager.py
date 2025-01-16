@@ -9,16 +9,16 @@ class RoomManager:
     
     def getAllRooms(self):
         response = self.SQLProvider.get("SELECT * FROM rooms")
-        if response == None:
+        if response is None:
             return []
-        rooms = [row for row in response] 
+        rooms = [row for row in response]
         return rooms
     
     def getAllConnectedUsers(self):
         response = self.SQLProvider.get("SELECT * FROM connected_users")
-        if response == None:
+        if response is None:
             return []
-        users = [row for row in response] 
+        users = [row for row in response]
         return users
     
     def createConnection(self, roomId: int):
@@ -26,40 +26,42 @@ class RoomManager:
             users = self.getAllConnectedUsers()
             for user in users:
                 if self.username == user[1]:
-                    return Exception((201, "User already exists"))
-            self.SQLProvider.insert("INSERT INTO connected_users (username, room_id) VALUES ('{}', '{}')".format(self.username, roomId))
+                    raise Exception((201, "User already exists"))
+            self.SQLProvider.insert("INSERT INTO connected_users (username, room_id) VALUES (%s, %s)", (self.username, roomId))
         except sqlError as err:
             print(err)
+        except Exception as ex:
+            print(ex)
         self.currentRoomID = roomId
 
     def createRoom(self, roomName):
         try:
-            room = self.SQLProvider.insert("INSERT INTO rooms (room_id, room_name, theme) VALUES (DEFAULT, '{}', DEFAULT)".format(roomName), returnedValue="room_id")
+            room = self.SQLProvider.insert("INSERT INTO rooms (room_id, room_name, theme) VALUES (DEFAULT, %s, %s)", (roomName, 'DEFAULT'), returnedValue="room_id")
         except sqlError as err:
             print(err)
         self.currentRoomID = room
 
     def closeRoom(self, roomId):
         try:
-            self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id='{}'".format(roomId))
+            self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (roomId))
         except sqlError as err:
             print(err)
         self.currentRoomID = None
 
     def closeConnection(self):
         try:
-            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE username='{}'".format(self.username))
+            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE username=%s", (self.username))
         except sqlError as err:
             print(err)
         self.currentRoomID = None
     
     def getUsersInCurrentRoom(self) -> list[str] | None:
         try:
-            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id='{}'".format(self.currentRoomID))
-            if response == None:
+            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (self.currentRoomID))
+            if response is None:
                 return []
-            users = [user[0] for user in response] # type: ignore
-            return users # type: ignore
+            users = [user[0] for user in response]  # type: ignore
+            return users
         except sqlError as err:
             print(err)
 
