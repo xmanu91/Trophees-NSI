@@ -1,15 +1,33 @@
 from mysql.connector import Error as sqlError
 from SQLProvider import SQLProvider
+from random import choice
 
 class GameManager:
 
-    def __init__(self, sqlManager: SQLProvider, username: str, roomName: str):
+    def __init__(self, sqlManager: SQLProvider, username: str, roomId: int):
         self.sqlManager = sqlManager
         self.username = username
-        self.roomName = roomName
+        self.roomId = roomId
+        self.drawingTheme = ""
 
-    def sendDrawing(self, pixelList: list):
+    def drawTheme(self):
+        theme = choice(self.loadThemes())
         try: 
-            self.sqlManager.insert('INSERT INTO drawings (creator, pixels, roomName) VALUES ("{}", "{}", "{}")'.format(self.username, str(pixelList), self.roomName))
+            # Utilisation de paramètres dans la requête UPDATE
+            self.sqlManager.insert("UPDATE rooms SET theme=%s WHERE room_id=%s", (theme, self.roomId))
+            self.drawingTheme = theme
         except sqlError as err:
             print(err)
+
+    def sendDrawing(self, pixelList: list):
+        try:
+            # Utilisation de paramètres dans la requête INSERT
+            self.sqlManager.insert("INSERT INTO drawings (creator, pixels, room_id) VALUES (%s, %s, %s)", 
+                                   (self.username, str(pixelList), self.roomId))
+        except sqlError as err:
+            print(err)
+
+    def loadThemes(self):
+        with open("assets/themes.txt", "r", encoding="utf-8") as file:
+            themes = [line.strip() for line in file]
+        return themes
