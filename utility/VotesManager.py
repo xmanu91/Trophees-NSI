@@ -2,15 +2,15 @@ from SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 
 class VotesManager:
-    def __init__(self, sqlManager: SQLProvider, roomName: str, username: str):
+    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str):
         self.sqlManager = sqlManager
-        self.roomName = roomName
+        self.roomId = roomId
         self.username = username
         self.drawings = []
 
     def getDrawings(self):
         try: 
-            response = self.sqlManager.get('SELECT creator, pixels FROM drawings WHERE roomName="{}" AND creator<>"{}"'.format(self.roomName, self.username))
+            response = self.sqlManager.get("SELECT creator, pixels FROM drawings WHERE room_id='{}' AND creator<>'{}'".format(self.roomId, self.username))
             if response == None:
                 return None
             self.drawings = [(drawing[0], eval(drawing[1])) for drawing in response] # type: ignore
@@ -20,13 +20,13 @@ class VotesManager:
 
     def vote(self, attributedVote):
         try:
-            self.sqlManager.insert('INSERT INTO votes (voter, attributedVote, roomName) VALUES ("{}", "{}", "{}")'.format(self.username, attributedVote, self.roomName))
+            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, room_id) VALUES ('{}', '{}', '{}')".format(self.username, attributedVote, self.roomId))
         except sqlError as err:
             print(err)
 
     def getVotes(self):
         try:
-            response = self.sqlManager.get('SELECT * FROM votes WHERE roomName="{}"'.format(self.roomName))
+            response = self.sqlManager.get("SELECT * FROM votes WHERE room_id='{}'".format(self.roomId))
             if response == None:
                 return None
             votes = [vote for vote in response]

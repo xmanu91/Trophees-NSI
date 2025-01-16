@@ -4,8 +4,8 @@ import psycopg2
 
 class SQLProvider:
     def __init__(self):
-        connectionType: str = env('SQL_CONNECTION_TYPE') or 'local'
-        if connectionType == 'online':
+        self.connectionType: str = env('SQL_CONNECTION_TYPE') or 'local'
+        if self.connectionType == 'online':
             try:
                 self.cnx = psycopg2.connect(user=env('SQL_USERNAME'), password=env('SQL_PASSWORD'), host=env('SQL_HOST'), port=env('SQL_PORT'), dbname="postgres")
             except psycopg2.Error as err:
@@ -31,11 +31,13 @@ class SQLProvider:
         except mysql.connector.Error:
             print("Database {} does not exists.".format(dbName))
 
-    def insert(self, prompt: str) -> int | None:
+    def insert(self, prompt: str, returnedValue: str | None = None) -> int | None:
         """Permits to execute INSERT and UPDATE statements"""
         try:
-            self.cursor.execute(prompt)
+            self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue) if returnedValue else ""))
             self.cnx.commit()
+            if self.connectionType == 'online' and returnedValue:
+                return self.cursor.fetchone()[0]
             return self.cursor.lastrowid
         except mysql.connector.Error as err:
             print(err)
