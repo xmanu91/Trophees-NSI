@@ -2,33 +2,65 @@ from typing import Callable
 import pygame
 
 class Button(): 
-    def __init__(self, default_color: pygame.Color, hover_color: pygame.Color, buttonRect: pygame.rect.RectType, action: Callable, image: str, imageCoordinates: tuple[int, int], text: str, textCoordinates: tuple[int, int]):
-        self.default_color = default_color  
-        self.hover_color = hover_color  
-        self.buttonRect = buttonRect
+    def __init__(
+            self, 
+            buttonRect: pygame.rect.RectType, 
+            action: Callable, 
+            image: pygame.Surface | None, 
+            hoverImage: pygame.Surface | None, 
+            imageCoordinates: tuple[int, int] | None, 
+            text: str, 
+            fontSize: int = 14,
+            textColor: pygame.Color = (0,0,0),
+            textCoordinates: tuple[int, int] | None = None, 
+            defaultColor: pygame.Color | None = None, 
+            hoverColor: pygame.Color | None = None, 
+            ):
+        self.defaultColor = defaultColor  
+        self.hoverColor = hoverColor  
+        self.rect = buttonRect
         self.action = action
 
-        # image + sa position :
-        self.image = pygame.image.load(image).convert_alpha() # j'ai mis "convert_alpha() pour gérer une potentiel transparence"
-        self.imageCoordinates = pygame.Rect(imageCoordinates, self.image.get_size()) # imageCoordinates = x,y et self.image.get_size() = width, height
+        # Surface definition
+        if image!= None:
+            self.spriteImage = pygame.transform.scale(image, buttonRect.size).convert_alpha()
+            self.hoverImage = pygame.transform.scale(hoverImage, buttonRect.size).convert_alpha()
+            self.image = pygame.transform.scale(image, buttonRect.size).convert_alpha()
+            self.imageCoordinates = pygame.Rect(imageCoordinates, self.image.get_size())
+        else:
+            self.image = pygame.Surface(buttonRect.size) 
+            self.rect = buttonRect  
 
-        # texte + sa position :
-        self.font = pygame.font.Font(None, 36)  # police par défaut, taille 36 pixels
-        self.surface_text = self.font.render(text, True, (0, 0, 0))  # texte en noir
-        self.textCoordinates = pygame.Rect(textCoordinates, self.surface_text.get_size()) 
+        #Button text
+        self.font = pygame.font.Font(pygame.font.match_font('arial'), fontSize)
+        self.surface_text = self.font.render(text, True, textColor)
+        self.textCoordinates= textCoordinates or (self.rect.width/2 - self.surface_text.get_width() / 2, self.rect.height/2 - self.surface_text.get_height() / 2)
+        
+        self.actionned = False
 
-        # surface du bouton :
-        self.surface = pygame.Surface(self.buttonRect.size) # self.buttonRect.size = (width, height)
+    def update(self): 
+        mousePosition = pygame.mouse.get_pos()
+        isMousePressed = pygame.mouse.get_pressed()[0]
 
-    def update(self):  # la fonction qui sera mise à jour en boucle à chaque instant
-        pos = pygame.mouse.get_pos()  # prend la position du curseur
-        mouse_pressed = pygame.mouse.get_pressed()[0]  # vérifie si le bouton gauche de la souris est pressé
+        #Hover
+        if self.rect.collidepoint(mousePosition): 
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+            if self.hoverColor:
+                self.image.fill(self.hoverColor)
+            if self.hoverImage:
+                self.image = self.hoverImage
 
-        if self.buttonRect.collidepoint(pos):  # si le curseur touche un bouton
-            self.surface.fill(self.hover_color)
-            if mouse_pressed:  
-                self.surface.fill((255, 0, 0))  # couleur du clic (rouge, on changera la couleur je pense)
-                if self.action:
+            if isMousePressed:  
+                if self.action and self.actionned!=True:
+                    self.actionned = True
                     self.action()
-        else:  # s'exécute si le curseur ne touche pas/plus le bouton
-            self.surface.fill(self.default_color)
+            else:
+                self.actionned = False
+        else: 
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            if self.defaultColor:
+                self.image.fill(self.defaultColor)
+            else:
+                self.image = self.spriteImage
+        
+        self.image.blit(self.surface_text, self.textCoordinates)
