@@ -1,10 +1,9 @@
 import pygame
 
 class TextInput(pygame.sprite.Sprite):
-    def __init__(self, rect, text, defaultColor, selectColor, screenBgColor=(30, 30, 30)):
+    def __init__(self, rect, defaultColor, selectColor, screenBgColor=(30, 30, 30)):
         super().__init__()
         self.rect = rect
-        self.text = text
         self.textInput = ""
         self.defaultColor = defaultColor
         self.selectColor = selectColor
