@@ -1,45 +1,57 @@
 import pygame
+import utility.eventManager as eventManager
 
 class TextInput(pygame.sprite.Sprite):
-    def __init__(self, rect, defaultColor, selectColor, screenBgColor=(30, 30, 30)):
+    def __init__(self, rect: pygame.Rect, borderColor: pygame.Color, selectColor: pygame.Color, textColor: pygame.Color, backgroundColor: pygame.Color, placeholder: str="", fontSize: int=32):
         super().__init__()
         self.rect = rect
-        self.textInput = ""
-        self.defaultColor = defaultColor
+        self.textInput = placeholder
+        self.placeHolder = placeholder
+        self.defaultBorderColor = borderColor
+        self.currentBorderColor = borderColor
         self.selectColor = selectColor
-        self.currentColor = defaultColor
-        self.font = pygame.font.Font(None, 32)
-        self.surfaceTextInput = self.font.render(self.textInput, True, self.defaultColor)
+        self.backgroundColor = backgroundColor
+        self.textColor = textColor
+        self.placeHolderColor = (50, 50, 50)
+        self.fontSize = fontSize
+        self.font = pygame.font.Font(None, fontSize)
+        self.image = self.font.render(self.textInput, True, self.placeHolderColor)
         self.actif = False
-        self.screenBgColor = screenBgColor
+        eventManager.addEventHandler(pygame.MOUSEBUTTONDOWN, self.onMouseButtonDown)
+        eventManager.addEventHandler(pygame.KEYDOWN, self.onKeyDown)
+        eventManager.addEventHandler(pygame.TEXTINPUT, self.onTextInput)
     
-    def update(self, screen, event):
-        """
-        /!\ InputText.update(screen, event) Doit etre appeler dans la boucle : 'for event in pygame.event.get()'
-        """
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.rect.collidepoint(event.pos):
+    def onMouseButtonDown(self, e):
+        if self.rect.collidepoint(e.pos):
                 self.actif = not self.actif
-            else:
-                self.actif = False
-            self.currentColor = self.selectColor if self.actif else self.defaultColor
-        if event.type == pygame.KEYDOWN:
-            if self.actif and event.unicode != '\r':
-                if event.key == pygame.K_RETURN:
+                if self.textInput == self.placeHolder and self.actif:
+                    self.textInput = ""
+        else:
+            self.actif = False
+            if self.textInput == "":
+                self.textInput = self.placeHolder
+        self.currentBorderColor = self.selectColor if self.actif else self.defaultBorderColor
+
+    def onKeyDown(self, e):
+            if self.actif and e.unicode != '\r':
+                if e.key == pygame.K_RETURN:
                     self.textInput = ''
-                elif event.key == pygame.K_BACKSPACE:
+                elif e.key == pygame.K_BACKSPACE:
+                    if self.textInput == self.placeHolder:
+                        self.textInput = ""
                     self.textInput = self.textInput[:-1]
-        if event.type == pygame.TEXTINPUT:
-            if self.actif:
-                self.textInput += event.text
+                    if self.textInput == "":
+                        self.textInput = self.placeHolder
 
-        screen.fill(self.screenBgColor) # Permet d'agrandir le rect sans artéfacts (pixels de couleur indésirable)
-        self.surfaceTextInput = self.font.render(self.textInput, True, self.currentColor) # Changement du texte
-        self.rect.w = max(self.rect.w, self.surfaceTextInput.get_width()+10) # Agrandissement du rect
+    def onTextInput(self, e):
+        if self.actif:
+            self.textInput += e.text
 
-        screen.blit(self.surfaceTextInput, (self.rect.x+5, self.rect.y+5)) # Actualisation du texte
-        pygame.draw.rect(screen, self.currentColor, self.rect, 2) # Affichage du rect
-        pygame.display.flip()
+    def update(self):
+        self.image = pygame.Surface(self.rect.size)
+        self.image.fill(self.backgroundColor)
+        self.image.blit(self.font.render(self.textInput, True, self.textColor).convert_alpha(), (10,self.rect.h /2 - (self.fontSize/3)))
+        pygame.draw.rect(self.image, self.currentBorderColor, (0,0,self.rect.w,self.rect.h), 2) # Affichage du rect
 
     def getText(self):
         return self.textInput
