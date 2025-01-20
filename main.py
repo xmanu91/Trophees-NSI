@@ -8,7 +8,8 @@ load_dotenv()
 pygame.init()
 
 
-WIDTH, HEIGHT = 1440, 720
+WIDTH, HEIGHT = 900, 500
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 sceneManager = SceneManager(screen)
 homeScene = HomeScene(sceneManager)

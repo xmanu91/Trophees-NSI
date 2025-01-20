@@ -13,7 +13,6 @@ class GameManager:
     def drawTheme(self):
         theme = choice(self.loadThemes())
         try: 
-            # Utilisation de paramètres dans la requête UPDATE
             self.sqlManager.insert("UPDATE rooms SET theme=%s WHERE room_id=%s", (theme, self.roomId))
             self.drawingTheme = theme
         except sqlError as err:
@@ -21,7 +20,6 @@ class GameManager:
 
     def sendDrawing(self, pixelList: list):
         try:
-            # Utilisation de paramètres dans la requête INSERT
             self.sqlManager.insert("INSERT INTO drawings (creator, pixels, room_id) VALUES (%s, %s, %s)", 
                                    (self.username, str(pixelList), self.roomId))
         except sqlError as err:
