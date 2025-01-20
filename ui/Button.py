@@ -1,7 +1,7 @@
 from typing import Callable
 import pygame
 
-class Button(): 
+class Button(pygame.sprite.Sprite): 
     def __init__(
             self, 
             buttonRect: pygame.rect.RectType, 
@@ -16,6 +16,7 @@ class Button():
             defaultColor: pygame.Color | None = None, 
             hoverColor: pygame.Color | None = None, 
             ):
+        super().__init__()
         self.defaultColor = defaultColor  
         self.hoverColor = hoverColor  
         self.rect = buttonRect
@@ -47,7 +48,7 @@ class Button():
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if self.hoverColor:
                 self.image.fill(self.hoverColor)
-            if self.hoverImage:
+            elif self.hoverImage:
                 self.image = self.hoverImage
 
             if isMousePressed:  
