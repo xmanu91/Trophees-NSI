@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 load_dotenv()
 pygame.init()
 
-
 WIDTH, HEIGHT = 900, 500
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
