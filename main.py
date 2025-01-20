@@ -3,6 +3,7 @@ import sys
 from dotenv import load_dotenv
 from ui.HomeScene import HomeScene
 from ui.SceneManager import SceneManager
+import utility.eventManager
 
 load_dotenv()
 pygame.init()
@@ -16,9 +17,7 @@ homeScene = HomeScene(sceneManager)
 sceneManager.setAsCurrentScene(homeScene)
 while True:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+        utility.eventManager.update(event)
 
     sceneManager.update()
     sceneManager.draw()
