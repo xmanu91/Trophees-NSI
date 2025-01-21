@@ -1,4 +1,4 @@
-from SQLProvider import SQLProvider
+from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 
 class VotesManager:
