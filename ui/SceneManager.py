@@ -8,7 +8,8 @@ class SceneManager:
 
     def setAsCurrentScene(self, scene: type[Scene]) -> None:
         if self.currentScene != None:
-            pass
+            self.currentScene.spriteGroup.empty()
+            self.surface.fill((0,0,0))
         self.currentScene = scene
         self.draw()
 
