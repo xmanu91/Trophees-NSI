@@ -1,4 +1,5 @@
 import pygame
+import utility.eventManager as eventManager
 
 def centerCoordinates(coordinates, gap):
     return (coordinates[0]-gap, coordinates[1] - gap)
@@ -16,8 +17,10 @@ class Canva(pygame.sprite.Sprite):
         self.__previousPoint = None
         self.brushSize = 5
         self.allowDraw = True
+        eventManager.addEventHandler(pygame.KEYDOWN, self.onKeyDown)
+        eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
 
-    def update(self, event):
+    def update(self):
         mousePosition = pygame.mouse.get_pos()
 
         if self.allowDraw:
@@ -35,23 +38,21 @@ class Canva(pygame.sprite.Sprite):
 
         if pygame.mouse.get_pressed(3)[1]:
             self.setBrushColor(self.image.get_at(mousePosition))
-        
-        if event.type == pygame.MOUSEWHEEL:
-            if event.y > 0:
-                self.brushSize += 1
-            else:
-                if self.brushSize != 1:
-                    self.brushSize -= 1
 
-        # Pour le développement
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_s:
-                self.save()
-            if event.key == pygame.K_k:
-                self.load("canva.png")
-            if event.key == pygame.K_r:
-                self.allowDraw = not self.allowDraw
-        # =====================
+    def onMouseWheel(self, e):
+        if e.y > 0:
+            self.brushSize += 1
+        else:
+            if self.brushSize != 1:
+                self.brushSize -= 1
+
+    def onKeyDown(self, e):
+        if e.key == pygame.K_s:
+            self.save()
+        if e.key == pygame.K_k:
+            self.load("canva.png")
+        if e.key == pygame.K_r:
+            self.allowDraw = not self.allowDraw
 
     def setBrushSize(self, size):
         self.brushSize = size

@@ -1,7 +1,7 @@
 import pygame
 import sys
 from dotenv import load_dotenv
-from ui.HomeScene import HomeScene
+from scenes.HomeScene import HomeScene
 from ui.SceneManager import SceneManager
 import utility.eventManager
 
