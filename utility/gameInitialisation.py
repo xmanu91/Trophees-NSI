@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from os import getenv as env
-from SQLProvider import SQLProvider
+from utility.SQLProvider import SQLProvider
 
 load_dotenv()
 

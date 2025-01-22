@@ -1,0 +1,52 @@
+from ui.Scene import Scene
+from ui.Text import Text
+from ui.Button import Button 
+from ui.SceneManager import SceneManager
+from ui.Image import Image
+import pygame
+import os
+
+"""
+Pensez à changer les liens des images pour la version finale
+"""
+
+class VoteScene(Scene):
+    def __init__(self, sceneManager: SceneManager):
+        super().__init__()
+
+        self.drawnList = []
+        self.index = 0
+        for drawn in os.listdir("assets/temp/"):
+            self.drawnList.append(drawn)
+
+        self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
+        self.background = Image('assets/background.jpg', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
+        
+        self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
+        self.drawing = Image("assets/temp/image1.png", self.drawRect)
+
+        self.vote1 = Button(pygame.rect.Rect((self.screenWidth/11*1) - 20, 440, 40, 40), lambda: self.nextScene("Vote 1"), None, None, None, "1", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote2 = Button(pygame.rect.Rect((self.screenWidth/11*2) - 20, 440, 40, 40), lambda: self.nextScene("Vote 2"), None, None, None, "2", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote3 = Button(pygame.rect.Rect((self.screenWidth/11*3) - 20, 440, 40, 40), lambda: self.nextScene("Vote 3"), None, None, None, "3", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote4 = Button(pygame.rect.Rect((self.screenWidth/11*4) - 20, 440, 40, 40), lambda: self.nextScene("Vote 4"), None, None, None, "4", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote5 = Button(pygame.rect.Rect((self.screenWidth/11*5) - 20, 440, 40, 40), lambda: self.nextScene("Vote 5"), None, None, None, "5", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote6 = Button(pygame.rect.Rect((self.screenWidth/11*6) - 20, 440, 40, 40), lambda: self.nextScene("Vote 6"), None, None, None, "6", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote7 = Button(pygame.rect.Rect((self.screenWidth/11*7) - 20, 440, 40, 40), lambda: self.nextScene("Vote 7"), None, None, None, "7", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote8 = Button(pygame.rect.Rect((self.screenWidth/11*8) - 20, 440, 40, 40), lambda: self.nextScene("Vote 8"), None, None, None, "8", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote9 = Button(pygame.rect.Rect((self.screenWidth/11*9) - 20, 440, 40, 40), lambda: self.nextScene("Vote 9"), None, None, None, "9", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.vote10 = Button(pygame.rect.Rect((self.screenWidth/11*10) -20, 440, 40, 40), lambda: self.nextScene("Vote 10"), None, None, None, "10", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+
+        self.spriteGroup.add(self.background, self.drawing, self.vote1, self.vote2, self.vote3, self.vote4, self.vote5, self.vote6, self.vote7, self.vote8, self.vote9, self.vote10)
+
+    def nextScene(self, note: int):
+        print(self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
+        print("Sending vote to server") # Mettre ici l'envoi de vote
+
+        if self.index < len(self.drawnList) - 1:
+            self.index += 1
+            self.spriteGroup.remove(self.drawing)
+            self.drawing = Image("assets/temp/" + self.drawnList[self.index], self.drawRect)
+            self.spriteGroup.add(self.drawing)
+            pygame.display.flip()
+        else:
+            print("VoteScene finished") # Passez à la scene suivante (HomeScene)
