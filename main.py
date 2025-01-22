@@ -16,8 +16,8 @@ WIDTH, HEIGHT = 900, 500
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 sceneManager = SceneManager(screen)
 
-homeScene = HomeScene(sceneManager)
-sceneManager.setAsCurrentScene(homeScene)
+voteScene = VoteScene(sceneManager)
+sceneManager.setAsCurrentScene(voteScene)
 
 while True:
     for event in pygame.event.get():
