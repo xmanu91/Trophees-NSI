@@ -1,4 +1,5 @@
 import pygame
+from scenes import PaintingScene
 import utility.eventManager as eventManager
 
 def centerCoordinates(coordinates, gap):
@@ -22,7 +23,7 @@ class Canva(pygame.sprite.Sprite):
 
     def update(self):
         mousePositionX, mousePositionY = pygame.mouse.get_pos()
-        mousePosition = (mousePositionX - self.rect.x, mousePositionY)
+        mousePosition = (mousePositionX - self.rect.x + self.brushSize, mousePositionY - self.rect.y + self.brushSize) # Correction des coordonnes + centrage
 
         if self.allowDraw:
             if pygame.mouse.get_pressed(3)[0]:
@@ -38,7 +39,10 @@ class Canva(pygame.sprite.Sprite):
                 self.__previousPoint = None
 
         if pygame.mouse.get_pressed(3)[1]:
-            self.setBrushColor(self.image.get_at(mousePosition))
+                try:
+                    self.setBrushColor(self.image.get_at(centerCoordinates(mousePosition, self.brushSize)))
+                except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
+                    print(Error)
 
     def onMouseWheel(self, e):
         if e.y > 0:

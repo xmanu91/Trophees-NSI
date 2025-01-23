@@ -26,7 +26,7 @@ screen.fill((255, 255, 255))
 while True:
     for event in pygame.event.get():
         utility.eventManager.update(event)
-        
+         
     sceneManager.update()
     sceneManager.draw()
     pygame.display.flip()
