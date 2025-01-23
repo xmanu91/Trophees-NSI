@@ -21,7 +21,8 @@ class Canva(pygame.sprite.Sprite):
         eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
 
     def update(self):
-        mousePosition = pygame.mouse.get_pos()
+        mousePositionX, mousePositionY = pygame.mouse.get_pos()
+        mousePosition = (mousePositionX - self.rect.x, mousePositionY)
 
         if self.allowDraw:
             if pygame.mouse.get_pressed(3)[0]:
@@ -53,6 +54,8 @@ class Canva(pygame.sprite.Sprite):
             self.load("canva.png")
         if e.key == pygame.K_r:
             self.allowDraw = not self.allowDraw
+        if e.key == pygame.K_f:
+            self.setBackgroundColor((34, 76, 0))
 
     def setBrushSize(self, size):
         self.brushSize = size
