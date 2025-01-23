@@ -22,7 +22,7 @@ sceneManager.setAsCurrentScene(voteScene)
 while True:
     for event in pygame.event.get():
         utility.eventManager.update(event)
-
+        
     sceneManager.update()
     sceneManager.draw()
     pygame.display.flip()
