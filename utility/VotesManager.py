@@ -22,11 +22,11 @@ class VotesManager:
         except sqlError as err:
             print(err)
 
-    def vote(self, attributedVote):
+    def vote(self, attributedVote, rating: int):
         try:
             # Utilisation de paramètres dans la requête INSERT
-            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, room_id) VALUES (%s, %s, %s)", 
-                                   (self.username, attributedVote, self.roomId))
+            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, room_id) VALUES (%s, %s, %s, %s)", 
+                                   (self.username, attributedVote, rating, self.roomId))
         except sqlError as err:
             print(err)
 
@@ -50,9 +50,9 @@ class VotesManager:
         usersDict = {} 
         for vote in votes:
             if vote[1] in usersDict:  # type: ignore
-                usersDict[vote[1]] += 1  # type: ignore
+                usersDict[vote[1]] += usersDict[vote[2]]  # type: ignore
             else: 
-                usersDict[vote[1]] = 1  # type: ignore
+                usersDict[vote[1]] = usersDict[vote[2]]  # type: ignore
         # Getting the winners
         results = [v for k, v in usersDict.items()]
         winners = []
