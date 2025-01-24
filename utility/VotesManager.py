@@ -11,19 +11,22 @@ class VotesManager:
     def getDrawings(self):
         try: 
             # Utilisation de paramètres dans la requête SELECT
-            response = self.sqlManager.get("SELECT creator, pixels FROM drawings WHERE room_id=%s AND creator<>%s", (self.roomId, self.username))
+            response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s AND creator<>%s", (self.roomId, self.username))
             if response is None:
                 return None
-            self.drawings = [(drawing[0], eval(drawing[1])) for drawing in response]  # type: ignore
+            self.drawings = [(drawing[0], drawing[1]) for drawing in response]  # type: ignore
+            print(self.drawings)
+            for drawing in self.drawings:
+                self.save_drawing(drawing[1], drawing[0])
             return self.drawings
         except sqlError as err:
             print(err)
 
-    def vote(self, attributedVote):
+    def vote(self, attributedVote, rating: int):
         try:
             # Utilisation de paramètres dans la requête INSERT
-            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, room_id) VALUES (%s, %s, %s)", 
-                                   (self.username, attributedVote, self.roomId))
+            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, room_id) VALUES (%s, %s, %s, %s)", 
+                                   (self.username, attributedVote, rating, self.roomId))
         except sqlError as err:
             print(err)
 
@@ -47,9 +50,9 @@ class VotesManager:
         usersDict = {} 
         for vote in votes:
             if vote[1] in usersDict:  # type: ignore
-                usersDict[vote[1]] += 1  # type: ignore
+                usersDict[vote[1]] += usersDict[vote[2]]  # type: ignore
             else: 
-                usersDict[vote[1]] = 1  # type: ignore
+                usersDict[vote[1]] = usersDict[vote[2]]  # type: ignore
         # Getting the winners
         results = [v for k, v in usersDict.items()]
         winners = []
@@ -58,3 +61,21 @@ class VotesManager:
                 winners.append(list(usersDict.keys())[i])
         
         return winners
+
+    def save_drawing(self, binary, name):
+        out = None
+        print(binary)
+  
+        try: 
+            # creating files in output folder for writing in binary mode 
+            out = open('assets/temp/' + name + '.png', 'wb') 
+            
+            # writing image data 
+            out.write(binary) 
+
+        except Exception as err:
+            print(err)
+            
+        # closing output file object 
+        finally: 
+            out.close()
