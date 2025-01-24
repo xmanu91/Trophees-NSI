@@ -4,6 +4,7 @@ from ui.Button import Button
 from ui.SceneManager import SceneManager
 from ui.Image import Image
 from ui.ProgressBar import ProgressBar
+from utility.VotesManager import VotesManager
 import pygame
 import os
 
@@ -14,7 +15,6 @@ Pensez à changer les liens des images pour la version finale
 class VoteScene(Scene):
     def __init__(self, sceneManager: SceneManager):
         super().__init__()
-
         self.drawnList = []
         self.index = 0
         for drawn in os.listdir("assets/temp/"):
@@ -24,7 +24,7 @@ class VoteScene(Scene):
         self.background = Image('assets/background.jpg', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
         
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
-        self.drawing = Image("assets/temp/image1.png", self.drawRect)
+        self.drawing = Image("assets/temp/" + self.drawnList[self.index], self.drawRect)
 
         self.note = 1
 
@@ -40,7 +40,7 @@ class VoteScene(Scene):
         self.vote10 = Button(pygame.rect.Rect((self.screenWidth/11*10) -20, 440, 40, 40), lambda: self.setNote(10), None, None, None, "10", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
 
         durationPerVote = 5
-        self.progressBar = ProgressBar(pygame.Rect(0, 0, 900, 10), (0,255,0), durationPerVote, lambda: self.nextScene(self.note))
+        self.progressBar = ProgressBar(pygame.Rect(0, 0, 900, 10), (0,255,0), durationPerVote, lambda: self.nextDrawing(self.note))
         self.progressBar.run_start()
 
         self.spriteGroup.add(self.background, self.drawing, self.vote1, self.vote2, self.vote3, self.vote4, self.vote5, 
@@ -56,7 +56,7 @@ class VoteScene(Scene):
             else:
                 button.defaultColor = (255, 255, 255)
 
-    def nextScene(self, note: int):
+    def nextDrawing(self, note: int):
         print(self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
         print("Sending vote to server") # Mettre ici l'envoi de vote
 
