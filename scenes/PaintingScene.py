@@ -1,14 +1,15 @@
-from ui.Scene import Scene
-from ui.Text import Text
-from ui.Button import Button 
+import utility.eventManager as eventManager
 from ui.SceneManager import SceneManager
-from ui.Image import Image
 from ui.TextInput import TextInput
-from ui.ProgressBar import ProgressBar
-from ui.Canva import Canva
-import pygame
-import threading
+from ui.Button import Button
+from ui.Scene import Scene
+from ui.Image import Image
 from ui.Shape import Shape
+from ui.Canva import Canva
+from ui.Text import Text
+import threading
+import pygame
+
 import time
 
 class PaintingScene(Scene):
@@ -47,21 +48,13 @@ class PaintingScene(Scene):
                 listColorButton.append(newColorButton)
                 self.spriteGroup.add(listColorButton[-1])
 
-        self.colorPreview = Shape(pygame.Rect(30, 290, 140, 25), (0, 0, 0))
+        self.colorPreview = Shape(pygame.Rect(30, 250, 140, 25), (0, 0, 0))
+    
+        self.spriteGroup.add(self.theme, self.colorPreview)
 
-        self.red = Shape(pygame.Rect(87.5-50, 360, 25, 100), (255, 0, 0))
-        self.green = Shape(pygame.Rect(87.5, 360, 25, 100), (0, 255, 0))
-        self.blue = Shape(pygame.Rect(87.5+50, 360, 25, 100), (0, 0, 255))
-
-        self.buttonRedPlus = Button(pygame.Rect(87.5-50+2, 330, 21, 21), lambda: self.addPlusOneToColor("red"), None, None, None, "+", 14, (0,0,0), (7, 1), (255, 255, 255), (144, 144, 144))
-        self.buttonRedMinus = Button(pygame.Rect(87.5-50+2, 470, 21, 21), lambda: self.decreaseOneToColor("red"), None, None, None, "-", 14, (0,0,0), (9, 0), (255, 255, 255), (144, 144, 144))
-        self.buttonGreenPlus = Button(pygame.Rect(87.5+2, 330, 21, 21), lambda: self.addPlusOneToColor("green"), None, None, None, "+", 14, (0,0,0), (7, 1), (255, 255, 255), (144, 144, 144))
-        self.buttonGreenMinus = Button(pygame.Rect(87.5+2, 470, 21, 21), lambda: self.decreaseOneToColor("green"), None, None, None, "-", 14, (0,0,0), (9, 0), (255, 255, 255), (144, 144, 144))
-        self.buttonBluePlus = Button(pygame.Rect(87.5+50+2, 330, 21, 21), lambda: self.addPlusOneToColor("blue"), None, None, None, "+", 14, (0,0,0), (7, 1), (255, 255, 255), (144, 144, 144))
-        self.buttonBlueMinus = Button(pygame.Rect(87.5+50+2, 470, 21, 21), lambda: self.decreaseOneToColor("blue"), None, None, None, "-", 14, (0,0,0), (9, 0), (255, 255, 255), (144, 144, 144))
-
-        self.spriteGroup.add(self.red, self.green, self.blue, self.buttonRedPlus, self.buttonRedMinus, self.buttonGreenPlus, 
-        self.buttonGreenMinus, self.buttonBluePlus, self.buttonBlueMinus, self.theme, self.colorPreview)
+        self.colorPalette = Image("assets/colorPalette.png", pygame.Rect(10, 310, 180, 180))
+        self.colorPaletteImage = self.colorPalette.get_image()
+        self.spriteGroup.add(self.colorPalette)
 
     def startTimer(self):
         threading.Thread(target=self.timer, daemon=True).start()
@@ -76,27 +69,20 @@ class PaintingScene(Scene):
         print("End timer")
         self.setCanva()
 
-    def addPlusOneToColor(self, color: str):
-        square = getattr(self, color)
-        delta = 5
-        if square.rect.height * 2.55 + delta < 255:
-            square.changeRect(pygame.Rect(square.rect.x, square.rect.y - delta, square.rect.width, (square.rect.height + delta))) 
-        else:
-            square.changeRect(pygame.Rect(square.rect.x, 360, square.rect.width, 100))
+    def centerCoordinates(self, coordinates, gap):
+        return (coordinates[0]-gap, coordinates[1] - gap)
 
-        newColor = (int(self.red.rect.height * 2.55), int(self.green.rect.height * 2.55), int(self.blue.rect.height * 2.55))
-        print(int(self.red.rect.height * 2.55), int(self.green.rect.height * 2.55), int(self.blue.rect.height * 2.55))
-        self.canva.setBrushColor(newColor)
-        self.colorPreview.changeColor(newColor)
-
-    def decreaseOneToColor(self, color: str):
-        square = getattr(self, color)
-        delta = 5
-        if square.rect.height * 2.55 - delta > 0:
-            square.changeRect(pygame.Rect(square.rect.x, square.rect.y + delta, square.rect.width, square.rect.height - delta))
-        
-
-            newColor = (int(self.red.rect.height * 2.55), int(self.green.rect.height * 2.55), int(self.blue.rect.height * 2.55))
-            print(int(self.red.rect.height * 2.55), int(self.green.rect.height * 2.55), int(self.blue.rect.height * 2.55))
-            self.canva.setBrushColor(newColor)
-            self.colorPreview.changeColor(newColor)
+    def update(self):
+        mousePositionX, mousePositionY = pygame.mouse.get_pos()
+        mousePosition = (mousePositionX - 10, mousePositionY - 310)
+        if not self.canva.rect.collidepoint(mousePosition):
+            if pygame.mouse.get_pressed(3)[0]:
+                    try:
+                        print("Changing")
+                        print(mousePosition)
+                        newColor = self.colorPaletteImage.get_at(self.centerCoordinates(mousePosition, self.canva.brushSize))
+                        self.canva.setBrushColor(newColor)
+                        self.colorPreview.changeColor(newColor)
+                        print("Changed")
+                    except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
+                        print(Error)

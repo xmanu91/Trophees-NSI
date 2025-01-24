@@ -66,6 +66,9 @@ class Canva(pygame.sprite.Sprite):
 
     def setBrushColor(self, color):
         self.drawColor = color
+
+    def getBrushColor(self):
+        return self.drawColor
     
     def setBackgroundColor(self, color):
         self.backgroundColor = color
