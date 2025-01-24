@@ -11,10 +11,13 @@ class VotesManager:
     def getDrawings(self):
         try: 
             # Utilisation de paramètres dans la requête SELECT
-            response = self.sqlManager.get("SELECT creator, pixels FROM drawings WHERE room_id=%s AND creator<>%s", (self.roomId, self.username))
+            response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s AND creator<>%s", (self.roomId, self.username))
             if response is None:
                 return None
-            self.drawings = [(drawing[0], eval(drawing[1])) for drawing in response]  # type: ignore
+            self.drawings = [(drawing[0], drawing[1]) for drawing in response]  # type: ignore
+            print(self.drawings)
+            for drawing in self.drawings:
+                self.save_drawing(drawing[1], drawing[0])
             return self.drawings
         except sqlError as err:
             print(err)
@@ -58,3 +61,21 @@ class VotesManager:
                 winners.append(list(usersDict.keys())[i])
         
         return winners
+
+    def save_drawing(self, binary, name):
+        out = None
+        print(binary)
+  
+        try: 
+            # creating files in output folder for writing in binary mode 
+            out = open('assets/temp/' + name + '.png', 'wb') 
+            
+            # writing image data 
+            out.write(binary) 
+
+        except Exception as err:
+            print(err)
+            
+        # closing output file object 
+        finally: 
+            out.close()
