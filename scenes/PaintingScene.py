@@ -30,25 +30,22 @@ class PaintingScene(Scene):
 
         # Création de la barre d'outil
         self.background = Shape(pygame.Rect(0, 0, 200, 900), (144, 144, 255))
+        self.spriteGroup.add(self.background)
 
         themeFontSize = int((16 / len(self.theme))*25) # Calc de la taille de la police en fonction de la longueur du theme
         themeXPos = (430 - themeFontSize * len(self.theme)) // 2 # Calc de la position x du theme
         self.theme = Text(self.theme, themeFontSize, (themeXPos, 0), (255,255,255), False)
 
-        self.colorPreset1 = Button(pygame.Rect(30, 60, 25, 25), lambda: (self.canva.setBrushColor((255, 0, 0)), self.colorPreview.changeColor((255, 0, 0))), None, None, None, "", 14, (255, 0, 0), (7, 1), (255, 0, 0), (144, 144, 144))
-        self.colorPreset2 = Button(pygame.Rect(30, 60+40, 25, 25), lambda: (self.canva.setBrushColor((0, 255, 0)), self.colorPreview.changeColor((0, 255, 0))), None, None, None, "", 14, (0, 255, 0), (7, 1), (0, 255, 0), (144, 144, 144))
-        self.colorPreset3 = Button(pygame.Rect(30, 60+80, 25, 25), lambda: (self.canva.setBrushColor((0, 0, 255)), self.colorPreview.changeColor((0, 0, 255))), None, None, None, "", 14, (0, 0, 255), (7, 1), (0, 0, 255), (144, 144, 144))
-        self.colorPreset4 = Button(pygame.Rect(30, 60+120, 25, 25), lambda: (self.canva.setBrushColor((255, 255, 0)), self.colorPreview.changeColor((255, 255, 0))), None, None, None, "", 14, (255, 255, 0), (7, 1), (255, 255, 0), (144, 144, 144))
-        self.colorPreset5 = Button(pygame.Rect(30, 60+160, 25, 25), lambda: (self.canva.setBrushColor((255, 255, 255)), self.colorPreview.changeColor((255, 255, 255))), None, None, None, "", 14, (255, 255, 255), (7, 1), (255, 255, 255), (144, 144, 144))
-        
-        self.colorPreset6 = Button(pygame.Rect(30+25+25, 60, 25, 25), lambda: (self.canva.setBrushColor((0, 255, 255)), self.colorPreview.changeColor((255, 255, 255))), None, None, None, "", 14, (255, 255, 255), (7, 1), (255, 255, 255), (144, 144, 144))
-        self.colorPreset7 = Button(pygame.Rect(30+25+25, 60+40, 25, 25), lambda: (self.canva.setBrushColor((255, 0, 255)), self.colorPreview.changeColor((255, 0, 255))), None, None, None, "", 14, (255, 0, 255), (7, 1), (255, 0, 255), (144, 144, 144))
-        self.colorPreset8 = Button(pygame.Rect(30+25+25, 60+80, 25, 25), lambda: (self.canva.setBrushColor((255, 255, 255)), self.colorPreview.changeColor((255, 255, 255))), None, None, None, "", 14, (255, 255, 255), (7, 1), (255, 255, 255), (144, 144, 144))
-        self.colorPreset9 = Button(pygame.Rect(30+25+25, 60+120, 25, 25), lambda: (self.canva.setBrushColor((255, 255, 255)), self.colorPreview.changeColor((255, 255, 255))), None, None, None, "", 14, (255, 255, 255), (7, 1), (255, 255, 255), (144, 144, 144))
-        self.colorPreset10 = Button(pygame.Rect(30+25+25, 60+160, 25, 25), lambda: (self.canva.setBrushColor((255, 255, 255)), self.colorPreview.changeColor((255, 255, 255))), None, None, None, "", 14, (255, 255, 255), (7, 1), (255, 255, 255), (144, 144, 144))
-        
-
-
+        listColor = [[(224,0,0), (224,84,0), (255,255,60), (111,224,0), (26,238,0)], [(0,224,142), (0,173,224), (0,53,224), (116,0,224), (200,0,224)], [(0, 0, 0), (50, 50, 50), (100, 100, 100), (175, 175, 175), (255, 255, 255)]]
+        listColorButton = []
+        for liste in listColor:
+            print(liste)
+            for color in liste:
+                print(color)
+                index = listColor.index(liste)
+                newColorButton = Button(pygame.Rect(15+25*liste.index(color)+11*liste.index(color), 60+11*index+25*index, 25, 25), lambda selfColor=color: (self.canva.setBrushColor(selfColor), self.colorPreview.changeColor(selfColor)), None, None, None, "", 14, (0, 0, 0), (7, 1), color, (144, 144, 144))
+                listColorButton.append(newColorButton)
+                self.spriteGroup.add(listColorButton[-1])
 
         self.colorPreview = Shape(pygame.Rect(30, 290, 140, 25), (0, 0, 0))
 
@@ -63,9 +60,8 @@ class PaintingScene(Scene):
         self.buttonBluePlus = Button(pygame.Rect(87.5+50+2, 330, 21, 21), lambda: self.addPlusOneToColor("blue"), None, None, None, "+", 14, (0,0,0), (7, 1), (255, 255, 255), (144, 144, 144))
         self.buttonBlueMinus = Button(pygame.Rect(87.5+50+2, 470, 21, 21), lambda: self.decreaseOneToColor("blue"), None, None, None, "-", 14, (0,0,0), (9, 0), (255, 255, 255), (144, 144, 144))
 
-        self.spriteGroup.add(self.background, self.red, self.green, self.blue, self.buttonRedPlus, self.buttonRedMinus, self.buttonGreenPlus, 
-        self.buttonGreenMinus, self.buttonBluePlus, self.buttonBlueMinus, self.theme, self.colorPreview, self.colorPreset1, self.colorPreset2, 
-        self.colorPreset3, self.colorPreset4, self.colorPreset5, self.colorPreset6, self.colorPreset7, self.colorPreset8, self.colorPreset9, self.colorPreset10)
+        self.spriteGroup.add(self.red, self.green, self.blue, self.buttonRedPlus, self.buttonRedMinus, self.buttonGreenPlus, 
+        self.buttonGreenMinus, self.buttonBluePlus, self.buttonBlueMinus, self.theme, self.colorPreview)
 
     def startTimer(self):
         threading.Thread(target=self.timer, daemon=True).start()
