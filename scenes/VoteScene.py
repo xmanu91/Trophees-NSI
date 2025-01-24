@@ -8,10 +8,6 @@ from utility.VotesManager import VotesManager
 import pygame
 import os
 
-"""
-Pensez à changer les liens des images pour la version finale
-"""
-
 class VoteScene(Scene):
     def __init__(self, sceneManager: SceneManager):
         super().__init__()
