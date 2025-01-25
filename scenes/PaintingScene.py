@@ -78,11 +78,8 @@ class PaintingScene(Scene):
         if not self.canva.rect.collidepoint(mousePosition):
             if pygame.mouse.get_pressed(3)[0]:
                     try:
-                        print("Changing")
-                        print(mousePosition)
                         newColor = self.colorPaletteImage.get_at(self.centerCoordinates(mousePosition, self.canva.brushSize))
                         self.canva.setBrushColor(newColor)
                         self.colorPreview.changeColor(newColor)
-                        print("Changed")
                     except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
                         print(Error)
