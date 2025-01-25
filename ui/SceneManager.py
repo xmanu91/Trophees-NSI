@@ -20,4 +20,4 @@ class SceneManager:
         try:
             self.currentScene.update()
         except Exception as ex:
-            print(ex)
+            print("SceneManager :", ex)

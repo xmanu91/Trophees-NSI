@@ -1,9 +1,7 @@
 import pygame
 from scenes import PaintingScene
 import utility.eventManager as eventManager
-
-def centerCoordinates(coordinates, gap):
-    return (coordinates[0]-gap, coordinates[1] - gap)
+from utility.tools import centerCoordinates
 
 class Canva(pygame.sprite.Sprite):
     def __init__(self,x,y,width,height,backgroundColor,drawColor,brushSize = 5):
@@ -16,7 +14,7 @@ class Canva(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.__previousPoint = None
-        self.brushSize = 5
+        self.brushSize = brushSize
         self.allowDraw = True
         eventManager.addEventHandler(pygame.KEYDOWN, self.onKeyDown)
         eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
@@ -24,7 +22,7 @@ class Canva(pygame.sprite.Sprite):
     def update(self):
         mousePositionX, mousePositionY = pygame.mouse.get_pos()
         mousePosition = (mousePositionX - self.rect.x + self.brushSize, mousePositionY - self.rect.y + self.brushSize) # Correction des coordonnes + centrage
-
+        
         if self.allowDraw:
             if pygame.mouse.get_pressed(3)[0]:
                 if self.__previousPoint:
@@ -51,11 +49,11 @@ class Canva(pygame.sprite.Sprite):
             if self.brushSize != 1:
                 self.brushSize -= 1
 
-    def onKeyDown(self, e):
+    def onKeyDown(self, e): # Dev Only
         if e.key == pygame.K_s:
             self.save()
         if e.key == pygame.K_k:
-            self.load("canva.png")
+            self.load("canva.png") 
         if e.key == pygame.K_r:
             self.allowDraw = not self.allowDraw
         if e.key == pygame.K_f:
@@ -75,7 +73,7 @@ class Canva(pygame.sprite.Sprite):
         self.image.fill(color)
 
     def save(self):
-        pygame.image.save(self.image, "canva.png")    
+        pygame.image.save(self.image, "canva.png") # Pensez a changer le chemin et le nom   
 
     def load(self, path):
         self.image = pygame.image.load(path).convert_alpha()

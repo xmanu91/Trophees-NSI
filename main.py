@@ -20,7 +20,6 @@ homeScene = HomeScene(sceneManager)
 paintingScene = PaintingScene(sceneManager)
 
 sceneManager.setAsCurrentScene(paintingScene)
-
 screen.fill((255, 255, 255))
 
 while True:
