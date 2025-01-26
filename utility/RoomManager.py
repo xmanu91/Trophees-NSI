@@ -1,4 +1,4 @@
-import SQLProvider as sql
+import utility.SQLProvider as sql
 from mysql.connector import Error as sqlError
 
 class RoomManager:
@@ -13,13 +13,22 @@ class RoomManager:
             return []
         rooms = [row for row in response]
         return rooms
-    
+
     def getAllConnectedUsers(self):
         response = self.SQLProvider.get("SELECT * FROM connected_users")
         if response is None:
             return []
         users = [row for row in response]
         return users
+    
+    def getCurrentRoomName(self):
+        try:
+            response = self.SQLProvider.get("SELECT room_name FROM rooms WHERE room_id=%s", (str(self.currentRoomID)))
+            if response is None:
+                return None
+            return response[0][0]
+        except sqlError as err:
+            print(err)
     
     def createConnection(self, roomId: int):
         try:
@@ -57,7 +66,7 @@ class RoomManager:
     
     def getUsersInCurrentRoom(self) -> list[str] | None:
         try:
-            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (self.currentRoomID))
+            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (str(self.currentRoomID)))
             if response is None:
                 return []
             users = [user[0] for user in response]  # type: ignore
