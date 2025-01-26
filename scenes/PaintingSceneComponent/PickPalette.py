@@ -3,10 +3,11 @@ from ui.Image import Image
 import pygame
 
 class PickPalette():
-    def __init__(self, canva, spriteGroup, colorPreview):
+    def __init__(self, canva, spriteGroup, colorPreview, darknessPreview):
         self.canva = canva
         self.spriteGroup = spriteGroup
         self.colorPreview = colorPreview
+        self.darknessPreview = darknessPreview
 
         self.colorPalette = Image("assets/colorPalette.png", pygame.Rect(10, 280, 180, 180))
         self.colorPaletteImage = self.colorPalette.get_image()
@@ -22,6 +23,8 @@ class PickPalette():
                 if pygame.mouse.get_pressed(3)[0]:
                     newColor = self.colorPaletteImage.get_at(centerCoordinates(mousePosition, self.canva.brushSize))
                     self.canva.setBrushColor(newColor)
+                    self.canva.setSelectedColor(newColor)
                     self.colorPreview.changeColor(newColor)
+                    self.darknessPreview.changeColor(newColor)
         else:   
             self.canva.allowDraw = True

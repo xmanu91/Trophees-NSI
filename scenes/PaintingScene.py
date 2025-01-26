@@ -33,4 +33,3 @@ class PaintingScene(Scene):
 
     def update(self):
         self.toolBar.update()
-        self.timer.update()

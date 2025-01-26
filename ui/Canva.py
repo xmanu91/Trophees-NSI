@@ -6,6 +6,7 @@ from utility.tools import centerCoordinates
 class Canva(pygame.sprite.Sprite):
     def __init__(self,x,y,width,height,backgroundColor,drawColor,brushSize = 5):
         super().__init__()
+        self.selectedColor = drawColor
         self.drawColor = drawColor
         self.image = pygame.Surface((width, height))
         self.backgroundColor = backgroundColor
@@ -16,7 +17,7 @@ class Canva(pygame.sprite.Sprite):
         self.__previousPoint = None
         self.brushSize = brushSize
         self.allowDraw = True
-        eventManager.addEventHandler(pygame.KEYDOWN, self.onKeyDown)
+        self.darknessValue = 100
         eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
 
     def update(self):
@@ -49,21 +50,29 @@ class Canva(pygame.sprite.Sprite):
             if self.brushSize != 1:
                 self.brushSize -= 1
 
-    def onKeyDown(self, e): # Dev Only
-        if e.key == pygame.K_s:
-            self.save()
-        if e.key == pygame.K_k:
-            self.load("canva.png") 
-        if e.key == pygame.K_r:
-            self.allowDraw = not self.allowDraw
-        if e.key == pygame.K_f:
-            self.setBackgroundColor((34, 76, 0))
-
     def setBrushSize(self, size):
         self.brushSize = size
 
     def setBrushColor(self, color):
         self.drawColor = color
+
+    def setSelectedColor(self, color):
+        self.selectedColor = color
+        self.gradientDarkness = [(0, 0, 0)]
+        self.darknessValue = 100
+        for gradient in range(1, 20):
+            self.gradientDarkness.append((color[0] * gradient // 20, color[1] * gradient // 20, color[2] * gradient // 20))
+
+    def changeDarkness(self, value):
+        self.darknessValue += value
+        if self.darknessValue < 0:
+            self.darknessValue = 0
+        elif self.darknessValue > 100:
+            self.darknessValue = 100
+
+        index = (self.darknessValue//5)-1
+        if index < 0: index = 0
+        self.setBrushColor(self.gradientDarkness[index])  
 
     def getBrushColor(self):
         return self.drawColor
