@@ -1,7 +1,6 @@
-import pygame
-from scenes import PaintingScene
 import utility.eventManager as eventManager
 from utility.tools import centerCoordinates
+import pygame
 
 class Canva(pygame.sprite.Sprite):
     def __init__(self,x,y,width,height,backgroundColor,drawColor,brushSize = 5):
@@ -23,8 +22,8 @@ class Canva(pygame.sprite.Sprite):
     def update(self):
         mousePositionX, mousePositionY = pygame.mouse.get_pos()
         mousePosition = (mousePositionX - self.rect.x + self.brushSize, mousePositionY - self.rect.y + self.brushSize) # Correction des coordonnes + centrage
-
-        if self.allowDraw and self.rect.collidepoint((mousePositionX, mousePositionY)):
+        
+        if self.allowDraw:
             if pygame.mouse.get_pressed(3)[0]:
                 if self.__previousPoint:
                     pygame.draw.circle(self.image, self.drawColor, centerCoordinates(self.__previousPoint, self.brushSize), self.brushSize)
@@ -58,10 +57,9 @@ class Canva(pygame.sprite.Sprite):
 
     def setSelectedColor(self, color):
         self.selectedColor = color
-        self.gradientDarkness = [(0, 0, 0)]
-        self.darknessValue = 100
-        for gradient in range(1, 20):
-            self.gradientDarkness.append((color[0] * gradient // 20, color[1] * gradient // 20, color[2] * gradient // 20))
+
+    def getSelectedColor(self):
+        return self.selectedColor
 
     def changeDarkness(self, value):
         self.darknessValue += value
@@ -70,9 +68,10 @@ class Canva(pygame.sprite.Sprite):
         elif self.darknessValue > 100:
             self.darknessValue = 100
 
-        index = (self.darknessValue//5)-1
-        if index < 0: index = 0
-        self.setBrushColor(self.gradientDarkness[index])  
+        color = self.getSelectedColor()
+        self.setBrushColor((color[0] * self.darknessValue//100, 
+                            color[1] * self.darknessValue//100, 
+                            color[2] * self.darknessValue//100))  
 
     def getBrushColor(self):
         return self.drawColor
