@@ -2,11 +2,11 @@ from ui.SceneManager import SceneManager
 from ui.Scene import Scene
 from ui.Image import Image
 from ui.Canva import Canva
+from ui.Timer import Timer
 from ui.Text import Text
 import pygame
 
 from scenes.PaintingSceneComponent.ToolBar import ToolBar
-from scenes.PaintingSceneComponent.Timer import Timer
 
 class PaintingScene(Scene):
     def __init__(self, sceneManager: SceneManager):

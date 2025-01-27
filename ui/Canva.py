@@ -23,8 +23,8 @@ class Canva(pygame.sprite.Sprite):
     def update(self):
         mousePositionX, mousePositionY = pygame.mouse.get_pos()
         mousePosition = (mousePositionX - self.rect.x + self.brushSize, mousePositionY - self.rect.y + self.brushSize) # Correction des coordonnes + centrage
-        
-        if self.allowDraw:
+
+        if self.allowDraw and self.rect.collidepoint((mousePositionX, mousePositionY)):
             if pygame.mouse.get_pressed(3)[0]:
                 if self.__previousPoint:
                     pygame.draw.circle(self.image, self.drawColor, centerCoordinates(self.__previousPoint, self.brushSize), self.brushSize)
