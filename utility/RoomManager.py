@@ -20,6 +20,10 @@ class RoomManager:
             return []
         users = [row for row in response]
         return users
+
+    def getConnectedUsersNumberInRoom(self, roomId):
+        response = self.SQLProvider.get("SELECT count(username) FROM connected_users WHERE room_id=%s", (str(roomId)))
+        return response[0][0]
     
     def getCurrentRoomName(self):
         try:
@@ -50,14 +54,15 @@ class RoomManager:
 
     def closeRoom(self, roomId):
         try:
-            self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (roomId))
+            self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (str(roomId)))
         except sqlError as err:
             print(err)
         self.currentRoomID = None
 
     def closeConnection(self):
         try:
-            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE username=%s", (self.username))
+            print(self.username)
+            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE username='%s'", (str(self.username)))
         except sqlError as err:
             print(err)
         self.currentRoomID = None
@@ -107,6 +112,13 @@ class RoomManager:
     def getRoomState(self):
         try:
             response = self.SQLProvider.get('SELECT state FROM rooms WHERE room_id=%s', (str(self.currentRoomID)))
+            return response[0][0]
+        except sqlError as err:
+            print(err)
+
+    def getRoomCreator(self):
+        try:
+            response = self.SQLProvider.get('SELECT creator FROM rooms WHERE room_id=%s', (str(self.currentRoomID)))
             return response[0][0]
         except sqlError as err:
             print(err)
