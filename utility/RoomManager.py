@@ -1,8 +1,8 @@
-import SQLProvider as sql
+from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 
 class RoomManager:
-    def __init__(self, SQLProvider: sql.SQLProvider, username: str):
+    def __init__(self, SQLProvider: SQLProvider, username: str):
         self.SQLProvider = SQLProvider
         self.username = username
         self.currentRoomID = None
@@ -57,7 +57,7 @@ class RoomManager:
     
     def getUsersInCurrentRoom(self) -> list[str] | None:
         try:
-            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (self.currentRoomID))
+            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (str(self.currentRoomID)))
             if response is None:
                 return []
             users = [user[0] for user in response]  # type: ignore
