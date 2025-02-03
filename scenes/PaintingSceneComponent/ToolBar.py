@@ -1,6 +1,7 @@
 from ui.Button import Button
 from ui.Shape import Shape
 from ui.Text import Text
+from ui.Canva import Canva
 import pygame
 
 from scenes.PaintingSceneComponent.PickPalette import PickPalette
@@ -8,7 +9,7 @@ from scenes.PaintingSceneComponent.PresetPalette import PresetPalette
 from scenes.PaintingSceneComponent.DarknessPreview import DarknessPreview
 
 class ToolBar():
-    def __init__(self, canva, spriteGroup, theme):
+    def __init__(self, canva: Canva, spriteGroup: pygame.sprite.Group, theme: str):
         self.canva = canva
         self.spriteGroup = spriteGroup
         self.theme = theme

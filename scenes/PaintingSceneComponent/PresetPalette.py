@@ -1,8 +1,13 @@
 from ui.Button import Button
+from ui.Canva import Canva
+from ui.Shape import Shape
+
+from scenes.PaintingSceneComponent.DarknessPreview import DarknessPreview
+
 import pygame
 
 class PresetPalette():
-    def __init__(self, canva, spriteGroup, colorPreview, darknessPreview):
+    def __init__(self, canva: Canva, spriteGroup: pygame.sprite.Group, colorPreview: Shape, darknessPreview: DarknessPreview):
         self.canva = canva
         self.spriteGroup = spriteGroup
         self.colorPreview = colorPreview
