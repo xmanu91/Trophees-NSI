@@ -6,7 +6,6 @@ from utility.RoomManager import RoomManager
 from ui.Image import Image
 from ui.TextInput import TextInput
 from typing import Callable
-from scenes.InRoomScene import InRoomScene
 import utility.eventManager as eventManager
 import pygame
 
@@ -33,8 +32,8 @@ class JoinRoomScene(Scene):
         self.spriteGroup.empty()
         self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton)
         for i in range(len(self.rooms)):
-            self.spriteGroup.add(RoomCard(pygame.Rect(self.screenWidth*0.05, self.screenHeight*0.2 + 70*i , self.screenWidth * 0.9, 60), self.rooms[i][1], self.rooms[i][0], self.sceneManager.setAsCurrentScene(Scene()), self.roomManager))
-        self.rooms = self.roomManager.getUsersInCurrentRoom()
+            self.spriteGroup.add(RoomCard(pygame.Rect(self.screenWidth*0.05, self.screenHeight*0.2 + 70*i , self.screenWidth * 0.9, 60), self.rooms[i][1], self.rooms[i][0], lambda: self.sceneManager.setAsCurrentScene(Scene()), self.roomManager))
+        self.rooms = self.roomManager.getAllRooms()
 
 class RoomCard(pygame.sprite.Sprite):
     def __init__(self, size : pygame.Rect, roomName : str, roomID : str, action: Callable, roomManager: RoomManager):
@@ -46,7 +45,7 @@ class RoomCard(pygame.sprite.Sprite):
         self.color = (129, 143, 129)
         self.image.fill(self.color)
         #instance des cards :
-        self.numberPlayer = roomManager.userInRoomNumber()
+        self.numberPlayer = 0
         self.numberPlayerText = Text((str(self.numberPlayer) + " players connected"), 17, (self.rect.width /1.5, self.rect.y + 19) , (0,0,0), False)
         self.button = Button(pygame.rect.Rect(self.rect.width - 75, self.rect.y + self.rect.height/2 - 20 , 100, 40), action, None, None, None, "Join", defaultColor=(164, 212, 162),  hoverColor=(119, 161, 117),textColor=(0,0,0), fontSize= 25)
         self.text = Text(roomName , 30, (self.rect.x + 10, self.rect.y + 15), (0,0,0), False )
