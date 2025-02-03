@@ -14,7 +14,7 @@ class Text(pygame.sprite.Sprite):
         self.text = text
         self.fontSize = fontSize
         self.color = color
-        self.font = pygame.font.Font(pygame.font.match_font('arial'), fontSize)  
+        self.font = pygame.font.Font(pygame.font.match_font(fontFamily), fontSize)  
         self.image = self.font.render(self.text, True, self.color)
         self.rect = self.image.get_rect()
 
@@ -22,3 +22,8 @@ class Text(pygame.sprite.Sprite):
             self.rect.center =  textCoordinates
         else : 
             self.rect.topleft = textCoordinates
+
+    def setText(self, text: str):
+        self.text = text
+        self.image = self.font.render(self.text, True, self.color)
+            

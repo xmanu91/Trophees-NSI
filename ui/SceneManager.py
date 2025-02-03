@@ -17,3 +17,4 @@ class SceneManager:
 
     def update(self):
         self.currentScene.spriteGroup.update()
+        self.currentScene.update()

@@ -1,28 +1,26 @@
-import pygame
 import utility.eventManager as eventManager
-
-def centerCoordinates(coordinates, gap):
-    return (coordinates[0]-gap, coordinates[1] - gap)
+from utility.tools import centerCoordinates
+import pygame
 
 class Canva(pygame.sprite.Sprite):
-    def __init__(self,x,y,width,height,backgroundColor,drawColor,brushSize = 5):
+    def __init__(self,rect: pygame.Rect, backgroundColor: pygame.Color,drawColor: pygame.Color, brushSize: int = 5):
         super().__init__()
-        self.drawColor = drawColor
-        self.image = pygame.Surface((width, height))
-        self.backgroundColor = backgroundColor
+        self.selectedColor: pygame.Color = drawColor
+        self.drawColor: pygame.Color = drawColor
+        self.rect: pygame.Rect = rect
+        self.image: pygame.Surface = pygame.Surface(self.rect.size)
+        self.backgroundColor: pygame.Color = backgroundColor
         self.image.fill(self.backgroundColor)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
         self.__previousPoint = None
-        self.brushSize = 5
-        self.allowDraw = True
-        eventManager.addEventHandler(pygame.KEYDOWN, self.onKeyDown)
+        self.brushSize: int = brushSize
+        self.allowDraw: bool = True
+        self.darknessValue: int = 100
         eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
 
     def update(self):
-        mousePosition = pygame.mouse.get_pos()
-
+        mousePositionX, mousePositionY = pygame.mouse.get_pos()
+        mousePosition = (mousePositionX - self.rect.x + self.brushSize, mousePositionY - self.rect.y + self.brushSize) # Correction des coordonnes + centrage
+        
         if self.allowDraw:
             if pygame.mouse.get_pressed(3)[0]:
                 if self.__previousPoint:
@@ -37,7 +35,10 @@ class Canva(pygame.sprite.Sprite):
                 self.__previousPoint = None
 
         if pygame.mouse.get_pressed(3)[1]:
-            self.setBrushColor(self.image.get_at(mousePosition))
+                try:
+                    self.setBrushColor(self.image.get_at(centerCoordinates(mousePosition, self.brushSize)))
+                except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
+                    print(Error)
 
     def onMouseWheel(self, e):
         if e.y > 0:
@@ -46,27 +47,41 @@ class Canva(pygame.sprite.Sprite):
             if self.brushSize != 1:
                 self.brushSize -= 1
 
-    def onKeyDown(self, e):
-        if e.key == pygame.K_s:
-            self.save()
-        if e.key == pygame.K_k:
-            self.load("canva.png")
-        if e.key == pygame.K_r:
-            self.allowDraw = not self.allowDraw
-
-    def setBrushSize(self, size):
+    def setBrushSize(self, size: int):
         self.brushSize = size
 
-    def setBrushColor(self, color):
+    def setBrushColor(self, color: pygame.Color):
         self.drawColor = color
+
+    def setSelectedColor(self, color: pygame.Color):
+        self.selectedColor = color
+        self.darknessValue = 100
+
+    def getSelectedColor(self) -> pygame.Color:
+        return self.selectedColor
+
+    def changeDarkness(self, value: int):
+        self.darknessValue += value
+        if self.darknessValue < 0:
+            self.darknessValue = 0
+        elif self.darknessValue > 100:
+            self.darknessValue = 100
+
+        color = self.getSelectedColor()
+        self.setBrushColor((color[0] * self.darknessValue//100, 
+                            color[1] * self.darknessValue//100, 
+                            color[2] * self.darknessValue//100))  
+
+    def getBrushColor(self) -> pygame.Color:
+        return self.drawColor
     
-    def setBackgroundColor(self, color):
+    def setBackgroundColor(self, color: pygame.Color):
         self.backgroundColor = color
         self.image.fill(color)
 
     def save(self):
-        pygame.image.save(self.image, "canva.png")    
+        pygame.image.save(self.image, "canva.png") # Pensez a changer le chemin et le nom   
 
-    def load(self, path):
+    def load(self, path: str):
         self.image = pygame.image.load(path).convert_alpha()
         self.rect = self.image.get_rect()
