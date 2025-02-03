@@ -6,3 +6,6 @@ class Scene():
     
     def draw(self, surface):
         self.spriteGroup.draw(surface)
+
+    def update(self):
+        self.spriteGroup.update()

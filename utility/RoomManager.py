@@ -1,8 +1,8 @@
-import utility.SQLProvider as sql
+from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 
 class RoomManager:
-    def __init__(self, SQLProvider: sql.SQLProvider, username: str):
+    def __init__(self, SQLProvider: SQLProvider, username: str):
         self.SQLProvider = SQLProvider
         self.username = username
         self.currentRoomID = None
