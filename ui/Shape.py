@@ -18,9 +18,3 @@ class Shape(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.rect.width, self.rect.height))
         self.image.fill(self.color)
 
-    def get_rect(self):
-        return self.rect
-
-    def get_image(self):
-        return self.image
-

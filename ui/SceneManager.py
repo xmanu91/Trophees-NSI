@@ -17,7 +17,4 @@ class SceneManager:
 
     def update(self):
         self.currentScene.spriteGroup.update()
-        try:
-            self.currentScene.update()
-        except Exception as ex:
-            print("SceneManager :", ex)
+        self.currentScene.update()

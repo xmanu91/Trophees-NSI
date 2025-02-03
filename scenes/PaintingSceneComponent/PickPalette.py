@@ -10,7 +10,7 @@ class PickPalette():
         self.darknessPreview = darknessPreview
 
         self.colorPalette = Image("assets/colorPalette.png", pygame.Rect(10, 280, 180, 180))
-        self.colorPaletteImage = self.colorPalette.get_image()
+        self.colorPaletteImage = self.colorPalette.image
         self.spriteGroup.add(self.colorPalette)
     
     def update(self):
