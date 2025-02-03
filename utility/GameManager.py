@@ -1,6 +1,7 @@
 from mysql.connector import Error as sqlError
-from SQLProvider import SQLProvider
+from utility.SQLProvider import SQLProvider
 from random import choice
+import os
 
 class GameManager:
 
@@ -18,10 +19,10 @@ class GameManager:
         except sqlError as err:
             print(err)
 
-    def sendDrawing(self, pixelList: list):
+    def sendDrawing(self, path):
         try:
-            self.sqlManager.insert("INSERT INTO drawings (creator, pixels, room_id) VALUES (%s, %s, %s)", 
-                                   (self.username, str(pixelList), self.roomId))
+            self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, decode(%s, 'hex'), %s)", 
+                                   (self.username, self.get_binary_array(path), self.roomId))
         except sqlError as err:
             print(err)
 
@@ -29,3 +30,9 @@ class GameManager:
         with open("assets/themes.txt", "r", encoding="utf-8") as file:
             themes = [line.strip() for line in file]
         return themes
+
+    def get_binary_array(self, path):
+        with open(path, "rb") as image:
+            f = image.read()
+            b = bytes(f).hex()
+            return b
