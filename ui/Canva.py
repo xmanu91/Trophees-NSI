@@ -57,6 +57,7 @@ class Canva(pygame.sprite.Sprite):
 
     def setSelectedColor(self, color):
         self.selectedColor = color
+        self.darknessValue = 100
 
     def getSelectedColor(self):
         return self.selectedColor

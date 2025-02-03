@@ -20,16 +20,17 @@ class PaintingScene(Scene):
         timerDuration = 1
         self.textTimer = Text(str(timerDuration), 32, (450, 250+16), (255,255,255), True)
         self.timer = Timer(timerDuration, self.textTimer, self.setCanva)
-
+        self.canva = Canva(200, 0, 700, 500, (255, 255, 255), (0, 0, 0))
+        self.toolBar = None
         self.spriteGroup.add(self.background, self.textTimer, self.textTheme)
 
         self.timer.startTimer()
         
     def setCanva(self):
         self.spriteGroup.empty()
-        self.canva = Canva(200, 0, 700, 500, (255, 255, 255), (0, 0, 0))
-        self.toolBar = ToolBar(self.canva, self.spriteGroup, self.theme)
+        self.toolBar = ToolBar(self.canva, self.spriteGroup,  self.theme)
         self.spriteGroup.add(self.canva)
 
     def update(self):
-        self.toolBar.update()
+        if self.toolBar != None:
+            self.toolBar.update()

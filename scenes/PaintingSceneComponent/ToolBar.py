@@ -5,6 +5,7 @@ import pygame
 
 from scenes.PaintingSceneComponent.PickPalette import PickPalette
 from scenes.PaintingSceneComponent.PresetPalette import PresetPalette
+from scenes.PaintingSceneComponent.DarknessPreview import DarknessPreview
 
 class ToolBar():
     def __init__(self, canva, spriteGroup, theme):
@@ -23,16 +24,16 @@ class ToolBar():
         self.colorPreview = Shape(pygame.Rect(30, 245, 140, 25), (0, 0, 0))
         self.spriteGroup.add(self.theme, self.colorPreview)
 
-        self.darknessPreview = Shape(pygame.Rect(30, 470, 140, 25), (0, 0, 0))
+        self.darknessPreview = DarknessPreview(pygame.Rect(30, 470, 140, 25))
         self.spriteGroup.add(self.darknessPreview)
 
         self.presetPalette = PresetPalette(self.canva, self.spriteGroup, self.colorPreview, self.darknessPreview)
         self.pickPalette = PickPalette(self.canva, self.spriteGroup, self.colorPreview, self.darknessPreview)
 
-        self.darknessIncreaseButton = Button(pygame.Rect(177, 475, 15, 15), lambda: (self.canva.changeDarkness(5), self.darknessPreview.changeColor(self.canva.getBrushColor())), None, None, None, "+", 14, (0, 0, 0), (4, -2), (255, 255, 255), (144, 144, 144))
+        self.darknessIncreaseButton = Button(pygame.Rect(177, 475, 15, 15), lambda: (self.canva.changeDarkness(-5), self.darknessPreview.changeColor(self.canva.getBrushColor()), self.colorPreview.changeColor(self.canva.getBrushColor())), None, None, None, "+", 14, (0, 0, 0), (4, -2), (255, 255, 255), (144, 144, 144))
         self.spriteGroup.add(self.darknessIncreaseButton)
 
-        self.darknessDecreaseButton = Button(pygame.Rect(7, 475, 15, 15), lambda: (self.canva.changeDarkness(-5), self.darknessPreview.changeColor(self.canva.getBrushColor())), None, None, None, "-", 14, (0, 0, 0), (6, -2), (255, 255, 255), (144, 144, 144))
+        self.darknessDecreaseButton = Button(pygame.Rect(7, 475, 15, 15), lambda: (self.canva.changeDarkness(5), self.darknessPreview.changeColor(self.canva.getBrushColor()), self.colorPreview.changeColor(self.canva.getBrushColor())), None, None, None, "-", 14, (0, 0, 0), (6, -2), (255, 255, 255), (144, 144, 144))
         self.spriteGroup.add(self.darknessDecreaseButton) 
 
         self.previousColor = self.canva.getBrushColor()         
