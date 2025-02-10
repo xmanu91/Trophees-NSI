@@ -45,7 +45,8 @@ class WinnerScene(Scene):
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)
 
-        threading.Thread(target=self.switchDrawing).start()
+        thread = threading.Thread(target=self.switchDrawing, daemon=True)
+        thread.start()
 
     def switchDrawing(self):
         while True:   
