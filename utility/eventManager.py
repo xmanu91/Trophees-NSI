@@ -1,6 +1,7 @@
 import pygame
+import sys
 
-eventHandlers = {pygame.QUIT: [lambda x:pygame.quit()]}
+eventHandlers = {pygame.QUIT: [lambda x: (pygame.quit())]}
 
 def addEventHandler(event, action):
     if event not in eventHandlers:

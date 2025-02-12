@@ -3,7 +3,7 @@ from utility.tools import centerCoordinates
 import pygame
 
 class Canva(pygame.sprite.Sprite):
-    def __init__(self,rect: pygame.Rect, backgroundColor: pygame.Color,drawColor: pygame.Color, brushSize: int = 5):
+    def __init__(self,rect: pygame.Rect, backgroundColor: pygame.Color,drawColor: pygame.Color, username: str,  brushSize: int = 5):
         super().__init__()
         self.selectedColor: pygame.Color = drawColor
         self.drawColor: pygame.Color = drawColor
@@ -15,6 +15,7 @@ class Canva(pygame.sprite.Sprite):
         self.brushSize: int = brushSize
         self.allowDraw: bool = True
         self.darknessValue: int = 100
+        self.username = username
         eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
 
     def update(self):
@@ -80,7 +81,7 @@ class Canva(pygame.sprite.Sprite):
         self.image.fill(color)
 
     def save(self):
-        pygame.image.save(self.image, "canva.png") # Pensez a changer le chemin et le nom   
+        pygame.image.save(self.image, "assets/temp/" + self.username.strip() + "_drawing.png") # Pensez a changer le chemin et le nom   
 
     def load(self, path: str):
         self.image = pygame.image.load(path).convert_alpha()

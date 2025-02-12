@@ -13,7 +13,7 @@ class ProgressBar(pygame.sprite.Sprite):
         self.image.fill(self.color)
         self.endAction = endAction
 
-    def start(self):
+    def __start(self):
         timer = time.time()
         while self.value < self.duration:
 
@@ -29,5 +29,5 @@ class ProgressBar(pygame.sprite.Sprite):
 
     def run_start(self):
         self.value = 0
-        thread = threading.Thread(target=self.start)
+        thread = threading.Thread(target=self.__start)
         thread.start()

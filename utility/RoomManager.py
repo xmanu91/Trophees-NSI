@@ -21,13 +21,13 @@ class RoomManager:
         users = [row for row in response]
         return users
 
-    def getConnectedUsersNumberInRoom(self, roomId):
-        response = self.SQLProvider.get("SELECT count(username) FROM connected_users WHERE room_id=%s", (str(roomId)))
+    def getConnectedUsersNumberInRoom(self, roomId: int):
+        response = self.SQLProvider.get("SELECT count(username) FROM connected_users WHERE room_id=%s", (str(roomId),))
         return response[0][0]
     
     def getCurrentRoomName(self):
         try:
-            response = self.SQLProvider.get("SELECT room_name FROM rooms WHERE room_id=%s", (str(self.currentRoomID)))
+            response = self.SQLProvider.get("SELECT room_name FROM rooms WHERE room_id=%s", (str(self.currentRoomID),))
             if response is None:
                 return None
             return response[0][0]
@@ -35,6 +35,7 @@ class RoomManager:
             print(err)
     
     def createConnection(self, roomId: int):
+        print('createConnection', roomId)
         try:
             users = self.getAllConnectedUsers()
             for user in users:
@@ -50,11 +51,11 @@ class RoomManager:
             room = self.SQLProvider.insert("INSERT INTO rooms (room_id, room_name, theme, state, rounds_number, round_time) VALUES (DEFAULT, %s, %s, 'loby', 4, 60)", (roomName, 'DEFAULT'), returnedValue="room_id")
         except sqlError as err:
             print(err)
-        self.currentRoomID = room
+        self.createConnection(room)
 
     def closeRoom(self, roomId):
         try:
-            self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (str(roomId)))
+            self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (str(roomId),))
         except sqlError as err:
             print(err)
         self.currentRoomID = None
@@ -62,14 +63,14 @@ class RoomManager:
     def closeConnection(self):
         try:
             print(self.username)
-            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE username='%s'", (str(self.username)))
+            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE username=%s", (str(self.username),))
         except sqlError as err:
             print(err)
         self.currentRoomID = None
 
     def setRoomState(self, state: str):
         try:
-            self.SQLProvider.executeSQL("UPDATE rooms SET state=%s WHERE room_id=%s", (state, self.currentRoomID))
+            self.SQLProvider.executeSQL("UPDATE rooms SET state=%s WHERE room_id=%s", (state, str(self.currentRoomID)))
         except sqlError as err:
             print(err) 
     
@@ -87,7 +88,7 @@ class RoomManager:
     
     def getUsersInCurrentRoom(self) -> list[str] | None:
         try:
-            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (str(self.currentRoomID)))
+            response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (str(self.currentRoomID),))
             if response is None:
                 return []
             users = [user[0] for user in response]  # type: ignore
@@ -97,28 +98,28 @@ class RoomManager:
 
     def getRoundNumber(self):
         try:
-            response = self.SQLProvider.get('SELECT rounds_number FROM rooms WHERE room_id=%s', (str(self.currentRoomID)))
+            response = self.SQLProvider.get('SELECT rounds_number FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             return response[0][0]
         except sqlError as err:
             print(err)
 
     def getRoundTime(self):
         try:
-            response = self.SQLProvider.get('SELECT round_time FROM rooms WHERE room_id=%s', (str(self.currentRoomID)))
+            response = self.SQLProvider.get('SELECT round_time FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             return response[0][0]
         except sqlError as err:
             print(err)
 
     def getRoomState(self):
         try:
-            response = self.SQLProvider.get('SELECT state FROM rooms WHERE room_id=%s', (str(self.currentRoomID)))
+            response = self.SQLProvider.get('SELECT state FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             return response[0][0]
         except sqlError as err:
             print(err)
 
     def getRoomCreator(self):
         try:
-            response = self.SQLProvider.get('SELECT creator FROM rooms WHERE room_id=%s', (str(self.currentRoomID)))
+            response = self.SQLProvider.get('SELECT creator FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             return response[0][0]
         except sqlError as err:
             print(err)
