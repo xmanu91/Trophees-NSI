@@ -28,7 +28,7 @@ podiumScene = PodiumScene(sceneManager, votesManager)
 homeScene = HomeScene(sceneManager, roomManager)
 paintingScene = PaintingScene(sceneManager)
 
-sceneManager.setAsCurrentScene(podiumScene)
+sceneManager.setAsCurrentScene(winnerScene)
 screen.fill((255, 255, 255))
 
 while True:
