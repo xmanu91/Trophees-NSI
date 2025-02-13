@@ -7,6 +7,7 @@ class VotesManager:
         self.roomId = roomId
         self.username = username
         self.drawings = []
+        self.participants = []
 
     def getDrawings(self):
         try: 
@@ -15,6 +16,7 @@ class VotesManager:
             if response is None:
                 return None
             self.drawings = [(drawing[0], drawing[1]) for drawing in response]  # type: ignore
+            self.participants = [drawing[0] for drawing in response]  # type: ignore
             print(self.drawings)
             for drawing in self.drawings:
                 self.save_drawing(drawing[1], drawing[0])
@@ -68,7 +70,7 @@ class VotesManager:
   
         try: 
             # creating files in output folder for writing in binary mode 
-            out = open('assets/temp/' + name + '.png', 'wb') 
+            out = open('assets/temp/' + name.strip() + '.png', 'wb') 
             
             # writing image data 
             out.write(binary) 

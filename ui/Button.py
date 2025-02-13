@@ -38,6 +38,7 @@ class Button(pygame.sprite.Sprite):
         self.textCoordinates= textCoordinates or (self.rect.width/2 - self.surface_text.get_width() / 2, self.rect.height/2 - self.surface_text.get_height() / 2)
         
         self.actionned = False
+        self.isUsable = pygame.mouse.get_pressed()[0]
 
     def update(self): 
         mousePosition = pygame.mouse.get_pos()
@@ -51,11 +52,12 @@ class Button(pygame.sprite.Sprite):
             elif self.hoverImage:
                 self.image = self.hoverImage
 
-            if isMousePressed:  
+            if isMousePressed and not self.isUsable:  
                 if self.action and self.actionned!=True:
                     self.actionned = True
                     self.action()
             else:
+                self.isUsable = False
                 self.actionned = False
         else: 
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)

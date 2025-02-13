@@ -1,16 +1,24 @@
+import pygame
+import os
+
 from ui.Scene import Scene
 from ui.Text import Text
 from ui.Button import Button 
 from ui.SceneManager import SceneManager
 from ui.Image import Image
 from ui.ProgressBar import ProgressBar
+
 from utility.VotesManager import VotesManager
-import pygame
-import os
+from utility.RoomManager import RoomManager
+from utility.gameInitialisation import sqlProvider
+
 
 class VoteScene(Scene):
-    def __init__(self, sceneManager: SceneManager):
+    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager):
         super().__init__()
+        self.sceneManager = sceneManager
+        self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username)
+        self.votesManager.getDrawings()
         self.drawnList = []
         self.index = 0
         for drawn in os.listdir("assets/temp/"):
@@ -54,7 +62,7 @@ class VoteScene(Scene):
 
     def nextDrawing(self, note: int):
         print(self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
-        print("Sending vote to server") # Mettre ici l'envoi de vote
+        self.votesManager.vote(self.votesManager.participants[self.index], note)
 
         if self.index < len(self.drawnList) - 1:
             self.progressBar.run_start() # Re-start de la ProgressBar
@@ -70,4 +78,5 @@ class VoteScene(Scene):
             self.spriteGroup.add(self.drawing)
             pygame.display.flip()
         else:
-            print("VoteScene finished") # Passez à la scene suivante (HomeScene)
+            print(self.votesManager.getWinner())
+            self.sceneManager.setAsCurrentScene(HomeScene(self.sceneManager, self.roomManager))
