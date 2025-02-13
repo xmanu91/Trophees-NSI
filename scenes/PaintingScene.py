@@ -27,7 +27,6 @@ class PaintingScene(Scene):
         self.gameManager.drawTheme()
         self.theme = self.gameManager.drawingTheme
 
-        print(self.theme)
         self.textTheme = Text(self.theme, 32, (450, 250-16), (255,255,255), True)
 
         themeTimerDuration = 5
