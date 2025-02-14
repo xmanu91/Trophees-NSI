@@ -38,6 +38,9 @@ class WinnerScene(Scene):
 
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
 
+        for winner in self.winners:
+            self.votesManager.getDrawing(winner)
+
         self.winnersDrawings = []
         for winner in self.winners:
             self.winnersDrawings.append(Image(f"assets/temp/{winner.strip()}.png", self.drawRect))
