@@ -1,4 +1,6 @@
 import pygame
+import os
+import shutil
 
 def centerCoordinates(coordinates, gap):
     return (coordinates[0]-gap, coordinates[1] - gap)
@@ -44,3 +46,13 @@ def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=Tr
                 min(max(a[2]+(rate[2]*(col-x1)),0),255)
             )
             fn_line(surface, color, (col,y1), (col,y2))
+
+def createDirectory(path: str):
+    if not os.path.exists(path):
+        os.mkdir(path) 
+
+def initialiseDirectory(path: str):
+    if os.path.isdir(path):
+        shutil.rmtree(path)            
+    if not os.path.exists(path):
+        os.mkdir(path)

@@ -22,7 +22,7 @@ class WinnerScene(Scene):
         self.spriteGroup.add(self.background)
         self.votesManager = votesManager
         self.sceneDuration = sceneDuration
-        self.winners = ["Image1", "Image2"] # self.votesManager.getWinners() #self.votesManager.getWinners() mettre ici la fonction qui recupere le noms des gagnants
+        self.winners =  self.votesManager.getWinners()
         
         self.text = ""
         if len(self.winners) == 1:
@@ -40,7 +40,7 @@ class WinnerScene(Scene):
 
         self.winnersDrawings = []
         for winner in self.winners:
-            self.winnersDrawings.append(Image(f"assets/temp/{winner}.png", self.drawRect))
+            self.winnersDrawings.append(Image(f"assets/temp/{winner.strip()}.png", self.drawRect))
 
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)
@@ -48,12 +48,11 @@ class WinnerScene(Scene):
         thread = threading.Thread(target=self.switchDrawing, daemon=True)
         thread.start()
 
-    def switchDrawing(self):
-        while True:   
-            self.spriteGroup.remove(self.displayedDrawing)
-            self.displayedDrawing = self.winnersDrawings[(self.winnersDrawings.index(self.displayedDrawing) + 1) % len(self.winnersDrawings)]
-            self.spriteGroup.add(self.displayedDrawing)
-            time.sleep(self.sceneDuration/2)
+    def switchDrawing(self):   
+        self.spriteGroup.remove(self.displayedDrawing)
+        self.displayedDrawing = self.winnersDrawings[(self.winnersDrawings.index(self.displayedDrawing) + 1) % len(self.winnersDrawings)]
+        self.spriteGroup.add(self.displayedDrawing)
+        time.sleep(self.sceneDuration/2)
 
     def update(self):
         pass

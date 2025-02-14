@@ -27,7 +27,6 @@ class JoinRoomScene(Scene):
         self.updateRoomsButton = Button(pygame.rect.Rect(self.screenWidth * 0.82, self.screenHeight * 0.25 - 15, 120, 30), self.updateRooms, None, None, None, "Actualiser", defaultColor=(0,0,0,0), hoverColor=(119,169,198), textColor=(255,255,255), fontSize= 18)
 
         self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton)
-        utility.eventManager.addEventHandler(pygame.QUIT, lambda x: roomManager.closeConnection())
         self.updateRooms()
        
     def updateRooms(self, e=None): # e parameters is due to eventHandler contraints
@@ -36,7 +35,7 @@ class JoinRoomScene(Scene):
         self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton)
         for i in range(len(self.rooms)):
             self.spriteGroup.add(RoomCard(pygame.Rect(self.screenWidth*0.05, self.screenHeight*0.3 + 70*i , self.screenWidth * 0.9, 60), 
-                                          self.rooms[i][1], 
+                                          self.rooms[i][2], 
                                           self.rooms[i][0], 
                                           self.roomManager,
                                           self.sceneManager))

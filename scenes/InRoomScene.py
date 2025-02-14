@@ -54,6 +54,7 @@ class InRoomScene(Scene):
         print('start game')
         if self.isUserRoomCreator:
             self.roomManager.setRoomState('playing')
+        pygame.time.set_timer(pygame.event.Event(self.updateUsersEventType), 0)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.sceneManager.setAsCurrentScene(PaintingScene(self.sceneManager, self.roomManager))
     

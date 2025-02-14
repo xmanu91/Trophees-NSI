@@ -47,6 +47,7 @@ class PaintingScene(Scene):
         self.gameProgressBar.run_start()
 
     def endDrawing(self):
+        print("end drawing executed")
         self.canva.save()
         self.gameManager.sendDrawing("assets/temp/" + self.roomManager.username.strip() + "_drawing.png")
         self.roomManager.setRoomState('voting')
