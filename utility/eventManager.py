@@ -10,8 +10,9 @@ def addEventHandler(event, action):
         eventHandlers[event].append(action)
     
 def update(event):
-    for handledEvent in eventHandlers:
+    fixedHandledEvents = eventHandlers
+    for handledEvent in fixedHandledEvents:
         if event.type == handledEvent:
-            for i in range(len(eventHandlers[handledEvent])):
-                eventHandlers[handledEvent][i](event)
+            for i in range(len(fixedHandledEvents[handledEvent])):
+                fixedHandledEvents[handledEvent][i](event)
                 
