@@ -28,6 +28,19 @@ class VotesManager:
         except sqlError as err:
             print(err)
 
+    def getDrawing(self, username: str):
+        try: 
+            utility.tools.initialiseDirectory('assets/temp')
+            print(self.roomId)
+            # Utilisation de paramètres dans la requête SELECT
+            response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator=%s", (str(self.roomId), username))
+            if response is None:
+                return None
+            self.save_drawing(response[0][1], response[0][0])
+            return (response[0][1], response[0][0])
+        except sqlError as err:
+            print(err)
+
     def vote(self, attributedVote, rating: int):
         try:
             # Utilisation de paramètres dans la requête INSERT

@@ -13,13 +13,14 @@ from utility.RoomManager import RoomManager
 from utility.gameInitialisation import sqlProvider
 
 from scenes.WinnerScene import WinnerScene
-
+from time import sleep
 
 class VoteScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager):
         super().__init__()
         self.sceneManager = sceneManager
         self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username)
+        sleep(2)
         self.votesManager.getDrawings()
         self.drawnList = []
         self.index = 0

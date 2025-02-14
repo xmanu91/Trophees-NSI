@@ -1,5 +1,4 @@
-import pygame
-import sys
+import copy
 
 eventHandlers = {}
 
@@ -10,7 +9,7 @@ def addEventHandler(event, action):
         eventHandlers[event].append(action)
     
 def update(event):
-    fixedHandledEvents = eventHandlers
+    fixedHandledEvents = eventHandlers.copy()
     for handledEvent in fixedHandledEvents:
         if event.type == handledEvent:
             for i in range(len(fixedHandledEvents[handledEvent])):
