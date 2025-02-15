@@ -1,3 +1,5 @@
+import utility.tools
+
 from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 
@@ -11,16 +13,30 @@ class VotesManager:
 
     def getDrawings(self):
         try: 
+            utility.tools.initialiseDirectory('assets/temp')
+            print(self.roomId)
             # Utilisation de paramètres dans la requête SELECT
-            response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s AND creator<>%s", (self.roomId, self.username))
+            response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator<>%s", (str(self.roomId), self.username))
             if response is None:
                 return None
             self.drawings = [(drawing[0], drawing[1]) for drawing in response]  # type: ignore
             self.participants = [drawing[0] for drawing in response]  # type: ignore
-            print(self.drawings)
+            print("response" + str(response), "self.drawings:" + str(self.drawings), "self.participants: " + str(self.participants))
             for drawing in self.drawings:
                 self.save_drawing(drawing[1], drawing[0])
             return self.drawings
+        except sqlError as err:
+            print(err)
+
+    def getDrawing(self, username: str):
+        try: 
+            print(self.roomId)
+            # Utilisation de paramètres dans la requête SELECT
+            response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator=%s", (str(self.roomId), username))
+            if response is None:
+                return None
+            self.save_drawing(response[0][1], response[0][0])
+            return (response[0][1], response[0][0])
         except sqlError as err:
             print(err)
 
@@ -28,14 +44,14 @@ class VotesManager:
         try:
             # Utilisation de paramètres dans la requête INSERT
             self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, room_id) VALUES (%s, %s, %s, %s)", 
-                                   (self.username, attributedVote, rating, self.roomId))
+                                   (self.username, attributedVote, rating, str(self.roomId)))
         except sqlError as err:
             print(err)
 
     def getVotes(self):
         try:
             # Utilisation de paramètres dans la requête SELECT
-            response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (self.roomId))
+            response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId)))
             if response is None:
                 return None
             votes = [vote for vote in response]
@@ -43,20 +59,21 @@ class VotesManager:
         except sqlError as err:
             print(err)
 
-    def getWinner(self):
+    def getWinners(self):
         votes = self.getVotes()
         if votes is None:
             return None
 
+        print(votes)
         # Count the votes
         usersDict = {} 
         for vote in votes:
             if vote[1] in usersDict:  # type: ignore
-                usersDict[vote[1]] += usersDict[vote[2]]  # type: ignore
+                usersDict[vote[1]] += vote[2]  # type: ignore
             else: 
-                usersDict[vote[1]] = usersDict[vote[2]]  # type: ignore
+                usersDict[vote[1]] = vote[2]  # type: ignore
         # Getting the winners
-        results = [v for k, v in usersDict.items()]
+        results = [v/len(self.participants) for k, v in usersDict.items()]
         winners = []
         for i in range(len(results)):
             if results[i] == max(results):

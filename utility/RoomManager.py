@@ -48,7 +48,7 @@ class RoomManager:
 
     def createRoom(self, roomName):
         try:
-            room = self.SQLProvider.insert("INSERT INTO rooms (room_id, room_name, theme, state, rounds_number, round_time) VALUES (DEFAULT, %s, %s, 'loby', 4, 60)", (roomName, 'DEFAULT'), returnedValue="room_id")
+            room = self.SQLProvider.insert("INSERT INTO rooms (room_id, creator, room_name, theme, state, rounds_number, round_time) VALUES (DEFAULT,%s, %s, %s, 'loby', 4, 60)", (self.username, roomName, 'DEFAULT'), returnedValue="room_id")
         except sqlError as err:
             print(err)
         self.createConnection(room)

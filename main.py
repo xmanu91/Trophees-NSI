@@ -6,6 +6,7 @@ from utility.RoomManager import RoomManager
 import utility.gameInitialisation
 import utility.eventManager
 from utility.SQLProvider import SQLProvider
+import sys
 
 
 load_dotenv()
@@ -26,6 +27,11 @@ while True:
         utility.eventManager.update(event)
 
         if event.type == pygame.QUIT:
+            roomID= roomManager.currentRoomID
+            roomCreator = roomManager.getRoomCreator()
+            roomManager.closeConnection()
+            if roomManager.username == roomCreator:
+                roomManager.closeRoom(roomID)
             pygame.quit()
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
          

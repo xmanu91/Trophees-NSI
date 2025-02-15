@@ -1,7 +1,6 @@
-import pygame
-import sys
+import copy
 
-eventHandlers = {pygame.QUIT: [lambda x: (pygame.quit())]}
+eventHandlers = {}
 
 def addEventHandler(event, action):
     if event not in eventHandlers:
@@ -10,8 +9,9 @@ def addEventHandler(event, action):
         eventHandlers[event].append(action)
     
 def update(event):
-    for handledEvent in eventHandlers:
+    fixedHandledEvents = eventHandlers.copy()
+    for handledEvent in fixedHandledEvents:
         if event.type == handledEvent:
-            for i in range(len(eventHandlers[handledEvent])):
-                eventHandlers[handledEvent][i](event)
+            for i in range(len(fixedHandledEvents[handledEvent])):
+                fixedHandledEvents[handledEvent][i](event)
                 
