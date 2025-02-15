@@ -30,7 +30,6 @@ class VotesManager:
 
     def getDrawing(self, username: str):
         try: 
-            utility.tools.initialiseDirectory('assets/temp')
             print(self.roomId)
             # Utilisation de paramètres dans la requête SELECT
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator=%s", (str(self.roomId), username))

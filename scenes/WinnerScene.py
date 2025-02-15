@@ -22,6 +22,7 @@ class WinnerScene(Scene):
         self.spriteGroup.add(self.background)
         self.votesManager = votesManager
         self.sceneDuration = sceneDuration
+        time.sleep(2) # Waiting for data of all users
         self.winners =  self.votesManager.getWinners()
         
         self.text = ""

@@ -20,7 +20,7 @@ class VoteScene(Scene):
         super().__init__()
         self.sceneManager = sceneManager
         self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username)
-        sleep(2)
+        sleep(2) # Waiting for data of all players
         self.votesManager.getDrawings()
         self.drawnList = []
         self.index = 0
