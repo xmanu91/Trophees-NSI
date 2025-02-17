@@ -3,8 +3,12 @@ import utility.tools
 from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 
+import os
+import tempfile
+
 class VotesManager:
-    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str):
+    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory):
+        self.tempdir = tempdir
         self.sqlManager = sqlManager
         self.roomId = roomId
         self.username = username
@@ -13,9 +17,9 @@ class VotesManager:
 
     def getDrawings(self):
         try: 
-            utility.tools.initialiseDirectory('assets/temp')
+            utility.tools.initialiseDirectory(self.tempdir.name)
             print(self.roomId)
-            # Utilisation de paramètres dans la requête SELECT
+            # Utilisation de paramètres dans las requête SELECT
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator<>%s", (str(self.roomId), self.username))
             if response is None:
                 return None
@@ -87,7 +91,7 @@ class VotesManager:
   
         try: 
             # creating files in output folder for writing in binary mode 
-            out = open('assets/temp/' + name.strip() + '.png', 'wb') 
+            out = open(os.path.join(self.tempdir.name, name.strip() + '.png'), 'wb') 
             
             # writing image data 
             out.write(binary) 

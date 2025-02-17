@@ -6,6 +6,8 @@ from ui.Text import Text
 import threading
 import pygame
 import time
+import os
+import tempfile
 
 """
     A modifier :
@@ -21,6 +23,7 @@ class WinnerScene(Scene):
         self.background = Image("assets/background.jpg", pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.spriteGroup.add(self.background)
         self.votesManager = votesManager
+        self.tempdir = self.votesManager.tempdir
         self.sceneDuration = sceneDuration
         time.sleep(2) # Waiting for data of all users
         self.winners =  self.votesManager.getWinners()
@@ -44,7 +47,7 @@ class WinnerScene(Scene):
 
         self.winnersDrawings = []
         for winner in self.winners:
-            self.winnersDrawings.append(Image(f"assets/temp/{winner.strip()}.png", self.drawRect))
+            self.winnersDrawings.append(Image(os.path.join(self.tempdir.name, winner.strip() + ".png"), self.drawRect))
 
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)

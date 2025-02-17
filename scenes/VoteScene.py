@@ -14,24 +14,27 @@ from utility.gameInitialisation import sqlProvider
 
 from scenes.WinnerScene import WinnerScene
 from time import sleep
+import tempfile
 
 class VoteScene(Scene):
-    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager):
+    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, tempdir: tempfile.TemporaryDirectory):
         super().__init__()
+        self.tempdir = tempdir
         self.sceneManager = sceneManager
-        self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username)
+        self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir)
         sleep(2) # Waiting for data of all players
         self.votesManager.getDrawings()
         self.drawnList = []
         self.index = 0
-        for drawn in os.listdir("assets/temp/"):
+        
+        for drawn in os.listdir(self.tempdir.name):
             self.drawnList.append(drawn)
 
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.background = Image('assets/background.jpg', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
         
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
-        self.drawing = Image("assets/temp/" + self.drawnList[self.index], self.drawRect)
+        self.drawing = Image(os.path.join(self.tempdir.name, self.drawnList[self.index]), self.drawRect)
 
         self.note = 1
 
@@ -77,7 +80,7 @@ class VoteScene(Scene):
 
             self.index += 1
             self.spriteGroup.remove(self.drawing)
-            self.drawing = Image("assets/temp/" + self.drawnList[self.index], self.drawRect)
+            self.drawing = Image(os.path.join(self.tempdir.name, self.drawnList[self.index]), self.drawRect)
             self.spriteGroup.add(self.drawing)
             pygame.display.flip()
         else:
