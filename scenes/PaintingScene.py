@@ -15,6 +15,10 @@ from utility.GameManager import GameManager
 from utility.gameInitialisation import sqlProvider
 from utility.RoomManager import RoomManager
 
+import tempfile
+import os
+import time
+
 class PaintingScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager):
         super().__init__()
@@ -39,7 +43,8 @@ class PaintingScene(Scene):
         self.spriteGroup.add(self.background, self.textThemeTimer, self.textTheme)
 
         self.themeTimer.startTimer()
-        
+        self.tempdir = tempfile.TemporaryDirectory()
+
     def setCanva(self):
         self.spriteGroup.empty()
         self.toolBar = ToolBar(self.canva, self.spriteGroup, self.theme)
@@ -48,10 +53,19 @@ class PaintingScene(Scene):
 
     def endDrawing(self):
         print("end drawing executed")
-        self.canva.save()
-        self.gameManager.sendDrawing("assets/temp/" + self.roomManager.username.strip() + "_drawing.png")
+
+        print(self.tempdir) # Debug: affiche le chemin temporaire de la dossier
+        print(self.tempdir.name)
+        self.canva.save(self.tempdir.name)
+        print("Temporisation")
+        time.sleep(10)
+        self.gameManager.sendDrawing(os.path.join(self.tempdir.name, self.roomManager.username.strip() + "_drawing.png"))
+
         self.roomManager.setRoomState('voting')
-        self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager))
+        self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.tempdir))
+
+    def cleanup(self):
+        self.tempdir.cleanup()
 
     def update(self):
         if self.toolBar != None:

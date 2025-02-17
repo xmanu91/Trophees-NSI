@@ -1,6 +1,9 @@
 import pygame
 import utility.eventManager as eventManager
 import utility.tools
+import os
+import time
+import tempfile
 
 from utility.tools import centerCoordinates
 
@@ -82,9 +85,9 @@ class Canva(pygame.sprite.Sprite):
         self.backgroundColor = color
         self.image.fill(color)
 
-    def save(self):
-        utility.tools.createDirectory('assets/temp')
-        pygame.image.save(self.image, "assets/temp/" + self.username.strip() + "_drawing.png") # Pensez a changer le chemin et le nom   
+    def save(self, path: str):
+        imagePath = os.path.join(path, self.username.strip() + "_drawing.png")
+        pygame.image.save(self.image, imagePath)
 
     def load(self, path: str):
         self.image = pygame.image.load(path).convert_alpha()
