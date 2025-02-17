@@ -1,8 +1,15 @@
 from dotenv import load_dotenv
+import sys
 from os import getenv as env
+import os
 from utility.SQLProvider import SQLProvider
 
-load_dotenv()
+if getattr(sys, 'frozen', False):
+    dotenv_path = os.path.join(sys._MEIPASS, '.env')
+else:
+    dotenv_path = '.env'
+
+load_dotenv(dotenv_path=dotenv_path)
 
 sqlProvider = SQLProvider()
 

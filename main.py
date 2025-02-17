@@ -7,9 +7,15 @@ import utility.gameInitialisation
 import utility.eventManager
 from utility.SQLProvider import SQLProvider
 import sys
+import os
 
+if getattr(sys, 'frozen', False):
+    dotenv_path = os.path.join(sys._MEIPASS, '.env')
+else:
+    dotenv_path = '.env'
 
-load_dotenv()
+load_dotenv(dotenv_path=dotenv_path)
+
 pygame.init()
 
 WIDTH, HEIGHT = 900, 500
