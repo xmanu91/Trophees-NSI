@@ -25,25 +25,27 @@ class InRoomScene(Scene):
         self.subHeadText = Text('Utilisateurs connectés:', 15, (self.screenWidth*0.1, self.screenHeight*0.20), (0,0,0), isCentered=False)
         self.playButton = Button(pygame.Rect(self.screenWidth*0.9 - 220, self.screenHeight*0.1, 100, 30), self.startGame, None, None, None, "JOUER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
         self.quitButton = Button(pygame.Rect(self.screenWidth*0.9 - 100, self.screenHeight*0.1, 100, 30), self.quitGame, None, None, None, "QUITTER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
-        
-        self.spriteGroup.add(self.background, self.roomNameText, self.quitButton)
+        self.updateRoomsButton = Button(pygame.Rect(self.screenWidth*0.9 - 100, self.screenHeight*0.18, 100, 30), self.updateConnectedUsers, None, None, None, "Actualiser", 13, (0,0,0), defaultColor=(255,255,255), hoverColor=(119,169,198))        
+
+        self.spriteGroup.add(self.background, self.roomNameText, self.quitButton, self.updateRoomsButton)
+        print(self.spriteGroup)
+        print(self.updateRoomsButton)
+
         if self.isUserRoomCreator:
             self.spriteGroup.add(self.playButton)
         
         self.connectedUsers = roomManager.getUsersInCurrentRoom()
         self.updateConnectedUsers()
-        self.updateUsersEventType = pygame.event.custom_type()
+
         self.updateStateEventType = pygame.event.custom_type()
-        print('updateUserType:', self.updateUsersEventType, 'updateStateType:', self.updateStateEventType)
-        pygame.time.set_timer(pygame.event.Event(self.updateUsersEventType), 5000)
+        print('updateStateType:', self.updateStateEventType)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 1000)
-        eventManager.addEventHandler(self.updateUsersEventType, self.updateConnectedUsers)
         eventManager.addEventHandler(self.updateStateEventType, self.checkGameState)
         
     def updateConnectedUsers(self, e=None): # e parameters is due to eventHandler contraints
         print('executed')
         self.spriteGroup.empty()
-        self.spriteGroup.add(self.background, self.roomNameText, self.subHeadText , self.quitButton)
+        self.spriteGroup.add(self.background, self.roomNameText, self.subHeadText , self.quitButton, self.updateRoomsButton)
         if self.isUserRoomCreator:
             self.spriteGroup.add(self.playButton)
         for i in range(len(self.connectedUsers)):

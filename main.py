@@ -17,6 +17,7 @@ else:
 load_dotenv(dotenv_path=dotenv_path)
 
 pygame.init()
+pygame.display.set_caption("Inkspired v1.? (Beta)")
 
 WIDTH, HEIGHT = 900, 500
 
