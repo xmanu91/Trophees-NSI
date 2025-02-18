@@ -26,8 +26,9 @@ class InRoomScene(Scene):
         self.playButton = Button(pygame.Rect(self.screenWidth*0.9 - 220, self.screenHeight*0.1, 100, 30), self.startGame, None, None, None, "JOUER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
         self.quitButton = Button(pygame.Rect(self.screenWidth*0.9 - 100, self.screenHeight*0.1, 100, 30), self.quitGame, None, None, None, "QUITTER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
         self.updateRoomsButton = Button(pygame.Rect(self.screenWidth*0.9 - 100, self.screenHeight*0.18, 100, 30), self.updateConnectedUsers, None, None, None, "Actualiser", 13, (0,0,0), defaultColor=(255,255,255), hoverColor=(119,169,198))        
+        self.idDisplay = Text("ID: " + str(self.roomManager.currentRoomID), 15, (self.screenWidth*0.1, self.screenHeight*0.16), (0,0,0), isCentered=False)
 
-        self.spriteGroup.add(self.background, self.roomNameText, self.quitButton, self.updateRoomsButton)
+        self.spriteGroup.add(self.background, self.roomNameText, self.quitButton, self.updateRoomsButton, self.idDisplay)
         print(self.spriteGroup)
         print(self.updateRoomsButton)
 
@@ -45,7 +46,7 @@ class InRoomScene(Scene):
     def updateConnectedUsers(self, e=None): # e parameters is due to eventHandler contraints
         print('executed')
         self.spriteGroup.empty()
-        self.spriteGroup.add(self.background, self.roomNameText, self.subHeadText , self.quitButton, self.updateRoomsButton)
+        self.spriteGroup.add(self.background, self.roomNameText, self.subHeadText , self.quitButton, self.updateRoomsButton, self.idDisplay)
         if self.isUserRoomCreator:
             self.spriteGroup.add(self.playButton)
         for i in range(len(self.connectedUsers)):
