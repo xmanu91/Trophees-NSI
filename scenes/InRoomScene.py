@@ -65,7 +65,9 @@ class InRoomScene(Scene):
         pygame.time.set_timer(pygame.event.Event(self.updateUsersEventType), 0)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.roomManager.closeConnection()
-        self.sceneManager.setAsCurrentScene(scenes.JoinRoomScene.JoinRoomScene(self.sceneManager, self.roomManager.username, self.roomManager))
+        self.sceneManager.setAsCurrentScene(scenes.JoinRoomScene.JoinRoomScene(self.sceneManager, self.roomManager.username, self.roomManager)) 
+        if len(self.connectedUsers) == 0 :
+            self.roomManager.closeRoom(self.roomId)
     
     def checkGameState(self, e=None): # e is due to the event manager requirements
         print('check game check')
@@ -80,3 +82,4 @@ class UserCard(pygame.sprite.Sprite):
         self.image = pygame.Surface(self.rect.size)
         self.image.fill((50,50,50))
         self.image.blit(self.text.image, self.text.rect)
+
