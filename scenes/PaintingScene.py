@@ -1,23 +1,22 @@
 import pygame
 
 from ui.SceneManager import SceneManager
+from ui.ProgressBar import ProgressBar
 from ui.Scene import Scene
 from ui.Image import Image
 from ui.Canva import Canva
 from ui.Timer import Timer
 from ui.Text import Text
-from ui.ProgressBar import ProgressBar
 
 from scenes.PaintingSceneComponent.ToolBar import ToolBar
 from scenes.VoteScene import VoteScene
 
-from utility.GameManager import GameManager
 from utility.gameInitialisation import sqlProvider
+from utility.GameManager import GameManager
 from utility.RoomManager import RoomManager
 
 import tempfile
 import os
-import time
 
 class PaintingScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager):
@@ -52,20 +51,13 @@ class PaintingScene(Scene):
         self.gameProgressBar.run_start()
 
     def endDrawing(self):
-        print("end drawing executed")
+        print("Fin de la scene de dessin")
 
-        print(self.tempdir) # Debug: affiche le chemin temporaire de la dossier
-        print(self.tempdir.name)
         self.canva.save(self.tempdir.name)
-        print("Temporisation")
-        time.sleep(10)
         self.gameManager.sendDrawing(os.path.join(self.tempdir.name, self.roomManager.username.strip() + "_drawing.png"))
 
         self.roomManager.setRoomState('voting')
         self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.tempdir))
-
-    def cleanup(self):
-        self.tempdir.cleanup()
 
     def update(self):
         if self.toolBar != None:

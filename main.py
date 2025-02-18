@@ -1,11 +1,11 @@
-import pygame
-from dotenv import load_dotenv
-from scenes.HomeScene import HomeScene
-from ui.SceneManager import SceneManager
-from utility.RoomManager import RoomManager
-import utility.gameInitialisation
-import utility.eventManager
 from utility.SQLProvider import SQLProvider
+from utility.RoomManager import RoomManager
+from ui.SceneManager import SceneManager
+from scenes.HomeScene import HomeScene
+import utility.gameInitialisation
+from dotenv import load_dotenv
+import utility.eventManager
+import pygame
 import sys
 import os
 

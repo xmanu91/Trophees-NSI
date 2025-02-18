@@ -1,16 +1,16 @@
 import pygame
 import os
 
+from ui.SceneManager import SceneManager
+from ui.ProgressBar import ProgressBar
+from ui.Button import Button 
+from ui.Image import Image
 from ui.Scene import Scene
 from ui.Text import Text
-from ui.Button import Button 
-from ui.SceneManager import SceneManager
-from ui.Image import Image
-from ui.ProgressBar import ProgressBar
 
+from utility.gameInitialisation import sqlProvider
 from utility.VotesManager import VotesManager
 from utility.RoomManager import RoomManager
-from utility.gameInitialisation import sqlProvider
 
 from scenes.WinnerScene import WinnerScene
 from time import sleep

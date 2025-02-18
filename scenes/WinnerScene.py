@@ -7,7 +7,6 @@ import threading
 import pygame
 import time
 import os
-import tempfile
 
 """
     A modifier :
