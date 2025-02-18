@@ -1,9 +1,10 @@
 import pygame
-import os
 import shutil
+import sys
+import os
 
 def centerCoordinates(coordinates, gap):
-    return (coordinates[0]-gap, coordinates[1] - gap)
+    return (coordinates[0]-gap, coordinates[1]-gap)
 
 #Found on the internet
 def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=True):
@@ -56,3 +57,8 @@ def initialiseDirectory(path: str):
         shutil.rmtree(path)            
     if not os.path.exists(path):
         os.mkdir(path)
+
+def getPath(relativePath: str):
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relativePath)
+
