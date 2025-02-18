@@ -33,11 +33,12 @@ while True:
         utility.eventManager.update(event)
 
         if event.type == pygame.QUIT:
-            roomID= roomManager.currentRoomID
-            roomCreator = roomManager.getRoomCreator()
-            roomManager.closeConnection()
-            if roomManager.username == roomCreator:
-                roomManager.closeRoom(roomID)
+            if roomManager.currentRoomID != None:
+                roomID= roomManager.currentRoomID
+                roomCreator = roomManager.getRoomCreator()
+                roomManager.closeConnection()
+                if roomManager.username == roomCreator:
+                    roomManager.closeRoom(roomID)
             pygame.quit()
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
          
