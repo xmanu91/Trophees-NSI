@@ -24,7 +24,7 @@ class Canva(pygame.sprite.Sprite):
         mousePosition = (mousePositionX - self.rect.x, mousePositionY - self.rect.y) # Correction des coordonnes + centrage
         
         if self.allowDraw:
-            if pygame.mouse.get_pressed(3)[0]:  
+            if pygame.mouse.get_pressed(3)[0] and self.rect.collidepoint((mousePositionX, mousePositionY)):  
                 self.__circleBrushSize = int((self.brushSize/2)-1)
                 if self.__previousPoint:
                     pygame.draw.circle(self.image, self.drawColor, self.__previousPoint, self.__circleBrushSize)
@@ -39,7 +39,7 @@ class Canva(pygame.sprite.Sprite):
 
         if pygame.mouse.get_pressed(3)[1]:
                 try:
-                    self.setBrushColor(self.image.get_at(centerCoordinates(mousePosition, self.brushSize)))
+                    self.setBrushColor(self.image.get_at(mousePosition))
                 except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
                     print(Error)
 
