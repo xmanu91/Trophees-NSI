@@ -56,7 +56,6 @@ class InRoomScene(Scene):
         print('start game')
         if self.isUserRoomCreator:
             self.roomManager.setRoomState('playing')
-        pygame.time.set_timer(pygame.event.Event(self.updateUsersEventType), 0)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.sceneManager.setAsCurrentScene(PaintingScene(self.sceneManager, self.roomManager))
     
@@ -64,7 +63,6 @@ class InRoomScene(Scene):
         print('quit game')
         if self.isUserRoomCreator:
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
-        pygame.time.set_timer(pygame.event.Event(self.updateUsersEventType), 0)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.roomManager.closeConnection()
         self.sceneManager.setAsCurrentScene(scenes.JoinRoomScene.JoinRoomScene(self.sceneManager, self.roomManager.username, self.roomManager))

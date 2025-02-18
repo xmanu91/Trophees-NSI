@@ -1,5 +1,6 @@
 from mysql.connector import Error as sqlError
 from utility.SQLProvider import SQLProvider
+from utility.tools import getPath
 from random import choice
 import os
 
@@ -27,7 +28,7 @@ class GameManager:
             print(err)
 
     def loadThemes(self):
-        with open("assets/themes.txt", "r", encoding="utf-8") as file:
+        with open(getPath("assets/themes.txt"), "r", encoding="utf-8") as file:
             themes = [line.strip() for line in file]
         return themes
 

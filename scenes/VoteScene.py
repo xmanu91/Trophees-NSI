@@ -70,7 +70,7 @@ class VoteScene(Scene):
         print(self.votesManager.participants, self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
         self.votesManager.vote(self.votesManager.participants[self.index], note)
 
-        if self.index < len(self.drawnList) - 1:
+        if self.index < len(self.votesManager.participants)-1:
             self.progressBar.run_start() # Re-start de la ProgressBar
             self.setNote(1) # Reset de la note
 

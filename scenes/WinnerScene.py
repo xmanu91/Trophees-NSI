@@ -1,4 +1,5 @@
 from utility.VotesManager import VotesManager
+import utility.eventManager as eventManager
 from ui.SceneManager import SceneManager
 from ui.Scene import Scene
 from ui.Image import Image
@@ -10,7 +11,6 @@ import os
 
 """
     A modifier :
-        - Recuperer les gagnants
         - Duree de la scene
 """
 
@@ -26,6 +26,7 @@ class WinnerScene(Scene):
         self.sceneDuration = sceneDuration
         time.sleep(2) # Waiting for data of all users
         self.winners =  self.votesManager.getWinners()
+        print(self.winners)
         
         self.text = ""
         if len(self.winners) == 1:
@@ -51,17 +52,15 @@ class WinnerScene(Scene):
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)
 
-        thread = threading.Thread(target=self.switchDrawing, daemon=True)
-        thread.start()
+        self.pygameEventSwitchDrawing = pygame.event.custom_type()
+        pygame.time.set_timer(self.pygameEventSwitchDrawing, int(self.sceneDuration/2)*1000)
+        eventManager.addEventHandler(self.pygameEventSwitchDrawing, self.switchDrawing)
 
-    def switchDrawing(self):   
+    def switchDrawing(self, event):  # Event
+        print("Switching drawing") 
         self.spriteGroup.remove(self.displayedDrawing)
         self.displayedDrawing = self.winnersDrawings[(self.winnersDrawings.index(self.displayedDrawing) + 1) % len(self.winnersDrawings)]
         self.spriteGroup.add(self.displayedDrawing)
-        time.sleep(self.sceneDuration/2)
 
     def update(self):
         pass
-
-        
-

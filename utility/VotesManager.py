@@ -55,7 +55,7 @@ class VotesManager:
     def getVotes(self):
         try:
             # Utilisation de paramètres dans la requête SELECT
-            response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId)))
+            response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId),))
             if response is None:
                 return None
             votes = [vote for vote in response]

@@ -31,7 +31,7 @@ screen.fill((255, 255, 255))
 
 while True:
     for event in pygame.event.get():
-        utility.eventManager.update(event)
+        utility.eventManager.update(event)  
 
         if event.type == pygame.QUIT:
             roomID= roomManager.currentRoomID
