@@ -19,6 +19,13 @@ class GameManager:
         except sqlError as err:
             print(err)
 
+    def getTheme(self):
+        try: 
+            result = self.sqlManager.get("SELECT theme FROM rooms WHERE room_id=%s", (str(self.roomId),))
+            return result[0][0]
+        except sqlError as err:
+            print(err)
+
     def sendDrawing(self, path):
         try:
             self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, decode(%s, 'hex'), %s)", 

@@ -28,8 +28,11 @@ class PaintingScene(Scene):
         self.roomManager = roomManager
         self.sceneManager = sceneManager
         self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
-        self.gameManager.drawTheme()
-        self.theme = self.gameManager.drawingTheme
+        if self.roomManager.username == roomManager.getRoomCreator():
+            self.gameManager.drawTheme()
+            self.theme = self.gameManager.drawingTheme
+        else:
+            self.theme = self.gameManager.getTheme()
 
         self.textTheme = Text(self.theme, 32, (450, 250-16), (255,255,255), True)
 
