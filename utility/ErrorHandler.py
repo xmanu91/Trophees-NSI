@@ -29,8 +29,6 @@ class ErrorWindow(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = pygame.display.get_window_size()[0]/2 - 150
         self.rect.y = pygame.display.get_window_size()[1]/2 - 75
-        
-        print(self.rect.x, self.rect.y, self.rect.centerx, self.rect.centery)
 
         self.errorText = Text(error, 16, (self.rect.width / 2, 25), (255,255,255), True)
         self.button = Button(pygame.Rect(self.rect.centerx - 50, self.rect.bottom - 75, 100, 50), action, None, None, None, "D'accord", defaultColor=(255,255,255),  hoverColor=(119,169,198), textColor=(0,0,0))
