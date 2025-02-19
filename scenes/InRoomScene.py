@@ -8,11 +8,8 @@ from ui.Button import Button
 
 from scenes.PaintingScene import PaintingScene
 
-<<<<<<< Updated upstream
-=======
 from utility.gameInitialisation import sqlProvider
 from utility.ErrorHandler import raiseAnError
->>>>>>> Stashed changes
 from utility.RoomManager import RoomManager
 from utility.GameManager import GameManager
 import utility.eventManager as eventManager
@@ -86,13 +83,6 @@ class InRoomScene(Scene):
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
 
     def startGame(self):
-<<<<<<< Updated upstream
-        print('start game')
-        if self.isUserRoomCreator:
-            self.roomManager.setRoomState('playing')
-        pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
-        self.sceneManager.setAsCurrentScene(PaintingScene(self.sceneManager, self.roomManager))
-=======
         if len(self.connectedUsers) < 2:
             raiseAnError("Vous devez être plusieurs pour pouvoir jouer")
             self.updateConnectedUsers()
@@ -101,7 +91,6 @@ class InRoomScene(Scene):
                 self.roomManager.setRoomState('playing')
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
             self.sceneManager.setAsCurrentScene(PaintingScene(self.sceneManager, self.roomManager, self.gameManager))
->>>>>>> Stashed changes
     
     def quitGame(self):
         print('quit game')
@@ -109,15 +98,10 @@ class InRoomScene(Scene):
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.roomManager.closeConnection()
-<<<<<<< Updated upstream
-        self.sceneManager.setAsCurrentScene(scenes.JoinRoomScene.JoinRoomScene(self.sceneManager, self.roomManager.username, self.roomManager))
-    
-=======
         self.sceneManager.setAsCurrentScene(scenes.JoinRoomScene.JoinRoomScene(self.sceneManager, self.roomManager.username, self.roomManager)) 
         if len(self.connectedUsers) == 0 :
             self.roomManager.closeRoom(self.roomId)
 
->>>>>>> Stashed changes
     def checkGameState(self, e=None): # e is due to the event manager requirements
         print('check game check')
         if self.roomManager.getRoomState() == 'playing':

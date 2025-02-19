@@ -25,11 +25,6 @@ class PaintingScene(Scene):
         self.background = Image("assets/background_theme.png", pygame.Rect(0,0, screenWidth, screenHeight))
         self.roomManager = roomManager
         self.sceneManager = sceneManager
-<<<<<<< Updated upstream
-        self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
-        self.gameManager.drawTheme()
-        self.theme = self.gameManager.drawingTheme
-=======
         self.gameManager = gameManager
         
         if self.roomManager.username == roomManager.getRoomCreator():
@@ -37,7 +32,6 @@ class PaintingScene(Scene):
             self.theme = self.gameManager.drawingTheme
         else:
             self.theme = self.gameManager.getTheme()
->>>>>>> Stashed changes
 
         self.textTheme = Text(self.theme, 32, (450, 250-16), (255,255,255), True)
 
