@@ -8,6 +8,7 @@ from ui.Button import Button
 
 from scenes.PaintingScene import PaintingScene
 
+from utility.ErrorHandler import raiseAnError
 from utility.RoomManager import RoomManager
 import utility.eventManager as eventManager
 
@@ -54,11 +55,13 @@ class InRoomScene(Scene):
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
 
     def startGame(self):
-        print('start game')
-        if self.isUserRoomCreator:
-            self.roomManager.setRoomState('playing')
-        pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
-        self.sceneManager.setAsCurrentScene(PaintingScene(self.sceneManager, self.roomManager))
+        if len(self.connectedUsers) < 2:
+            raiseAnError("Vous devez être plusieurs pour pouvoir jouer")
+        else:
+            if self.isUserRoomCreator:
+                self.roomManager.setRoomState('playing')
+            pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
+            self.sceneManager.setAsCurrentScene(PaintingScene(self.sceneManager, self.roomManager))
     
     def quitGame(self):
         print('quit game')

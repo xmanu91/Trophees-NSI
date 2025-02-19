@@ -5,6 +5,7 @@ class RoomManager:
     def __init__(self, SQLProvider: SQLProvider, username: str):
         self.SQLProvider = SQLProvider
         self.username = username
+        self.userId= None
         self.currentRoomID = None
     
     def getAllRooms(self):
@@ -37,13 +38,11 @@ class RoomManager:
     def createConnection(self, roomId: int):
         print('createConnection', roomId)
         try:
-            users = self.getAllConnectedUsers()
-            for user in users:
-                if self.username == user[1]:
-                    raise Exception((201, "User already exists"))
-            self.SQLProvider.insert("INSERT INTO connected_users (username, room_id) VALUES (%s, %s)", (self.username, roomId))
+            response = self.SQLProvider.insert("INSERT INTO connected_users (username, room_id) VALUES (%s, %s)", (self.username, roomId), returnedValue='user_id')
         except sqlError as err:
             print(err)
+        self.userId = response
+        print(self.userId)
         self.currentRoomID = roomId
 
     def createRoom(self, roomName):
@@ -57,7 +56,7 @@ class RoomManager:
         try:
             self.SQLProvider.executeSQL("DELETE FROM drawings WHERE room_id=%s", (str(roomId),))
             self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE room_id=%s", (str(roomId),))
-            self.SQLProvider.executeSQL("DELETE FROM votesS WHERE room_id=%s", (str(roomId),))
+            self.SQLProvider.executeSQL("DELETE FROM votes WHERE room_id=%s", (str(roomId),))
             self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (str(roomId),))
         except sqlError as err:
             print(err)
@@ -66,7 +65,7 @@ class RoomManager:
     def closeConnection(self):
         try:
             print(self.username)
-            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE username=%s", (str(self.username),))
+            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE user_id=%s", (str(self.userId),))
         except sqlError as err:
             print(err)
         self.currentRoomID = None
