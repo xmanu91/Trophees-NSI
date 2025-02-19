@@ -1,5 +1,6 @@
 from utility.SQLProvider import SQLProvider
 from utility.RoomManager import RoomManager
+from utility.ErrorHandler import ErrorHandlerUi, errorEventType
 from ui.SceneManager import SceneManager
 from scenes.HomeScene import HomeScene
 import utility.gameInitialisation
@@ -20,8 +21,10 @@ pygame.init()
 pygame.display.set_caption("Inkspired v1.? (Beta)")
 
 WIDTH, HEIGHT = 900, 500
-
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+errorHandler = ErrorHandlerUi()
+utility.eventManager.addEventHandler(errorEventType, errorHandler.raiseError)
+
 sceneManager = SceneManager(screen)
 roomManager = RoomManager(utility.gameInitialisation.sqlProvider, '')
 homeScene = HomeScene(sceneManager, roomManager)
@@ -45,4 +48,6 @@ while True:
          
     sceneManager.update()
     sceneManager.draw()
+    errorHandler.spriteGroup.update()
+    errorHandler.spriteGroup.draw(screen)
     pygame.display.flip()

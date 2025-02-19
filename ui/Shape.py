@@ -6,6 +6,7 @@ class Shape(pygame.sprite.Sprite):
         self.rect = rect
         self.color = color
         self.image = pygame.Surface((self.rect.width, self.rect.height))
+        self.image = self.image.convert_alpha()
         self.image.fill(self.color)
 
     def changeColor(self, color: pygame.Color):
