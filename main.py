@@ -1,11 +1,12 @@
-import pygame
-from dotenv import load_dotenv
-from scenes.HomeScene import HomeScene
-from ui.SceneManager import SceneManager
+from utility.SQLProvider import SQLProvider
 from utility.RoomManager import RoomManager
 from utility.ErrorHandler import ErrorHandlerUi, errorEventType
+from ui.SceneManager import SceneManager
+from scenes.HomeScene import HomeScene
 import utility.gameInitialisation
+from dotenv import load_dotenv
 import utility.eventManager
+import pygame
 import sys
 import os
 
@@ -17,6 +18,7 @@ else:
 load_dotenv(dotenv_path=dotenv_path)
 
 pygame.init()
+pygame.display.set_caption("Inkspired v1.? (Beta)")
 
 WIDTH, HEIGHT = 900, 500
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -32,14 +34,15 @@ screen.fill((255, 255, 255))
 
 while True:
     for event in pygame.event.get():
-        utility.eventManager.update(event)
+        utility.eventManager.update(event)  
 
         if event.type == pygame.QUIT:
-            roomID= roomManager.currentRoomID
-            roomCreator = roomManager.getRoomCreator()
-            roomManager.closeConnection()
-            if roomManager.username == roomCreator:
-                roomManager.closeRoom(roomID)
+            if roomManager.currentRoomID != None:
+                roomID= roomManager.currentRoomID
+                roomCreator = roomManager.getRoomCreator()
+                roomManager.closeConnection()
+                if roomManager.username == roomCreator:
+                    roomManager.closeRoom(roomID)
             pygame.quit()
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
          

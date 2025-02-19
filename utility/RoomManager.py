@@ -55,6 +55,9 @@ class RoomManager:
 
     def closeRoom(self, roomId):
         try:
+            self.SQLProvider.executeSQL("DELETE FROM drawings WHERE room_id=%s", (str(roomId),))
+            self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE room_id=%s", (str(roomId),))
+            self.SQLProvider.executeSQL("DELETE FROM votesS WHERE room_id=%s", (str(roomId),))
             self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (str(roomId),))
         except sqlError as err:
             print(err)

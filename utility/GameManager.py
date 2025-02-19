@@ -1,5 +1,6 @@
 from mysql.connector import Error as sqlError
 from utility.SQLProvider import SQLProvider
+from utility.tools import getPath
 from random import choice
 import os
 
@@ -19,6 +20,13 @@ class GameManager:
         except sqlError as err:
             print(err)
 
+    def getTheme(self):
+        try: 
+            result = self.sqlManager.get("SELECT theme FROM rooms WHERE room_id=%s", (str(self.roomId),))
+            return result[0][0]
+        except sqlError as err:
+            print(err)
+
     def sendDrawing(self, path):
         try:
             self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, decode(%s, 'hex'), %s)", 
@@ -27,7 +35,7 @@ class GameManager:
             print(err)
 
     def loadThemes(self):
-        with open("assets/themes.txt", "r", encoding="utf-8") as file:
+        with open(getPath("assets/themes.txt"), "r", encoding="utf-8") as file:
             themes = [line.strip() for line in file]
         return themes
 

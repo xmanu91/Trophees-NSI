@@ -1,23 +1,22 @@
 import pygame
 
 from ui.SceneManager import SceneManager
+from ui.ProgressBar import ProgressBar
 from ui.Scene import Scene
 from ui.Image import Image
 from ui.Canva import Canva
 from ui.Timer import Timer
 from ui.Text import Text
-from ui.ProgressBar import ProgressBar
 
 from scenes.PaintingSceneComponent.ToolBar import ToolBar
 from scenes.VoteScene import VoteScene
 
-from utility.GameManager import GameManager
 from utility.gameInitialisation import sqlProvider
+from utility.GameManager import GameManager
 from utility.RoomManager import RoomManager
 
 import tempfile
 import os
-import time
 
 class PaintingScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager):
@@ -28,8 +27,11 @@ class PaintingScene(Scene):
         self.roomManager = roomManager
         self.sceneManager = sceneManager
         self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
-        self.gameManager.drawTheme()
-        self.theme = self.gameManager.drawingTheme
+        if self.roomManager.username == roomManager.getRoomCreator():
+            self.gameManager.drawTheme()
+            self.theme = self.gameManager.drawingTheme
+        else:
+            self.theme = self.gameManager.getTheme()
 
         self.textTheme = Text(self.theme, 32, (450, 250-16), (255,255,255), True)
 
@@ -52,20 +54,13 @@ class PaintingScene(Scene):
         self.gameProgressBar.run_start()
 
     def endDrawing(self):
-        print("end drawing executed")
+        print("Fin de la scene de dessin")
 
-        print(self.tempdir) # Debug: affiche le chemin temporaire de la dossier
-        print(self.tempdir.name)
         self.canva.save(self.tempdir.name)
-        print("Temporisation")
-        time.sleep(10)
         self.gameManager.sendDrawing(os.path.join(self.tempdir.name, self.roomManager.username.strip() + "_drawing.png"))
 
         self.roomManager.setRoomState('voting')
         self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.tempdir))
-
-    def cleanup(self):
-        self.tempdir.cleanup()
 
     def update(self):
         if self.toolBar != None:
