@@ -3,6 +3,7 @@ from utility.SQLProvider import SQLProvider
 from utility.tools import getPath
 from random import choice
 import os
+import tempfile
 
 class GameManager:
 
@@ -11,19 +12,13 @@ class GameManager:
         self.username = username
         self.roomId = roomId
         self.drawingTheme = ""
+        self.tempdir = tempfile.TemporaryDirectory()
 
     def drawTheme(self):
         theme = choice(self.loadThemes())
         try: 
             self.sqlManager.insert("UPDATE rooms SET theme=%s WHERE room_id=%s", (theme, self.roomId))
             self.drawingTheme = theme
-        except sqlError as err:
-            print(err)
-
-    def getTheme(self):
-        try: 
-            result = self.sqlManager.get("SELECT theme FROM rooms WHERE room_id=%s", (str(self.roomId),))
-            return result[0][0]
         except sqlError as err:
             print(err)
 
@@ -44,3 +39,6 @@ class GameManager:
             f = image.read()
             b = bytes(f).hex()
             return b
+
+    def getTempDir(self):
+        return self.tempdir

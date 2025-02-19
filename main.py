@@ -1,6 +1,5 @@
 from utility.SQLProvider import SQLProvider
 from utility.RoomManager import RoomManager
-from utility.ErrorHandler import ErrorHandlerUi, errorEventType
 from ui.SceneManager import SceneManager
 from scenes.HomeScene import HomeScene
 import utility.gameInitialisation
@@ -21,13 +20,12 @@ pygame.init()
 pygame.display.set_caption("Inkspired v1.? (Beta)")
 
 WIDTH, HEIGHT = 900, 500
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-errorHandler = ErrorHandlerUi()
-utility.eventManager.addEventHandler(errorEventType, errorHandler.raiseError)
 
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 sceneManager = SceneManager(screen)
 roomManager = RoomManager(utility.gameInitialisation.sqlProvider, '')
 homeScene = HomeScene(sceneManager, roomManager)
+sceneManager.setHomeScene(homeScene, roomManager)
 sceneManager.setAsCurrentScene(homeScene)
 
 screen.fill((255, 255, 255))
@@ -37,17 +35,14 @@ while True:
         utility.eventManager.update(event)  
 
         if event.type == pygame.QUIT:
-            if roomManager.currentRoomID != None:
-                roomID= roomManager.currentRoomID
-                roomCreator = roomManager.getRoomCreator()
-                roomManager.closeConnection()
-                if roomManager.username == roomCreator:
-                    roomManager.closeRoom(roomID)
+            roomID= roomManager.currentRoomID
+            roomCreator = roomManager.getRoomCreator()
+            roomManager.closeConnection()
+            if roomManager.username == roomCreator:
+                roomManager.closeRoom(roomID)
             pygame.quit()
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
          
     sceneManager.update()
     sceneManager.draw()
-    errorHandler.spriteGroup.update()
-    errorHandler.spriteGroup.draw(screen)
     pygame.display.flip()

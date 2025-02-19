@@ -47,6 +47,12 @@ class TextInput(pygame.sprite.Sprite):
         if self.actif:
             self.textInput += e.text
 
+    def setPlaceholder(self, text):
+        self.placeHolder = text
+    
+    def setText(self, text):
+        self.textInput = text
+        
     def update(self):
         self.image = pygame.Surface(self.rect.size)
         self.image.fill(self.backgroundColor)
