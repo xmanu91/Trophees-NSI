@@ -11,16 +11,19 @@ from ui.Text import Text
 from utility.gameInitialisation import sqlProvider
 from utility.VotesManager import VotesManager
 from utility.RoomManager import RoomManager
+from utility.GameManager import GameManager
 
 from scenes.WinnerScene import WinnerScene
 from time import sleep
 import tempfile
 
 class VoteScene(Scene):
-    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, tempdir: tempfile.TemporaryDirectory):
+    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, gameManager: GameManager):
         super().__init__()
-        self.tempdir = tempdir
+        self.gameManager = gameManager
+        self.tempdir = self.gameManager.getTempDir()
         self.sceneManager = sceneManager
+        self.roomManager = roomManager
         self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir)
         sleep(2) # Waiting for data of all players
         self.votesManager.getDrawings()
@@ -85,4 +88,4 @@ class VoteScene(Scene):
             pygame.display.flip()
         else:
             print(self.votesManager.getWinners())
-            self.sceneManager.setAsCurrentScene(WinnerScene(self.sceneManager, self.votesManager))
+            self.sceneManager.setAsCurrentScene(WinnerScene(self.sceneManager, self.votesManager, self.gameManager, self.roomManager))

@@ -25,9 +25,10 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 errorHandler = ErrorHandlerUi()
 utility.eventManager.addEventHandler(errorEventType, errorHandler.raiseError)
 
-sceneManager = SceneManager(screen)
+sceneManager = SceneManager(screen) 
 roomManager = RoomManager(utility.gameInitialisation.sqlProvider, '')
 homeScene = HomeScene(sceneManager, roomManager)
+sceneManager.setHomeScene(homeScene, roomManager)
 sceneManager.setAsCurrentScene(homeScene)
 
 screen.fill((255, 255, 255))

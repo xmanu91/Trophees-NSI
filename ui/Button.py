@@ -60,7 +60,7 @@ class Button(pygame.sprite.Sprite):
                 self.isUsable = False
                 self.actionned = False
         else: 
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND) # Remettre arrow si besoins
             if self.defaultColor:
                 self.image.fill(self.defaultColor)
             else:

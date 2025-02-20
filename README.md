@@ -17,7 +17,7 @@ Or you can clone this repository.
 Then, you can install the required packages by using this command:
 
 ```BASH
-pip install -r requirements.txt
+pip freeze -r requirements.txt
 ```
 
 Finnaly, run the game by running the main.py file:

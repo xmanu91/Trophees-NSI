@@ -3,6 +3,7 @@ from utility.SQLProvider import SQLProvider
 from utility.tools import getPath
 from random import choice
 import os
+import tempfile
 
 class GameManager:
 
@@ -11,6 +12,7 @@ class GameManager:
         self.username = username
         self.roomId = roomId
         self.drawingTheme = ""
+        self.tempdir = tempfile.TemporaryDirectory()
 
     def drawTheme(self):
         theme = choice(self.loadThemes())
@@ -44,3 +46,6 @@ class GameManager:
             f = image.read()
             b = bytes(f).hex()
             return b
+
+    def getTempDir(self):
+        return self.tempdir

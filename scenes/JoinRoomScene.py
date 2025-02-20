@@ -5,6 +5,7 @@ from ui.Button import Button
 from ui.SceneManager import SceneManager
 from ui.Image import Image
 from ui.TextInput import TextInput
+from utility.ErrorHandler import raiseAnError
 
 from scenes.InRoomScene import InRoomScene
 
@@ -42,12 +43,27 @@ class JoinRoomScene(Scene):
         self.rooms = self.roomManager.getAllRooms()
     
     def joinRoom(self):
-        self.roomManager.createConnection(self.seekRoomNameInput.getText())
-        self.sceneManager.setAsCurrentScene(InRoomScene(self.sceneManager, self.roomManager, False))
+        if not self.roomManager.doesRoomExist(self.seekRoomNameInput.getText()):
+            raiseAnError("Aucune room avec cette ID n'existe")
+            self.seekRoomNameInput.setPlaceholder("Veuillez entrer un id de room valide")
+            self.seekRoomNameInput.setText("")
+        else:
+            try:
+                self.roomManager.createConnection(self.seekRoomNameInput.getText())
+                self.sceneManager.setAsCurrentScene(InRoomScene(self.sceneManager, self.roomManager, False))
+            except:
+                raiseAnError("Une erreur est survenue")
+
     
     def createRoom(self):
-        self.roomManager.createRoom(self.seekRoomNameInput.getText())
-        self.sceneManager.setAsCurrentScene(InRoomScene(self.sceneManager, self.roomManager, True))
+        name = self.seekRoomNameInput.getText()
+        if name == "" or name == "Entrez le nom de la room":
+            raiseAnError("Veuillez entrer un nom de room valide")
+            self.seekRoomNameInput.setPlaceholder("Veuillez entrer un nom de room valide")
+            self.seekRoomNameInput.setText("")
+        else:
+            self.roomManager.createRoom(name)
+            self.sceneManager.setAsCurrentScene(InRoomScene(self.sceneManager, self.roomManager, True))
 
 class RoomCard(pygame.sprite.Sprite):
     def __init__(self, size : pygame.Rect, roomName : str, roomID : int, roomManager: RoomManager, sceneManager: SceneManager):
@@ -69,6 +85,7 @@ class RoomCard(pygame.sprite.Sprite):
             self.onButtonPressed, None, None, None, "Rejoindre", defaultColor=(164, 212, 162), hoverColor=(119, 161, 117),textColor=(0,0,0), fontSize= 20)
         
         self.text = Text(roomName , 30, (self.rect.x + 10, self.rect.y + 15), (0,0,0), False )
+
         self.image.blit(self.text.image, (self.text.rect.x - self.rect.x, self.text.rect.y - self.rect.y))
         self.image.blit(self.numberPlayerText.image, (self.numberPlayerText.rect.x - self.rect.x, self.numberPlayerText.rect.y - self.rect.y))
 

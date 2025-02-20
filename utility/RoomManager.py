@@ -15,6 +15,13 @@ class RoomManager:
         rooms = [row for row in response]
         return rooms
 
+    def getAllRoomsIds(self):
+        response = self.SQLProvider.get("SELECT room_id FROM rooms")
+        if response is None:
+            return []
+        rooms = [row for row in response]
+        return rooms
+
     def getAllConnectedUsers(self):
         response = self.SQLProvider.get("SELECT * FROM connected_users")
         if response is None:
@@ -129,3 +136,11 @@ class RoomManager:
     def setUsername(self, newUsername: str):
         self.username = newUsername
 
+    def doesRoomExist(self, roomId: any) -> bool:
+        if not roomId.isdigit():
+            return False
+        allRooms = self.getAllRoomsIds()
+        for room in allRooms:
+            if str(room[0]) == str(roomId) or room[0] == roomId:
+                return True
+        return False

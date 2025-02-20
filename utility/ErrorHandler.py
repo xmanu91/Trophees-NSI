@@ -6,8 +6,8 @@ from ui.Button import Button
 
 errorEventType = pygame.event.custom_type()
 
-def raiseAnError(error):
-    pygame.event.post(pygame.event.Event(errorEventType, error=error))
+def raiseAnError(error, action=None):
+    pygame.event.post(pygame.event.Event(errorEventType, error=error, action=action))
 
 class ErrorHandlerUi:
     def __init__(self):
@@ -15,17 +15,20 @@ class ErrorHandlerUi:
 
     def raiseError(self, e):
         self.spriteGroup.add(Shape(pygame.Rect(0,0, pygame.display.get_window_size()[0],  pygame.display.get_window_size()[1]), (0,0,0, int(255*0.40))))
-        self.spriteGroup.add(ErrorWindow(e.error, self.closeError))
+        if e.action == None:
+            self.spriteGroup.add(ErrorWindow(e.error, self.closeError))
+        else:
+            self.spriteGroup.add(ErrorWindow(e.error, e.action))
     
     def closeError(self):
         self.spriteGroup.empty()
-        
+
 
 class ErrorWindow(pygame.sprite.Sprite):
     def __init__(self, error, action):
         super().__init__()
         self.rect = pygame.Rect(pygame.display.get_window_size()[0]/2, pygame.display.get_window_size()[1]/2, 300, 150)
-        self.errorText = Text(error, 16, (0, 0), (255,255,255), True)
+        self.errorText = Text(error, 16, (0, 25), (255,255,255), True)
         self.rect.width = self.errorText.rect.w + 50 
         self.image = pygame.Surface(self.rect.size)
         self.image.fill((255,0,0))
