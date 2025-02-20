@@ -1,5 +1,6 @@
 from utility.tools import centerCoordinates
 import utility.eventManager as eventManager
+from collections import deque
 import pygame
 import os
 
@@ -37,9 +38,15 @@ class Canva(pygame.sprite.Sprite):
             else:
                 self.__previousPoint = None
 
+            if pygame.mouse.get_pressed(3)[2]:
+                try:
+                    self.holyBucket(mousePosition[0], mousePosition[1], self.drawColor, self.image)
+                except Exception as Error:
+                    print(Error)
+
         if pygame.mouse.get_pressed(3)[1]:
                 try:
-                    self.setBrushColor(self.image.get_at(mousePosition))
+                    self.setBrushColor(self.image.get_at((mousePositionX + self.rect.x, mousePositionY + self.rect.y)))
                 except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
                     print(Error)
 
@@ -89,3 +96,24 @@ class Canva(pygame.sprite.Sprite):
     def load(self, path: str):
         self.image = pygame.image.load(path).convert_alpha()
         self.rect = self.image.get_rect()
+
+    def holyBucket(self, x, y, color, toile):
+        baseColor = toile.get_at((x, y))
+        if baseColor == color:
+            return
+        PAS = set() # C'est une liste, BEAUCOUP plus rapide
+        pixels = deque() # Pareil mais c'est une file
+        pixels.append((x, y))
+
+        while pixels:
+            x, y = pixels.popleft()
+            if (x, y) in PAS:
+                continue
+            PAS.add((x, y))
+
+            if 0<=x<self.rect.width and 0<=y<self.rect.height and toile.get_at((x, y)) == baseColor: 
+                toile.set_at((x, y), color) 
+                pixels.append((x+1, y))
+                pixels.append((x-1, y))
+                pixels.append((x, y+1))
+                pixels.append((x, y-1))

@@ -1,5 +1,6 @@
 import pygame
 import scenes
+import time
 
 import scenes.PaintingScene
 import scenes.RoomSettingsScene
@@ -24,6 +25,7 @@ class InRoomScene(Scene):
         self.isUserRoomCreator = isUserRoomCreator
         self.connected_users = self.roomManager.getUsersInCurrentRoom()
         self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
+        self.roomManager.setRoundsNumber(1)
         print('In RoomId:', self.roomManager.currentRoomID)
 
         self.background = Image('assets/background.jpg', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
@@ -73,6 +75,8 @@ class InRoomScene(Scene):
         else:
             if self.isUserRoomCreator:
                 self.roomManager.setRoomState('playing')
+            else:
+                time.sleep(0.2)
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
             paintingScene = scenes.PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)

@@ -27,7 +27,6 @@ class PaintingScene(Scene):
         self.sceneManager = sceneManager
         self.gameManager = gameManager
         
-        time.sleep(0.2) # Waiting for data of all users
         if self.roomManager.username == roomManager.getRoomCreator():
             self.gameManager.drawTheme()
             self.gameManager.deleteDrawings()
