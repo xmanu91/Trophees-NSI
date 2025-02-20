@@ -1,13 +1,16 @@
 import pygame
+import scenes
+
+import scenes.InRoomScene
 from ui.Scene import Scene
 from ui.Text import Text
 from ui.Button import Button
 from ui.SceneManager import SceneManager
 from ui.Image import Image
 from ui.TextInput import TextInput
+
 from utility.ErrorHandler import raiseAnError
 from utility.RoomManager import RoomManager
-from scenes.InRoomScene import InRoomScene
 
 
 class JoinRoomScene(Scene):
@@ -48,7 +51,7 @@ class JoinRoomScene(Scene):
         else:
             try:
                 self.roomManager.createConnection(self.seekRoomNameInput.getText())
-                self.sceneManager.setAsCurrentScene(InRoomScene(self.sceneManager, self.roomManager, False))
+                self.sceneManager.setAsCurrentScene(scenes.InRoomScene.InRoomScene(self.sceneManager, self.roomManager, False))
             except:
                 raiseAnError("Une erreur est survenue")
 
@@ -61,7 +64,7 @@ class JoinRoomScene(Scene):
             self.seekRoomNameInput.setText("")
         else:
             self.roomManager.createRoom(name)
-            self.sceneManager.setAsCurrentScene(InRoomScene(self.sceneManager, self.roomManager, True))
+            self.sceneManager.setAsCurrentScene(scenes.InRoomScene.InRoomScene(self.sceneManager, self.roomManager, True))
 
 class RoomCard(pygame.sprite.Sprite):
     def __init__(self, size : pygame.Rect, roomName : str, roomID : int, roomManager: RoomManager, sceneManager: SceneManager):
@@ -88,8 +91,12 @@ class RoomCard(pygame.sprite.Sprite):
         self.image.blit(self.numberPlayerText.image, (self.numberPlayerText.rect.x - self.rect.x, self.numberPlayerText.rect.y - self.rect.y))
 
     def onButtonPressed(self):
-        self.roomManager.createConnection(self.roomID)
-        self.sceneManager.setAsCurrentScene(InRoomScene(self.sceneManager, self.roomManager, False))
+        if self.roomManager.doesUserConnectedInRoom(self.roomID, self.roomManager.username):
+            raiseAnError("Ce pseudonyme est déjà utilisé dans cette room")
+            self.sceneManager.setAsCurrentScene(scenes.HomeScene.HomeScene(self.sceneManager, self.roomManager))
+        else:
+            self.roomManager.createConnection(self.roomID)
+            self.sceneManager.setAsCurrentScene(scenes.InRoomScene.InRoomScene(self.sceneManager, self.roomManager, False))
 
     def update(self):
         self.button.update()

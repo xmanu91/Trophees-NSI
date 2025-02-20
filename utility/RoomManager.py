@@ -137,12 +137,19 @@ class RoomManager:
     def setUsername(self, newUsername: str):
         self.username = newUsername
 
-    def doesRoomExist(self, roomId: any) -> bool:
+    def doesRoomExist(self, roomId: id) -> bool:
         if not roomId.isdigit():
             return False
         try:
             response = self.SQLProvider.get('SELECT room_name FROM rooms WHERE room_id=%s', (str(roomId),))
             print(response)
+            return len(response) > 0
+        except sqlError as err:
+            print(err)
+
+    def doesUserConnectedInRoom(self, roomId: id, username: str) -> bool:
+        try:
+            response = self.SQLProvider.get('SELECT username FROM connected_users WHERE room_id=%s and username=%s', (str(roomId), username))
             return len(response) > 0
         except sqlError as err:
             print(err)

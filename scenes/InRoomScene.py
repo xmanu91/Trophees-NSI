@@ -1,19 +1,19 @@
 import pygame
-import scenes.HomeScene
+import scenes
+
+import scenes.PaintingScene
+import scenes.RoomSettingsScene
 from ui.Scene import Scene
 from ui.SceneManager import SceneManager
 from ui.Image import Image
 from ui.Text import Text
 from ui.Button import Button
 
-from scenes.PaintingScene import PaintingScene
-
 from utility.gameInitialisation import sqlProvider
 from utility.ErrorHandler import raiseAnError
 from utility.RoomManager import RoomManager
 from utility.GameManager import GameManager
 import utility.eventManager as eventManager
-from scenes.RoomSettingsScene import RoomSettingsScene
 
 class InRoomScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, isUserRoomCreator: bool):
@@ -23,14 +23,6 @@ class InRoomScene(Scene):
         self.sceneManager = sceneManager
         self.isUserRoomCreator = isUserRoomCreator
         self.connected_users = self.roomManager.getUsersInCurrentRoom()
-
-        if self.connected_users.count(self.roomManager.username) > 1:
-            self.roomManager.closeConnection()
-            raiseAnError("Veuillez vous reconnecter avec un autre pseudonyme")
-            sceneManager.setAsCurrentScene(scenes.HomeScene.HomeScene(self.sceneManager, self.roomManager))
-            return
-    
-            
         self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
         print('In RoomId:', self.roomManager.currentRoomID)
 
@@ -82,7 +74,7 @@ class InRoomScene(Scene):
             if self.isUserRoomCreator:
                 self.roomManager.setRoomState('playing')
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
-            paintingScene = PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
+            paintingScene = scenes.PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)
     def quitGame(self):
         print('quit game')
@@ -100,7 +92,7 @@ class InRoomScene(Scene):
             self.startGame()
 
     def openRoomSettings(self):
-        self.sceneManager.setAsCurrentScene(RoomSettingsScene(self.sceneManager, self.roomManager, self, self.gameManager), False)
+        self.sceneManager.setAsCurrentScene(scenes.RoomSettingsScene.RoomSettingsScene(self.sceneManager, self.roomManager, self, self.gameManager), False)
 
 class UserCard(pygame.sprite.Sprite):
     def __init__(self, rect: pygame.Rect, username: str):
