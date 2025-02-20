@@ -3,6 +3,7 @@ import utility.eventManager as eventManager
 from utility.GameManager import GameManager
 from ui.SceneManager import SceneManager
 import utility.RoomManager as RoomManager
+from scenes import HomeScene, PaintingScene
 from ui.Scene import Scene
 from ui.Image import Image
 from ui.Text import Text
@@ -34,11 +35,11 @@ class WinnerScene(Scene):
         print(f"self.winners: {self.winners}")
 
         if self.roomManager.currentRound == self.roomManager.getRoundsNumber():
-            self.nextRoundOrQuitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "QUITTER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
-            self.spriteGroup.add(self.nextRoundOrQuitButton)
+            self.QuitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "QUITTER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+            self.spriteGroup.add(self.QuitButton)
         elif self.roomManager.currentRound < self.roomManager.getRoundsNumber() and self.roomManager.username == self.roomManager.getRoomCreator():
-            self.nextRoundOrQuitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.nextRound, None, None, None, "NEXT ROUND", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
-            self.spriteGroup.add(self.nextRoundOrQuitButton)
+            self.nextRoundButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.nextRound, None, None, None, "NEXT ROUND", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+            self.spriteGroup.add(self.nextRoundButton)
         else:
             self.updateStateEventType = pygame.event.custom_type()
             print('updateStateType:', self.updateStateEventType)
@@ -89,12 +90,11 @@ class WinnerScene(Scene):
             print("game not started")
 
     def nextRound(self):
-        self.tempdir = self.gameManager.getTempDir()
         if self.roomManager.username == self.roomManager.getRoomCreator():
             self.roomManager.setRoomState('playing')
         else:
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
-        self.sceneManager.goToPaintingScene()
+        self.sceneManager.setAsCurrentScene(PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager))
         
     def quit(self):
         self.tempdir = self.gameManager.getTempDir()
@@ -106,7 +106,4 @@ class WinnerScene(Scene):
         if len(self.connectedUsers)-1 <= 0 :
             self.roomManager.closeRoom(self.roomId)
         pygame.time.set_timer(self.pygameEventSwitchDrawing, 0)
-        self.sceneManager.goToHomeScene()
-
-    def update(self):
-        pass
+        self.sceneManager.setAsCurrentScene(HomeScene.HomeScene(self.sceneManager, self.roomManager))

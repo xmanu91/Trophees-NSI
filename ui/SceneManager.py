@@ -1,6 +1,4 @@
 from ui.Scene import Scene
-from utility.RoomManager import RoomManager
-from utility.GameManager import GameManager
 import pygame
 
 class SceneManager:
@@ -24,20 +22,3 @@ class SceneManager:
     def update(self):
         self.currentScene.spriteGroup.update()
         self.currentScene.update()
-
-    def setHomeScene(self, scene: type[Scene], roomManager: RoomManager):
-        self.homeScene = scene
-        self.roomManager = roomManager
-
-    def setPaintingScene(self, scene: type[Scene], roomManager: RoomManager, gameManager: GameManager):
-        self.paintingScene = scene
-        self.roomManager = roomManager
-        self.gameManager = gameManager
-
-    def goToHomeScene(self):
-        self.setAsCurrentScene(self.homeScene)
-        self.currentScene.__init__(self, self.roomManager)
-
-    def goToPaintingScene(self):
-        self.setAsCurrentScene(self.paintingScene)
-        self.currentScene.__init__(self, self.roomManager, self.gameManager)

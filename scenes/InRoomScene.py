@@ -22,22 +22,14 @@ class InRoomScene(Scene):
         self.roomManager = roomManager
         self.sceneManager = sceneManager
         self.isUserRoomCreator = isUserRoomCreator
+        self.connected_users = self.roomManager.getUsersInCurrentRoom()
 
-        self.connectedUsers = {}
-        for user in self.roomManager.getUsersInCurrentRoom():
-            if user in self.connectedUsers:
-                self.connectedUsers[user] += 1
-            else:
-                self.connectedUsers[user] = 1
-        
-        if any(value > 1 for value in self.connectedUsers.values()):
-            try:
-                self.roomManager.closeConnection()
-                raiseAnError("Veuillez vous reconnecter avec un autre pseudonyme", lambda: exit())
-            finally:
-                self.background = Image('assets/background.jpg', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
-                self.spriteGroup.add(self.background)
-                return
+        if self.connected_users.count(self.roomManager.username) > 1:
+            self.roomManager.closeConnection()
+            raiseAnError("Veuillez vous reconnecter avec un autre pseudonyme")
+            sceneManager.setAsCurrentScene(scenes.HomeScene.HomeScene(self.sceneManager, self.roomManager))
+            return
+    
             
         self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
         print('In RoomId:', self.roomManager.currentRoomID)
@@ -91,7 +83,6 @@ class InRoomScene(Scene):
                 self.roomManager.setRoomState('playing')
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
             paintingScene = PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
-            self.sceneManager.setPaintingScene(paintingScene, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)
     def quitGame(self):
         print('quit game')

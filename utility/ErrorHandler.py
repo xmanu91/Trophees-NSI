@@ -18,7 +18,7 @@ class ErrorHandlerUi:
         if e.action == None:
             self.spriteGroup.add(ErrorWindow(e.error, self.closeError))
         else:
-            self.spriteGroup.add(ErrorWindow(e.error, e.action))
+            self.spriteGroup.add(ErrorWindow(e.error, lambda: (self.closeError(), e.action())))
     
     def closeError(self):
         self.spriteGroup.empty()

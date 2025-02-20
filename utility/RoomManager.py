@@ -140,8 +140,10 @@ class RoomManager:
     def doesRoomExist(self, roomId: any) -> bool:
         if not roomId.isdigit():
             return False
-        allRooms = self.getAllRoomsIds()
-        for room in allRooms:
-            if str(room[0]) == str(roomId) or room[0] == roomId:
-                return True
-        return False
+        try:
+            response = self.SQLProvider.get('SELECT room_name FROM rooms WHERE room_id=%s', (str(roomId),))
+            print(response)
+            return len(response) > 0
+        except sqlError as err:
+            print(err)
+        
