@@ -68,7 +68,6 @@ class VotesManager:
         if votes is None:
             return None
 
-        print(votes)
         # Count the votes
         usersDict = {} 
         for vote in votes:

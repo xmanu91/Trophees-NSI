@@ -23,16 +23,28 @@ class WinnerScene(Scene):
         self.roomManager = roomManager
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.background = Image("assets/background.jpg", pygame.Rect(0,0, self.screenWidth, self.screenHeight))
+        self.spriteGroup.add(self.background)
         self.gameManager = gameManager
-        self.quitButton = Button(pygame.Rect(self.screenWidth*0.9 - 100, self.screenHeight*0.1, 100, 30), self.Next, None, None, None, "QUITTER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
-        self.spriteGroup.add(self.background, self.quitButton)
+        
         self.votesManager = votesManager
         self.tempdir = self.gameManager.getTempDir()
         self.sceneDuration = sceneDuration
         time.sleep(2) # Waiting for data of all users
         self.winners =  self.votesManager.getWinners()
-        print(self.winners)
-        
+        print(f"self.winners: {self.winners}")
+
+        if self.roomManager.currentRound == self.roomManager.getRoundsNumber():
+            self.nextRoundOrQuitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "QUITTER", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+            self.spriteGroup.add(self.nextRoundOrQuitButton)
+        elif self.roomManager.currentRound < self.roomManager.getRoundsNumber() and self.roomManager.username == self.roomManager.getRoomCreator():
+            self.nextRoundOrQuitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.nextRound, None, None, None, "NEXT ROUND", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+            self.spriteGroup.add(self.nextRoundOrQuitButton)
+        else:
+            self.updateStateEventType = pygame.event.custom_type()
+            print('updateStateType:', self.updateStateEventType)
+            pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 1000)
+            eventManager.addEventHandler(self.updateStateEventType, self.checkGameState)
+
         self.text = ""
         if len(self.winners) == 1:
             self.text = "Le gagnant est : "
@@ -43,7 +55,7 @@ class WinnerScene(Scene):
         self.text = self.text[:-2]
 
         self.textLabel = Text(self.text, 32, (450, 450), (255,255,255), True)
-        self.spriteGroup.add(self.textLabel, self.quitButton)    
+        self.spriteGroup.add(self.textLabel)    
 
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
 
@@ -68,7 +80,23 @@ class WinnerScene(Scene):
         self.displayedDrawing = self.winnersDrawings[(self.winnersDrawings.index(self.displayedDrawing) + 1) % len(self.winnersDrawings)]
         self.spriteGroup.add(self.displayedDrawing)
 
-    def Next(self):
+    def checkGameState(self, e=None): # e is due to the event manager requirements
+        print('check game state')
+        if self.roomManager.getRoomState() == 'playing':
+            print("new round started")
+            self.nextRound()
+        else:
+            print("game not started")
+
+    def nextRound(self):
+        self.tempdir = self.gameManager.getTempDir()
+        if self.roomManager.username == self.roomManager.getRoomCreator():
+            self.roomManager.setRoomState('playing')
+        else:
+            pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
+        self.sceneManager.goToPaintingScene()
+        
+    def quit(self):
         self.tempdir = self.gameManager.getTempDir()
         self.tempdir.cleanup()
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
@@ -77,6 +105,7 @@ class WinnerScene(Scene):
         print(f"self.connectedUsers: {len(self.connectedUsers)-1}")
         if len(self.connectedUsers)-1 <= 0 :
             self.roomManager.closeRoom(self.roomId)
+        pygame.time.set_timer(self.pygameEventSwitchDrawing, 0)
         self.sceneManager.goToHomeScene()
 
     def update(self):

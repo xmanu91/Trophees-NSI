@@ -11,11 +11,10 @@ from ui.Text import Text
 from scenes.PaintingSceneComponent.ToolBar import ToolBar
 from scenes.VoteScene import VoteScene
 
-from utility.gameInitialisation import sqlProvider
 from utility.GameManager import GameManager
 from utility.RoomManager import RoomManager
 
-import tempfile
+import time
 import os
 
 class PaintingScene(Scene):
@@ -28,8 +27,10 @@ class PaintingScene(Scene):
         self.sceneManager = sceneManager
         self.gameManager = gameManager
         
+        time.sleep(0.2) # Waiting for data of all users
         if self.roomManager.username == roomManager.getRoomCreator():
             self.gameManager.drawTheme()
+            self.gameManager.deleteDrawings()
             self.theme = self.gameManager.drawingTheme
         else:
             self.theme = self.gameManager.getTheme()
@@ -46,7 +47,12 @@ class PaintingScene(Scene):
         self.spriteGroup.add(self.background, self.textThemeTimer, self.textTheme)
 
         self.themeTimer.startTimer()
+        self.gameManager.resetTempDir()
         self.tempdir = self.gameManager.getTempDir()
+
+        self.roomManager.currentRound += 1
+        print("Rounds number : ", self.roomManager.currentRound)
+        print("Total of rounds : ", self.roomManager.getRoundsNumber())
 
     def setCanva(self):
         self.spriteGroup.empty()

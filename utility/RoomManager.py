@@ -7,6 +7,7 @@ class RoomManager:
         self.username = username
         self.userId= None
         self.currentRoomID = None
+        self.currentRound = 0
     
     def getAllRooms(self):
         response = self.SQLProvider.get("SELECT * FROM rooms")
@@ -105,7 +106,7 @@ class RoomManager:
         except sqlError as err:
             print(err)
 
-    def getRoundNumber(self):
+    def getRoundsNumber(self):
         try:
             response = self.SQLProvider.get('SELECT rounds_number FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             return response[0][0]

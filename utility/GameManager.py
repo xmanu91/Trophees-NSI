@@ -36,6 +36,13 @@ class GameManager:
         except sqlError as err:
             print(err)
 
+    
+    def deleteDrawings(self):
+        try:
+            self.sqlManager.executeSQL('DELETE FROM drawings WHERE room_id=%s', (str(self.roomId),))
+        except sqlError as err:
+            print(err)
+
     def loadThemes(self):
         with open(getPath("assets/themes.txt"), "r", encoding="utf-8") as file:
             themes = [line.strip() for line in file]
@@ -49,3 +56,7 @@ class GameManager:
 
     def getTempDir(self):
         return self.tempdir
+
+    def resetTempDir(self):
+        self.tempdir.cleanup()
+        self.tempdir = tempfile.TemporaryDirectory()

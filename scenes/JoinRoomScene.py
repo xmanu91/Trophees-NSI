@@ -6,11 +6,9 @@ from ui.SceneManager import SceneManager
 from ui.Image import Image
 from ui.TextInput import TextInput
 from utility.ErrorHandler import raiseAnError
-
+from utility.RoomManager import RoomManager
 from scenes.InRoomScene import InRoomScene
 
-from utility.RoomManager import RoomManager
-import utility.eventManager
 
 class JoinRoomScene(Scene):
     def __init__(self, sceneManager : SceneManager, username : str, roomManager: RoomManager):

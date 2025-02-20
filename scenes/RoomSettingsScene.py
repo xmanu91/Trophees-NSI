@@ -43,6 +43,7 @@ class RoomSettingsScene(Scene):
         try:
             self.roomManager.setRoundsNumber(int(self.textInputNbRound.getText()))
             self.roomManager.setRoundTime(int(self.textInputDurationRound.getText()))
+            self.back()
         except ValueError:
             raiseAnError("Veuillez entrer des nombres pour les champs de saisie")
-        self.back()
+        
