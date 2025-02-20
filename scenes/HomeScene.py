@@ -24,6 +24,8 @@ class HomeScene(Scene):
 
     def joinRoom(self):
         if self.usernameInput.getText() == self.usernameInput.placeHolder or self.usernameInput.getText() == "":
-            raiseAnError("Veuillez entrer un pseudonyme")   
+            raiseAnError("Veuillez entrer un pseudonyme") 
+        elif not self.usernameInput.getText().isalnum():
+            raiseAnError("Caractères speciaux non autorisés")
         else:
             self.sceneManager.setAsCurrentScene(JoinRoomScene(self.sceneManager, self.usernameInput.getText(), self.roomManager))
