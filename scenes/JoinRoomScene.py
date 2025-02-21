@@ -22,26 +22,29 @@ class JoinRoomScene(Scene):
         self.roomManager.setUsername(username)
         self.sceneManager = sceneManager
         self.rooms = self.roomManager.getAllRooms()
-        self.background = Image('assets/background.jpg', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
-        self.seekRoomNameInput = TextInput(pygame.rect.Rect(self.screenWidth*0.05, self.screenHeight * 0.10 - 25, self.screenWidth * 0.6, 50), (0,0,0), (119,169,198), (255,255,255), (33,33,33, 50), placeholder="Entrez le nom de la room")
-        self.joinRoomButton = Button(pygame.rect.Rect(self.screenWidth * 0.68, self.screenHeight * 0.1 - 25, 120, 50), self.joinRoom, None, None, None, "Rejoindre", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
-        self.createRoomButton = Button(pygame.rect.Rect(self.screenWidth * 0.82, self.screenHeight * 0.1 - 25, 120, 50), self.createRoom, None, None, None, "Créer", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
-        self.updateRoomsButton = Button(pygame.rect.Rect(self.screenWidth * 0.82, self.screenHeight * 0.25 - 15, 120, 30), self.updateRooms, None, None, None, "Actualiser", defaultColor=(0,0,0,0), hoverColor=(119,169,198), textColor=(255,255,255), fontSize= 18)
+        self.background = Image('assets/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
+        self.seekRoomNameInput = TextInput(pygame.rect.Rect(self.screenWidth*0.02, self.screenHeight * 0.08 - 25, self.screenWidth * 0.6525, 50), (0,0,0), (119,169,198), (255,255,255), (33,33,33, 50), placeholder="Entrez le nom de la room")
+        self.GameInProgress = Text(f"Partie en cours : {len(self.roomManager.getAllRooms())}", 22, (self.screenWidth*0.02, self.screenHeight * 0.17), (0,0,0), False)
+        self.joinRoomButton = Button(pygame.rect.Rect(self.screenWidth * 0.68 + 12, self.screenHeight * 0.08 - 25, 120, 50), self.joinRoom, None, None, None, "Rejoindre", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.createRoomButton = Button(pygame.rect.Rect(self.screenWidth * 0.98 - 120, self.screenHeight * 0.08 - 25, 120, 50), self.createRoom, None, None, None, "Créer", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
+        self.updateRoomsButton = Button(pygame.rect.Rect(self.screenWidth * 0.98 - 120, self.screenHeight * 0.13 + 15, 120, 30), self.updateRooms, None, None, None, "Actualiser", defaultColor=(255,255,255), hoverColor=(119,169,198), textColor=(0,0,0), fontSize= 18)
 
-        self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton)
+        self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton, self.GameInProgress)
         self.updateRooms()
        
     def updateRooms(self, e=None): # e parameters is due to eventHandler contraints
         print('updateRoom')
         self.spriteGroup.empty()
-        self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton)
-        for i in range(len(self.rooms)):
-            self.spriteGroup.add(RoomCard(pygame.Rect(self.screenWidth*0.05, self.screenHeight*0.3 + 70*i , self.screenWidth * 0.9, 60), 
+        self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton, self.GameInProgress)
+        for i in range(min(5, len(self.rooms))):
+            self.spriteGroup.add(RoomCard(pygame.Rect(self.screenWidth*0.02, self.screenHeight*0.25 + 70*i , self.screenWidth * 0.96, 60), 
                                           self.rooms[i][2], 
                                           self.rooms[i][0], 
                                           self.roomManager,
                                           self.sceneManager))
         self.rooms = self.roomManager.getAllRooms()
+
+        self.GameInProgress.setText(f"Partie en cours : {len(self.roomManager.getAllRooms())}")
     
     def joinRoom(self):
         if not self.roomManager.doesRoomExist(self.seekRoomNameInput.getText()):
@@ -67,23 +70,23 @@ class JoinRoomScene(Scene):
             self.sceneManager.setAsCurrentScene(scenes.InRoomScene.InRoomScene(self.sceneManager, self.roomManager, True))
 
 class RoomCard(pygame.sprite.Sprite):
-    def __init__(self, size : pygame.Rect, roomName : str, roomID : int, roomManager: RoomManager, sceneManager: SceneManager):
+    def __init__(self, rect : pygame.Rect, roomName : str, roomID : int, roomManager: RoomManager, sceneManager: SceneManager):
         super().__init__()
-        self.rect = size
+        self.rect = rect
         self.roomName = roomName
         self.roomManager = roomManager
         self.sceneManager = sceneManager
         self.roomID = roomID
         self.image = pygame.Surface(self.rect.size)
-        self.color = (129, 143, 129)
+        self.color = (165, 165, 165)
         self.image.fill(self.color)
 
         #instance des cards :
         self.numberPlayer = roomManager.getConnectedUsersNumberInRoom(roomID)
-        self.numberPlayerText = Text((str(self.numberPlayer) + " joueurs connectés"), 17, (self.rect.width /1.5, self.rect.y + 19) , (0,0,0), False)
+        self.numberPlayerText = Text((str(self.numberPlayer) + " joueurs connectés"), 17, (self.rect.width /1.4, self.rect.y + 19) , (0,0,0), False)
         self.button = Button(
-            pygame.rect.Rect(self.rect.width - 75, self.rect.y + self.rect.height/2 - 20 , 100, 40), 
-            self.onButtonPressed, None, None, None, "Rejoindre", defaultColor=(164, 212, 162), hoverColor=(119, 161, 117),textColor=(0,0,0), fontSize= 20)
+            pygame.rect.Rect(self.rect.width - 100, self.rect.y + self.rect.height/2 - 20 , 100, 40), 
+            self.onButtonPressed, None, None, None, "Rejoindre", defaultColor=(100, 100, 100), hoverColor=(85, 85, 85),textColor=(0,0,0), fontSize= 20)
         
         self.text = Text(roomName , 30, (self.rect.x + 10, self.rect.y + 15), (0,0,0), False )
 

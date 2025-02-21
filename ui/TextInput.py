@@ -1,5 +1,6 @@
 import pygame
 import utility.eventManager as eventManager
+from utility.tools import getPath
 
 class TextInput(pygame.sprite.Sprite):
     def __init__(self, rect: pygame.Rect, borderColor: pygame.Color, selectColor: pygame.Color, textColor: pygame.Color, backgroundColor: pygame.Color, placeholder: str="", fontSize: int=32):
@@ -14,7 +15,7 @@ class TextInput(pygame.sprite.Sprite):
         self.textColor = textColor
         self.placeHolderColor = (50, 50, 50)
         self.fontSize = fontSize
-        self.font = pygame.font.Font(None, fontSize)
+        self.font = pygame.font.Font(getPath("assets/Papernotes.ttf"), fontSize)
         self.image = self.font.render(self.textInput, True, self.placeHolderColor)
         self.actif = False
         eventManager.addEventHandler(pygame.MOUSEBUTTONDOWN, self.onMouseButtonDown)
@@ -40,8 +41,6 @@ class TextInput(pygame.sprite.Sprite):
                     if self.textInput == self.placeHolder:
                         self.textInput = ""
                     self.textInput = self.textInput[:-1]
-                    if self.textInput == "":
-                        self.textInput = self.placeHolder
 
     def onTextInput(self, e):
         if self.actif:
