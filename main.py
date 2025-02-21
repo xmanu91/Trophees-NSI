@@ -18,7 +18,7 @@ else:
 load_dotenv(dotenv_path=dotenv_path)
 
 pygame.init()
-pygame.display.set_caption("Inkspired v1.? (Beta)")
+pygame.display.set_caption("Inkspired v1.?  (Beta)")
 
 WIDTH, HEIGHT = 900, 500
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -34,7 +34,7 @@ screen.fill((255, 255, 255))
 
 while True:
     for event in pygame.event.get():
-        utility.eventManager.update(event)  
+        utility.eventManager.update(event)
 
         if event.type == pygame.QUIT:
             if roomManager.currentRoomID != None:
