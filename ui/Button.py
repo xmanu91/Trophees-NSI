@@ -51,6 +51,7 @@ class Button(pygame.sprite.Sprite):
                 self.image.fill(self.hoverColor)
             elif self.hoverImage:
                 self.image = self.hoverImage
+                self.rect = self.imageCoordinates
 
             if isMousePressed and not self.isUsable:  
                 if self.action and self.actionned!=True:
@@ -65,5 +66,6 @@ class Button(pygame.sprite.Sprite):
                 self.image.fill(self.defaultColor)
             else:
                 self.image = self.spriteImage
+                self.rect = self.imageCoordinates
         
         self.image.blit(self.surface_text, self.textCoordinates)

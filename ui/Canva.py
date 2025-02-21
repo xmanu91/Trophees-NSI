@@ -1,3 +1,4 @@
+from typing import Literal
 from utility.tools import centerCoordinates
 import utility.eventManager as eventManager
 from collections import deque
@@ -7,8 +8,8 @@ import os
 class Canva(pygame.sprite.Sprite):
     def __init__(self,rect: pygame.Rect, backgroundColor: pygame.Color,drawColor: pygame.Color, username: str,  brushSize: int = 10):
         super().__init__()
-        self.selectedColor: pygame.Color = drawColor
-        self.drawColor: pygame.Color = drawColor
+        self.selectedColor: pygame.Color = drawColor # Couleur selectionné de base (sans darkness)
+        self.drawColor: pygame.Color = drawColor # Couleur effective
         self.rect: pygame.Rect = rect
         self.image: pygame.Surface = pygame.Surface(self.rect.size)
         self.backgroundColor: pygame.Color = backgroundColor
@@ -18,6 +19,7 @@ class Canva(pygame.sprite.Sprite):
         self.allowDraw: bool = True
         self.darknessValue: int = 100
         self.username = username
+        self.selectedTool = "brush"
         eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
 
     def update(self):
@@ -26,15 +28,39 @@ class Canva(pygame.sprite.Sprite):
         
         if self.allowDraw:
             if pygame.mouse.get_pressed(3)[0] and self.rect.collidepoint((mousePositionX, mousePositionY)):  
-                self.__circleBrushSize = int((self.brushSize/2)-1)
-                if self.__previousPoint:
-                    pygame.draw.circle(self.image, self.drawColor, self.__previousPoint, self.__circleBrushSize)
-                    pygame.draw.line(self.image, self.drawColor, self.__previousPoint, mousePosition, self.brushSize)
-                    pygame.draw.circle(self.image, self.drawColor, mousePosition, self.__circleBrushSize)
-                    self.__previousPoint = mousePosition
-                else:
-                    pygame.draw.circle(self.image, self.drawColor, mousePosition, self.__circleBrushSize)
-                    self.__previousPoint = mousePosition
+                match self.selectedTool:
+                    case "brush":
+                        self.setBrushColor(self.selectedColor)
+                        self.__circleBrushSize = int((self.brushSize/2)-1)
+                        if self.__previousPoint:
+                            pygame.draw.circle(self.image, self.drawColor, self.__previousPoint, self.__circleBrushSize)
+                            pygame.draw.line(self.image, self.drawColor, self.__previousPoint, mousePosition, self.brushSize)
+                            pygame.draw.circle(self.image, self.drawColor, mousePosition, self.__circleBrushSize)
+                            self.__previousPoint = mousePosition
+                        else:
+                            pygame.draw.circle(self.image, self.drawColor, mousePosition, self.__circleBrushSize)
+                            self.__previousPoint = mousePosition
+                    case "bucket":
+                        self.holyBucket(mousePosition[0], mousePosition[1], self.drawColor, self.image)
+                    case "eraser":
+                        self.setBrushColor((255, 255, 255))
+                        self.__circleBrushSize = int((self.brushSize/2)-1)
+                        if self.__previousPoint:
+                            pygame.draw.circle(self.image, self.drawColor, self.__previousPoint, self.__circleBrushSize)
+                            pygame.draw.line(self.image, self.drawColor, self.__previousPoint, mousePosition, self.brushSize)
+                            pygame.draw.circle(self.image, self.drawColor, mousePosition, self.__circleBrushSize)
+                            self.__previousPoint = mousePosition
+                        else:
+                            pygame.draw.circle(self.image, self.drawColor, mousePosition, self.__circleBrushSize)
+                            self.__previousPoint = mousePosition
+                    case "colorpicker":
+                        try:
+                            color = self.image.get_at(mousePosition)
+                            self.setBrushColor(color)
+                            self.setSelectedColor(color)
+                        except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
+                            print(Error)
+
             else:
                 self.__previousPoint = None
 
@@ -46,7 +72,9 @@ class Canva(pygame.sprite.Sprite):
 
         if pygame.mouse.get_pressed(3)[1]:
                 try:
-                    self.setBrushColor(self.image.get_at((mousePositionX + self.rect.x, mousePositionY + self.rect.y)))
+                    color = self.image.get_at((mousePositionX + self.rect.x, mousePositionY + self.rect.y))
+                    self.setBrushColor(color)
+                    self.setSelectedColor(color)
                 except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
                     print(Error)
 
@@ -62,6 +90,9 @@ class Canva(pygame.sprite.Sprite):
 
     def setBrushColor(self, color: pygame.Color):
         self.drawColor = color
+    
+    def setSelectedTool(self, tool: Literal["brush"] | Literal["bucket"] | Literal["colorpicker"] | Literal["eraser"]):
+        self.selectedTool = tool
 
     def setSelectedColor(self, color: pygame.Color):
         self.selectedColor = color
