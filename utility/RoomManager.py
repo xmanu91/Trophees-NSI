@@ -7,9 +7,17 @@ class RoomManager:
         self.username = username
         self.userId= None
         self.currentRoomID = None
+        self.currentRound = 0
     
     def getAllRooms(self):
         response = self.SQLProvider.get("SELECT * FROM rooms")
+        if response is None:
+            return []
+        rooms = [row for row in response]
+        return rooms
+
+    def getAllRoomsIds(self):
+        response = self.SQLProvider.get("SELECT room_id FROM rooms")
         if response is None:
             return []
         rooms = [row for row in response]
@@ -98,7 +106,7 @@ class RoomManager:
         except sqlError as err:
             print(err)
 
-    def getRoundNumber(self):
+    def getRoundsNumber(self):
         try:
             response = self.SQLProvider.get('SELECT rounds_number FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             return response[0][0]
@@ -129,3 +137,20 @@ class RoomManager:
     def setUsername(self, newUsername: str):
         self.username = newUsername
 
+    def doesRoomExist(self, roomId: id) -> bool:
+        if not roomId.isdigit():
+            return False
+        try:
+            response = self.SQLProvider.get('SELECT room_name FROM rooms WHERE room_id=%s', (str(roomId),))
+            print(response)
+            return len(response) > 0
+        except sqlError as err:
+            print(err)
+
+    def doesUserConnectedInRoom(self, roomId: id, username: str) -> bool:
+        try:
+            response = self.SQLProvider.get('SELECT username FROM connected_users WHERE room_id=%s and username=%s', (str(roomId), username))
+            return len(response) > 0
+        except sqlError as err:
+            print(err)
+        

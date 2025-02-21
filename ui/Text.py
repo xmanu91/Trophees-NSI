@@ -1,4 +1,5 @@
 import pygame
+from utility.tools import getPath
 
 class Text(pygame.sprite.Sprite):
     def __init__(
@@ -8,13 +9,13 @@ class Text(pygame.sprite.Sprite):
         textCoordinates: tuple[int, int],
         color: tuple[int, int, int],
         isCentered: bool = True,
-        fontFamily: str = 'arial',
+        fontFamily: str | None = None,
         ): 
         super().__init__()
         self.text = text
         self.fontSize = fontSize
         self.color = color
-        self.font = pygame.font.Font(pygame.font.match_font(fontFamily), fontSize)  
+        self.font = pygame.font.Font(getPath(f"assets/Papernotes.ttf"), fontSize)  
         self.image = self.font.render(self.text, True, self.color)
         self.rect = self.image.get_rect()
 

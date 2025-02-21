@@ -1,5 +1,6 @@
 from typing import Callable
 import pygame
+from utility.tools import getPath
 
 class Button(pygame.sprite.Sprite): 
     def __init__(
@@ -33,7 +34,7 @@ class Button(pygame.sprite.Sprite):
             self.rect = buttonRect  
 
         #Button text
-        self.font = pygame.font.Font(pygame.font.match_font('arial'), fontSize)
+        self.font = pygame.font.Font(getPath("assets/Papernotes.ttf"), fontSize)
         self.surface_text = self.font.render(text, True, textColor)
         self.textCoordinates= textCoordinates or (self.rect.width/2 - self.surface_text.get_width() / 2, self.rect.height/2 - self.surface_text.get_height() / 2)
         
@@ -51,6 +52,7 @@ class Button(pygame.sprite.Sprite):
                 self.image.fill(self.hoverColor)
             elif self.hoverImage:
                 self.image = self.hoverImage
+                self.rect = self.imageCoordinates
 
             if isMousePressed and not self.isUsable:  
                 if self.action and self.actionned!=True:
@@ -60,10 +62,11 @@ class Button(pygame.sprite.Sprite):
                 self.isUsable = False
                 self.actionned = False
         else: 
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND) # Remettre arrow si besoins
             if self.defaultColor:
                 self.image.fill(self.defaultColor)
             else:
                 self.image = self.spriteImage
+                self.rect = self.imageCoordinates
         
         self.image.blit(self.surface_text, self.textCoordinates)

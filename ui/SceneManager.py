@@ -6,11 +6,13 @@ class SceneManager:
         self.surface: pygame.Surface = surface
         self.currentScene: Scene = None
 
-    def setAsCurrentScene(self, scene: type[Scene]) -> None:
-        if self.currentScene != None:
-            print('change scene', scene)
+    def setAsCurrentScene(self, scene: type[Scene], deletePreviousScene: bool = True) -> None:
+        if self.currentScene != None and deletePreviousScene:
+            print('Changement de scene:', scene)
             self.currentScene.spriteGroup.empty()
             self.surface.fill((0,0,0))
+        elif self.currentScene != None and deletePreviousScene == False:
+            print('Changement de scene sans effacer la scene precedente', scene)
         self.currentScene = scene
         self.draw()
 
