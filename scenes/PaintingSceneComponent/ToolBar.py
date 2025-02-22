@@ -4,6 +4,7 @@ from ui.Shape import Shape
 from ui.Text import Text
 from ui.Canva import Canva
 import pygame
+from utility.tools import removeAlpha
 
 from scenes.PaintingSceneComponent.PickPalette import PickPalette
 from scenes.PaintingSceneComponent.PresetPalette import PresetPalette
@@ -16,7 +17,7 @@ class ToolBar():
         self.theme = theme
 
         # Création de la barre d'outil
-        self.background = Shape(pygame.Rect(0, 0, 200, 900), (144, 144, 255))
+        self.background = Image.Image("assets/brown paper.png", pygame.Rect(0, 0, 200, 900))
         self.spriteGroup.add(self.background)
 
         themeFontSize = int((16 / len(self.theme))*25) # Calc de la taille de la police en fonction de la longueur du theme
@@ -48,10 +49,10 @@ class ToolBar():
         self.presetPalette = PresetPalette(self.canva, self.spriteGroup, self.colorPreview, self.darknessPreview) # Carrés
         self.pickPalette = PickPalette(self.canva, self.spriteGroup, self.colorPreview, self.darknessPreview) # Cercle
 
-        self.darknessIncreaseButton = Button(pygame.Rect(177, 475, 15, 15), lambda: (self.canva.changeDarkness(-5), self.darknessPreview.changeColor(self.canva.getBrushColor()), self.colorPreview.changeColor(self.canva.getBrushColor())), None, None, None, "+", 14, (0, 0, 0), (4, -2), (255, 255, 255), (144, 144, 144))
+        self.darknessIncreaseButton = Button(pygame.Rect(177, 475, 15, 15), lambda: (self.canva.changeDarkness(-5), self.darknessPreview.changeColor(self.canva.getBrushColor()), self.colorPreview.changeColor(self.canva.getBrushColor())), None, None, None, "+", 14, (0, 0, 0), (4, 2), (255, 255, 255), (144, 144, 144))
         self.spriteGroup.add(self.darknessIncreaseButton)
 
-        self.darknessDecreaseButton = Button(pygame.Rect(7, 475, 15, 15), lambda: (self.canva.changeDarkness(5), self.darknessPreview.changeColor(self.canva.getBrushColor()), self.colorPreview.changeColor(self.canva.getBrushColor())), None, None, None, "-", 14, (0, 0, 0), (6, -2), (255, 255, 255), (144, 144, 144))
+        self.darknessDecreaseButton = Button(pygame.Rect(7, 475, 15, 15), lambda: (self.canva.changeDarkness(5), self.darknessPreview.changeColor(self.canva.getBrushColor()), self.colorPreview.changeColor(self.canva.getBrushColor())), None, None, None, "-", 14, (0, 0, 0), (6, 2), (255, 255, 255), (144, 144, 144))
         self.spriteGroup.add(self.darknessDecreaseButton) 
 
         self.previousColor = self.canva.getBrushColor()         

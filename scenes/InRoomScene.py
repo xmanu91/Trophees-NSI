@@ -72,10 +72,11 @@ class InRoomScene(Scene):
         if self.isUserRoomCreator:
             self.spriteGroup.add(self.playButton, self.roomSettings)
 
-        for i in range(len(self.connectedUsers)):
-            self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i]))
-
-
+        for i in range(len(self.connectedUsers)): # Mettre la couronne 
+            if self.connectedUsers[i] == self.roomManager.getRoomCreator():
+                self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], True))
+            else:
+                self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], False))
 
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
 
@@ -110,10 +111,17 @@ class InRoomScene(Scene):
         self.sceneManager.setAsCurrentScene(scenes.RoomSettingsScene.RoomSettingsScene(self.sceneManager, self.roomManager, self, self.gameManager), False)
 
 class UserCard(pygame.sprite.Sprite):
-    def __init__(self, rect: pygame.Rect, username: str):
+    def __init__(self, rect: pygame.Rect, username: str, isCreator: bool):
         super().__init__()
         self.rect = rect
-        self.text = Text(username, 20, (20, self.rect.height / 2 - 12), (255,255,255), isCentered=False)
+
+        self.text = Text(username, 20, (self.rect.w/2, self.rect.h/2), (255,255,255), isCentered=True)
+
+        if isCreator:
+            self.emoji = Text("👑", 20, (self.rect.w/2 + self.text.rect.w/2 + 16, self.rect.h/2 - 1), (255,255,255), isCentered=True, fontFamily="FirefoxEmoji.ttf")
+
         self.image = pygame.Surface(self.rect.size)
         self.image.fill((50, 50, 50))
         self.image.blit(self.text.image, self.text.rect)
+        if isCreator:
+            self.image.blit(self.emoji.image, self.emoji.rect)

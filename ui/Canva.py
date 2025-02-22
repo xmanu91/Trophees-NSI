@@ -72,7 +72,7 @@ class Canva(pygame.sprite.Sprite):
 
         if pygame.mouse.get_pressed(3)[1]:
                 try:
-                    color = self.image.get_at((mousePositionX + self.rect.x, mousePositionY + self.rect.y))
+                    color = self.image.get_at((mousePosition[0], mousePosition[1]))
                     self.setBrushColor(color)
                     self.setSelectedColor(color)
                 except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva

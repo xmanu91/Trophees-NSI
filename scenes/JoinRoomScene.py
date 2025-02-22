@@ -44,7 +44,7 @@ class JoinRoomScene(Scene):
                                           self.sceneManager))
         self.rooms = self.roomManager.getAllRooms()
 
-        self.GameInProgress.setText(f"Partie en cours : {len(self.roomManager.getAllRooms())}")
+        self.GameInProgress.setText(f"Parties en cours : {len(self.roomManager.getAllRooms())}")
     
     def joinRoom(self):
         if not self.roomManager.doesRoomExist(self.seekRoomNameInput.getText()):

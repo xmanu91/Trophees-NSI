@@ -62,3 +62,6 @@ def getPath(relativePath: str):
     base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
     return os.path.join(base_path, relativePath)
 
+def removeAlpha(color: tuple):
+    return (color[0], color[1], color[2])
+
