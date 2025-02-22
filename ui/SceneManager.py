@@ -19,6 +19,9 @@ class SceneManager:
     def draw(self):
         self.currentScene.spriteGroup.draw(self.surface)
 
+    def getSpriteGroup(self) -> pygame.sprite.Group:
+        return self.currentScene.spriteGroup
+    
     def update(self):
         self.currentScene.spriteGroup.update()
         self.currentScene.update()

@@ -1,10 +1,12 @@
 from utility.SQLProvider import SQLProvider
 from utility.RoomManager import RoomManager
 from utility.ErrorHandler import ErrorHandlerUi, errorEventType
+from utility.ButtonManager import ButtonManager
 from ui.SceneManager import SceneManager
 from scenes.HomeScene import HomeScene
 import utility.gameInitialisation
 from dotenv import load_dotenv
+from ui.Button import Button
 import utility.eventManager
 import pygame
 import sys
@@ -26,6 +28,10 @@ errorHandler = ErrorHandlerUi()
 utility.eventManager.addEventHandler(errorEventType, errorHandler.raiseError)
 
 sceneManager = SceneManager(screen)
+
+buttonManager = ButtonManager(sceneManager)
+Button.buttonManager = buttonManager  
+
 roomManager = RoomManager(utility.gameInitialisation.sqlProvider, '')
 homeScene = HomeScene(sceneManager, roomManager)
 sceneManager.setAsCurrentScene(homeScene)
@@ -47,6 +53,7 @@ while True:
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
          
     sceneManager.update()
+    buttonManager.update()
     sceneManager.draw()
     errorHandler.spriteGroup.update()
     errorHandler.spriteGroup.draw(screen)
