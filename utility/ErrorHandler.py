@@ -16,13 +16,16 @@ class ErrorHandlerUi:
     def raiseError(self, e):
         self.spriteGroup.add(Shape(pygame.Rect(0,0, pygame.display.get_window_size()[0],  pygame.display.get_window_size()[1]), (0,0,0, int(255*0.40))))
         if e.action == None:
-            self.spriteGroup.add(ErrorWindow(e.error, self.closeError))
+            self.errorWindow = ErrorWindow(e.error, self.closeError)
+            self.spriteGroup.add(self.errorWindow)
         else:
-            self.spriteGroup.add(ErrorWindow(e.error, lambda: (self.closeError(), e.action())))
+            self.errorWindow = ErrorWindow(e.error, lambda: (self.closeError(), e.action()))
+            self.spriteGroup.add(self.errorWindow)
     
     def closeError(self):
         self.spriteGroup.empty()
-
+        self.errorWindow.kill()
+        
 
 class ErrorWindow(pygame.sprite.Sprite):
     def __init__(self, error, action):
@@ -37,10 +40,13 @@ class ErrorWindow(pygame.sprite.Sprite):
         self.rect.y = pygame.display.get_window_size()[1]/2 - self.rect.h/2
         
         self.errorText.rect.centerx = self.rect.width/2
-        self.button = Button(pygame.Rect(self.rect.centerx - 50, self.rect.bottom - 75, 100, 50), action, None, None, None, "D'accord", defaultColor=(255,255,255),  hoverColor=(119,169,198), textColor=(0,0,0))
+        self.button = Button(pygame.Rect(self.rect.centerx - 50, self.rect.bottom - 75, 100, 50), action, None, None, None, "D'accord", defaultColor=(255,255,255),  hoverColor=(119,169,198), textColor=(0,0,0), ErrorButton=True)
 
         self.image.blit(self.errorText.image, self.errorText.rect)
 
     def update(self):
         self.button.update()
         self.image.blit(self.button.image, (self.rect.width/2 - 50, self.rect.height - 75, 100, 50))
+
+    def kill(self):
+        self.button.kill()

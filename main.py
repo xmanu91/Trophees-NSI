@@ -1,10 +1,10 @@
-from utility.SQLProvider import SQLProvider
 from utility.RoomManager import RoomManager
 from utility.ErrorHandler import ErrorHandlerUi, errorEventType
 from ui.SceneManager import SceneManager
 from scenes.HomeScene import HomeScene
 import utility.gameInitialisation
 from dotenv import load_dotenv
+from ui.Button import Button
 import utility.eventManager
 import pygame
 import sys
@@ -25,7 +25,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 errorHandler = ErrorHandlerUi()
 utility.eventManager.addEventHandler(errorEventType, errorHandler.raiseError)
 
-sceneManager = SceneManager(screen)
+sceneManager = SceneManager(screen) 
+Button.sceneManager = sceneManager
+
 roomManager = RoomManager(utility.gameInitialisation.sqlProvider, '')
 homeScene = HomeScene(sceneManager, roomManager)
 sceneManager.setAsCurrentScene(homeScene)

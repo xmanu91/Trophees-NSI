@@ -24,7 +24,7 @@ class JoinRoomScene(Scene):
         self.rooms = self.roomManager.getAllRooms()
         self.background = Image('assets/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.seekRoomNameInput = TextInput(pygame.rect.Rect(self.screenWidth*0.02, self.screenHeight * 0.08 - 25, self.screenWidth * 0.6525, 50), (0,0,0), (119,169,198), (255,255,255), (33,33,33, 50), placeholder="Entrez le nom de la room")
-        self.GameInProgress = Text(f"Partie en cours : {len(self.roomManager.getAllRooms())}", 22, (self.screenWidth*0.02, self.screenHeight * 0.17), (0,0,0), False)
+        self.GameInProgress = Text(f"Parties en cours : {len(self.roomManager.getAllRooms())}", 22, (self.screenWidth*0.02, self.screenHeight * 0.17), (0,0,0), False)
         self.joinRoomButton = Button(pygame.rect.Rect(self.screenWidth * 0.68 + 12, self.screenHeight * 0.08 - 25, 120, 50), self.joinRoom, None, None, None, "Rejoindre", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
         self.createRoomButton = Button(pygame.rect.Rect(self.screenWidth * 0.98 - 120, self.screenHeight * 0.08 - 25, 120, 50), self.createRoom, None, None, None, "Créer", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize= 25)
         self.updateRoomsButton = Button(pygame.rect.Rect(self.screenWidth * 0.98 - 120, self.screenHeight * 0.13 + 15, 120, 30), self.updateRooms, None, None, None, "Actualiser", defaultColor=(255,255,255), hoverColor=(119,169,198), textColor=(0,0,0), fontSize= 18)
