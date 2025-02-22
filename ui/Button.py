@@ -56,50 +56,13 @@ class Button(pygame.sprite.Sprite, ButtonManager):
                     sprite.disabled = True
 
     def kill(self):
-        print("Reabilitation of the button")
         group = self.buttonManager.getSpriteGroup()
         for sprite in group:
-            print(sprite)
             if type(sprite) == type(self):
                 sprite.disabled = False
         super().kill()
 
-    def epdate(self): 
-        mousePosition = pygame.mouse.get_pos()
-        isMousePressed = pygame.mouse.get_pressed()[0]
-
-        #Hover
-        if self.rect.collidepoint(mousePosition): 
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if self.hoverColor:
-                self.image.fill(self.hoverColor)
-            elif self.hoverImage:
-                self.image = self.hoverImage
-                self.rect = self.imageCoordinates
-
-            if isMousePressed and not self.isUsable:  
-                if self.action and self.actionned!=True:
-                    self.actionned = True
-                    self.action()
-            else:
-                self.isUsable = False
-                self.actionned = False
-        else: 
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND) # Remettre arrow si besoins
-            if self.defaultColor:
-                self.image.fill(self.defaultColor)
-            else:
-                self.image = self.spriteImage
-                self.rect = self.imageCoordinates
-        
-        self.image.blit(self.surface_text, self.textCoordinates)
-
-
     def update(self):
-        """
-        Clic sur le bouton d'apres fix
-        Clic sur le bouton derriere not fix /!\
-        """
         mousePosition = pygame.mouse.get_pos()
         isMousePressed = pygame.mouse.get_pressed()[0]
 
