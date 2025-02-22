@@ -1,11 +1,11 @@
 from typing import Callable
 import pygame
 from utility.tools import getPath
-from utility.ButtonManager import ButtonManager
+from ui.SceneManager import SceneManager
 
-class Button(pygame.sprite.Sprite, ButtonManager):
+class Button(pygame.sprite.Sprite):
 
-    buttonManager = None
+    sceneManager = None
 
     def __init__(
             self, 
@@ -49,14 +49,13 @@ class Button(pygame.sprite.Sprite, ButtonManager):
         self.previousState = False
 
         if self.ErrorButton:
-            group = self.buttonManager.getSpriteGroup()
+            group = self.sceneManager.getSpriteGroup()
             for sprite in group:
                 if type(sprite) == type(self):
-                    print(type(sprite), sprite)
                     sprite.disabled = True
 
     def kill(self):
-        group = self.buttonManager.getSpriteGroup()
+        group = self.sceneManager.getSpriteGroup()
         for sprite in group:
             if type(sprite) == type(self):
                 sprite.disabled = False
@@ -77,7 +76,6 @@ class Button(pygame.sprite.Sprite, ButtonManager):
             if isMousePressed:
                 if self.action:
                     self.action()
-                    print("Clic")
 
         else: 
             if self.defaultColor:
