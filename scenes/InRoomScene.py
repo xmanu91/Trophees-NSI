@@ -15,6 +15,7 @@ from utility.ErrorHandler import raiseAnError
 from utility.RoomManager import RoomManager
 from utility.GameManager import GameManager
 import utility.eventManager as eventManager
+import utility.consolLog as consolLog
 
 class InRoomScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, isUserRoomCreator: bool):
@@ -26,7 +27,7 @@ class InRoomScene(Scene):
         self.connected_users = self.roomManager.getUsersInCurrentRoom()
         self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
         self.roomManager.setRoundsNumber(1)
-        print('In RoomId:', self.roomManager.currentRoomID)
+        consolLog.info('In RoomId:', self.roomManager.currentRoomID)
 
         self.background = Image('assets/backgrounds/paperBackground_2.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.roomNameText = Text(roomManager.getCurrentRoomName(), 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), (0,0,0), isCentered=False)
@@ -55,12 +56,11 @@ class InRoomScene(Scene):
         self.updateConnectedUsers()
 
         self.updateStateEventType = pygame.event.custom_type()
-        print('updateStateType:', self.updateStateEventType)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 1000)
         eventManager.addEventHandler(self.updateStateEventType, self.checkGameState)
         
     def updateConnectedUsers(self, e=None): # e parameters is due to eventHandler contraints
-        print('executed')
+        consolLog.info('Actualisation...')
         self.spriteGroup.empty()
 
         self.subHeadText.setText(f'Utilisateurs connectés ({str(len(self.roomManager.getUsersInCurrentRoom()))}):')
@@ -94,7 +94,7 @@ class InRoomScene(Scene):
             paintingScene = scenes.PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)
     def quitGame(self):
-        print('quit game')
+        consolLog.info("Room quitter")
         if self.isUserRoomCreator:
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
@@ -104,7 +104,6 @@ class InRoomScene(Scene):
             self.roomManager.closeRoom(self.roomId)
 
     def checkGameState(self, e=None): # e is due to the event manager requirements
-        print('check game check')
         if self.roomManager.getRoomState() == 'playing':
             self.startGame()
 

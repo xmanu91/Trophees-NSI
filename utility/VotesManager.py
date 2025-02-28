@@ -2,6 +2,7 @@ import utility.tools
 
 from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
+from utility import consolLog
 
 import os
 import tempfile
@@ -18,23 +19,23 @@ class VotesManager:
     def getDrawings(self):
         try: 
             utility.tools.initialiseDirectory(self.tempdir.name)
-            print(self.roomId)
+            consolLog.info("RoomId : ", self.roomId)
             # Utilisation de paramètres dans las requête SELECT
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator<>%s", (str(self.roomId), self.username))
             if response is None:
                 return None
             self.drawings = [(drawing[0], drawing[1]) for drawing in response]  # type: ignore
             self.participants = [drawing[0] for drawing in response]  # type: ignore
-            print("response" + str(response), "self.drawings:" + str(self.drawings), "self.participants: " + str(self.participants))
+            consolLog.info("response" + str(response), "self.drawings:" + str(self.drawings), "self.participants: " + str(self.participants))
             for drawing in self.drawings:
                 self.saveDrawing(drawing[1], drawing[0])
             return self.drawings
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     def getDrawing(self, username: str):
         try: 
-            print(self.roomId)
+            consolLog.info("RoomId : ", self.roomId)
             # Utilisation de paramètres dans la requête SELECT
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator=%s", (str(self.roomId), username))
             if response is None:
@@ -42,7 +43,7 @@ class VotesManager:
             self.saveDrawing(response[0][1], response[0][0])
             return (response[0][1], response[0][0])
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     def vote(self, attributedVote, rating: int):
         try:
@@ -50,7 +51,7 @@ class VotesManager:
             self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, room_id) VALUES (%s, %s, %s, %s)", 
                                    (self.username, attributedVote, rating, str(self.roomId)))
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     def getVotes(self):
         try:
@@ -61,7 +62,7 @@ class VotesManager:
             votes = [vote for vote in response]
             return votes
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     def getWinners(self):
         votes = self.getVotes()
@@ -86,7 +87,6 @@ class VotesManager:
 
     def saveDrawing(self, binary, name):
         out = None
-        print(binary)
   
         try: 
             # creating files in output folder for writing in binary mode 
@@ -96,7 +96,7 @@ class VotesManager:
             out.write(binary) 
 
         except Exception as err:
-            print(err)
+            consolLog.error(err)
             
         # closing output file object 
         finally: 

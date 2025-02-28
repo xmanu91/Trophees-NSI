@@ -12,6 +12,7 @@ from utility.gameInitialisation import sqlProvider
 from utility.VotesManager import VotesManager
 from utility.RoomManager import RoomManager
 from utility.GameManager import GameManager
+from utility import consolLog
 
 from scenes.WinnerScene import WinnerScene
 from time import sleep
@@ -70,7 +71,7 @@ class VoteScene(Scene):
                 button.defaultColor = (255, 255, 255)
 
     def nextDrawing(self, note: int):
-        print(self.votesManager.participants, self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
+        consolLog.info(self.votesManager.participants, self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
         self.votesManager.vote(self.votesManager.participants[self.index], note)
 
         if self.index < len(self.votesManager.participants)-1:
@@ -87,5 +88,5 @@ class VoteScene(Scene):
             self.spriteGroup.add(self.drawing)
             pygame.display.flip()
         else:
-            print(self.votesManager.getWinners())
+            consolLog.info(self.votesManager.getWinners())
             self.sceneManager.setAsCurrentScene(WinnerScene(self.sceneManager, self.votesManager, self.gameManager, self.roomManager))

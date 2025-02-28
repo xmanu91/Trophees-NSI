@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from ui.Button import Button
 import utility.eventManager
 from utility.tools import getPath
+from utility import consolLog
 import pygame
 import sys
 import os
@@ -48,6 +49,7 @@ while True:
                 if roomManager.username == roomCreator:
                     roomManager.closeRoom(roomID)
             pygame.quit()
+            consolLog.info("Quit")
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
          
     sceneManager.update()

@@ -11,12 +11,13 @@ from ui.TextInput import TextInput
 
 from utility.ErrorHandler import raiseAnError
 from utility.RoomManager import RoomManager
+import utility.consolLog as consolLog
 
 
 class JoinRoomScene(Scene):
     def __init__(self, sceneManager : SceneManager, username : str, roomManager: RoomManager):
         super().__init__()
-        print('join room scene init')
+        consolLog.info("Initialisation de JoinRoomScene")
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.roomManager = roomManager
         self.roomManager.setUsername(username)
@@ -33,7 +34,6 @@ class JoinRoomScene(Scene):
         self.updateRooms()
        
     def updateRooms(self, e=None): # e parameters is due to eventHandler contraints
-        print('updateRoom')
         self.spriteGroup.empty()
         self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton, self.GameInProgress)
         for i in range(min(5, len(self.rooms))):

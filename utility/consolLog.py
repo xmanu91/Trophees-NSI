@@ -2,8 +2,10 @@ import datetime
 import inspect
 
 ORANGE = "\033[33m"
-RED = "\033[31m"     
-END = "\033[0m"   
+RED = "\033[31m"
+END = "\033[0m"
+
+debug = True
 
 def getFileName(inspectStackFilename):
     templist = []
@@ -15,11 +17,17 @@ def getFileName(inspectStackFilename):
     templist.reverse()
     return "".join(templist)
 
-def info(text: str):
-    print(f"{str(datetime.datetime.now())[:19]} - INFO - {getFileName(inspect.stack()[1].filename)} - {text}")
+def info(*text: str | int | float | bool):
+    if debug:
+        message = " ".join(map(str, text)) 
+        print(f"{str(datetime.datetime.now())[:19]} - INFO - {getFileName(inspect.stack()[1].filename)} - {message}")
 
-def warn(text: str):
-    print(f"{ORANGE}{str(datetime.datetime.now())[:19]} - WARN - {getFileName(inspect.stack()[1].filename)} - {text}{END}")
+def warn(*text: str | int | float | bool):
+    if debug:
+        message = " ".join(map(str, text))
+        print(f"{ORANGE}{str(datetime.datetime.now())[:19]} - WARN - {getFileName(inspect.stack()[1].filename)} - {message}{END}")
 
-def error(text: str):
-    print(f"{RED}{str(datetime.datetime.now())[:19]} - ERROR - {getFileName(inspect.stack()[1].filename)} - {text}{END}")
+def error(*text: str | int | float | bool):
+    if debug:
+        message = " ".join(map(str, text))
+        print(f"{RED}{str(datetime.datetime.now())[:19]} - ERROR - {getFileName(inspect.stack()[1].filename)} - {message}{END}")
