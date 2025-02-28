@@ -11,6 +11,7 @@ from ui.Text import Text
 from scenes.PaintingSceneComponent.ToolBar import ToolBar
 from scenes.VoteScene import VoteScene
 
+
 from utility.GameManager import GameManager
 from utility.RoomManager import RoomManager
 from utility import consolLog

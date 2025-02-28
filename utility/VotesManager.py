@@ -104,3 +104,4 @@ class VotesManager:
         # closing output file object 
         finally: 
             out.close()
+

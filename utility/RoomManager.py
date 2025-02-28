@@ -66,7 +66,7 @@ class RoomManager:
 
     def closeConnection(self):
         try:
-            consolLog.info(self.username)
+            consolLog.info("Fermeture de la connexion de : ", self.username)
             self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE user_id=%s", (str(self.userId),))
         except sqlError as err:
             consolLog.error(err)

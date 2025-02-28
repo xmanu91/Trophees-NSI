@@ -6,8 +6,8 @@ load_dotenv()
 sqlProvider = SQLProvider()
 
 # Ajuster le temps d'attente pour les requêtes
-sqlProvider.executeSQL("SET statement_timeout = '30s';")  # Ajustez le temps selon vos besoins
-print("Temps d'attente ajusté à 30 secondes")
+sqlProvider.executeSQL("SET statement_timeout = '5s';")  # Ajustez le temps selon vos besoins
+print("Temps d'attente ajusté à 5 secondes")
 
 # Vider les tables avec DELETE
 sqlProvider.executeSQL('DELETE FROM drawings;')
