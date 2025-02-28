@@ -10,7 +10,7 @@ class PickPalette():
         self.canva = canva
         self.spriteGroup = spriteGroup
 
-        self.colorPalette = Image("assets/palette.png", pygame.Rect(5, 290, 378*0.5, 261*0.5))
+        self.colorPalette = Image("assets/images/palette.png", pygame.Rect(5, 290, 378*0.5, 261*0.5))
         self.colorPaletteImage = self.colorPalette.image
 
         self.colorShapes = {"blue": Shape(pygame.Rect(42, 317, 41, 39), (0,0,0,0)),
