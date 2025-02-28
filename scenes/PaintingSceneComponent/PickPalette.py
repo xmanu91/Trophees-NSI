@@ -1,10 +1,9 @@
+import pygame
+
 from ui.Circle import Circle
-from utility.tools import centerCoordinates
 from ui.Image import Image
 from ui.Canva import Canva
-from scenes.PaintingSceneComponent.DarknessPreview import DarknessPreview
 from ui.Shape import Shape
-import pygame
 
 class PickPalette():
     def __init__(self, canva: Canva, spriteGroup: pygame.sprite.Group):

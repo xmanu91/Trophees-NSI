@@ -1,14 +1,11 @@
+import pygame
+
 from ui.Image import Image
 from ui.Button import Button
-from ui.Shape import Shape
 from ui.Text import Text
 from ui.Canva import Canva
-import pygame
-from utility.tools import removeAlpha
 
 from scenes.PaintingSceneComponent.PickPalette import PickPalette
-from scenes.PaintingSceneComponent.PresetPalette import PresetPalette
-from scenes.PaintingSceneComponent.DarknessPreview import DarknessPreview
 
 class ToolBar():
     def __init__(self, canva: Canva, spriteGroup: pygame.sprite.Group, theme: str):
