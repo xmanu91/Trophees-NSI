@@ -72,7 +72,7 @@ class VoteScene(Scene):
 
     def nextDrawing(self, note: int):
         consolLog.info(self.votesManager.participants, self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
-        self.votesManager.vote(self.votesManager.participants[self.index], note)
+        self.votesManager.vote(self.votesManager.participants[self.index], note, self.roomManager.currentRound)
 
         if self.index < len(self.votesManager.participants)-1:
             self.progressBar.run_start() # Re-start de la ProgressBar

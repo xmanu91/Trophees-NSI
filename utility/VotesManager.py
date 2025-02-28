@@ -45,18 +45,21 @@ class VotesManager:
         except sqlError as err:
             consolLog.error(err)
 
-    def vote(self, attributedVote, rating: int):
+    def vote(self, attributedVote, rating: int, round: int):
         try:
             # Utilisation de paramètres dans la requête INSERT
-            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, room_id) VALUES (%s, %s, %s, %s)", 
-                                   (self.username, attributedVote, rating, str(self.roomId)))
+            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, round, room_id) VALUES (%s, %s, %s, %s, %s)", 
+                                   (self.username, attributedVote, rating, str(round),  str(self.roomId)))
         except sqlError as err:
             consolLog.error(err)
 
-    def getVotes(self):
+    def getVotes(self, round: int = None):
         try:
-            # Utilisation de paramètres dans la requête SELECT
-            response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId),))
+            if round:
+                response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
+            else:
+                response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId),))
+            
             if response is None:
                 return None
             votes = [vote for vote in response]
@@ -64,8 +67,8 @@ class VotesManager:
         except sqlError as err:
             consolLog.error(err)
 
-    def getWinners(self):
-        votes = self.getVotes()
+    def getWinners(self, round: int = None):
+        votes = self.getVotes(round)
         if votes is None:
             return None
 
