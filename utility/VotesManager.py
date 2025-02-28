@@ -27,7 +27,7 @@ class VotesManager:
             self.participants = [drawing[0] for drawing in response]  # type: ignore
             print("response" + str(response), "self.drawings:" + str(self.drawings), "self.participants: " + str(self.participants))
             for drawing in self.drawings:
-                self.save_drawing(drawing[1], drawing[0])
+                self.saveDrawing(drawing[1], drawing[0])
             return self.drawings
         except sqlError as err:
             print(err)
@@ -39,7 +39,7 @@ class VotesManager:
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator=%s", (str(self.roomId), username))
             if response is None:
                 return None
-            self.save_drawing(response[0][1], response[0][0])
+            self.saveDrawing(response[0][1], response[0][0])
             return (response[0][1], response[0][0])
         except sqlError as err:
             print(err)
@@ -84,7 +84,7 @@ class VotesManager:
         
         return winners
 
-    def save_drawing(self, binary, name):
+    def saveDrawing(self, binary, name):
         out = None
         print(binary)
   
