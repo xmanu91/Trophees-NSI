@@ -23,7 +23,7 @@ class WinnerScene(Scene):
         self.sceneManager = sceneManager
         self.roomManager = roomManager
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
-        self.background = Image("assets/background.jpg", pygame.Rect(0,0, self.screenWidth, self.screenHeight))
+        self.background = Image("assets/backgrounds/wallBackground_3.png", pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.spriteGroup.add(self.background)
         self.gameManager = gameManager
         

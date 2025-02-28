@@ -41,7 +41,7 @@ class Button(pygame.sprite.Sprite):
         self.rect = buttonRect  
 
         #Button text
-        self.font = pygame.font.Font(getPath("assets/Papernotes.ttf"), fontSize)
+        self.font = pygame.font.Font(getPath("assets/fonts/Papernotes.ttf"), fontSize)
         self.surface_text = self.font.render(text, True, textColor)
         self.textCoordinates= textCoordinates or (self.rect.width/2 - self.surface_text.get_width() / 2, self.rect.height/2 - self.surface_text.get_height() / 2)
         

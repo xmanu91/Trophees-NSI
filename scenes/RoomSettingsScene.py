@@ -21,7 +21,7 @@ class RoomSettingsScene(Scene):
         self.roomManager = roomManager
         self.previousScene = previousScene
         self.gameManager = gameManager
-        background = Image('assets/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
+        background = Image('assets/backgrounds/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
 
         self.Text = Text("Paramètres", 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), (0,0,0), isCentered=False)
         self.textNbRound = Text("Nombre de tours : ", 22, (self.screenWidth*0.1, self.screenHeight*0.15), (0,0,0), isCentered=False)

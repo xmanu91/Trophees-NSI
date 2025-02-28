@@ -15,7 +15,7 @@ class TextInput(pygame.sprite.Sprite):
         self.textColor = textColor
         self.placeHolderColor = (50, 50, 50)
         self.fontSize = fontSize
-        self.font = pygame.font.Font(getPath("assets/Papernotes.ttf"), fontSize)
+        self.font = pygame.font.Font(getPath("assets/fonts/Papernotes.ttf"), fontSize)
         self.image = self.font.render(self.textInput, True, self.placeHolderColor)
         self.actif = False
         eventManager.addEventHandler(pygame.MOUSEBUTTONDOWN, self.onMouseButtonDown)

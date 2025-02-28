@@ -34,7 +34,7 @@ class VoteScene(Scene):
             self.drawnList.append(drawn)
 
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
-        self.background = Image('assets/wallBackground_2.png', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
+        self.background = Image('assets/backgrounds/wallBackground_3.png', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
         
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
         self.drawing = Image(os.path.join(self.tempdir.name, self.drawnList[self.index]), self.drawRect)

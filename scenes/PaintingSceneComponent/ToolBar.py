@@ -14,21 +14,21 @@ class ToolBar():
         self.theme = theme
 
         # Création de la barre d'outil
-        self.background = Image("assets/brown paper.png", pygame.Rect(0, 0, 200, 900))
+        self.background = Image("assets/backgrounds/brown paper.png", pygame.Rect(0, 0, 200, 900))
         self.spriteGroup.add(self.background)
 
         postIt = Image("assets/post-it.png", pygame.Rect(5, 15, 391*0.5, 124*0.5))
 
-        eraserSprite = Image("assets/gomme.png", pygame.Rect(0, 0, 155, 50))
+        eraserSprite = Image("assets/gomme_2.png", pygame.Rect(0, 0, 155, 50))
         self.eraser = Button(pygame.Rect(-50, 91, 155, 50), lambda: self.changeTool('eraser'), eraserSprite.image, eraserSprite.image, (-44, 91), "")
 
-        brushSprite = Image("assets/pinceau.png", pygame.Rect(0, 0, 225, 25))
+        brushSprite = Image("assets/pinceau_2.png", pygame.Rect(0, 0, 225, 25))
         self.brush = Button(pygame.Rect(-50, 172, 225, 25), lambda: self.changeTool('brush'), brushSprite.image, brushSprite.image, (-44, 172), "")
 
-        colorPickerSprite = Image("assets/pipette.png", pygame.Rect(0, 0, 250, 98))
+        colorPickerSprite = Image("assets/pipette_2.png", pygame.Rect(0, 0, 250, 98))
         self.colorPicker = Button(pygame.Rect(-50, 197, 250, 98), lambda: self.changeTool('colorpicker'), colorPickerSprite.image, colorPickerSprite.image, (-44, 197), "")
 
-        bucketSprite = Image("assets/seau.png", pygame.Rect(0, 0, 225, 225))
+        bucketSprite = Image("assets/seau_2.png", pygame.Rect(0, 0, 225, 225))
         self.bucket = Button(pygame.Rect(-11, 426, 225, 225), lambda: self.changeTool('bucket'), bucketSprite.image, bucketSprite.image, (-11, 426), "")
 
         self.pickPalette = PickPalette(self.canva, self.spriteGroup)

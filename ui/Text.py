@@ -17,9 +17,9 @@ class Text(pygame.sprite.Sprite):
         self.color = color
         
         if fontFamily != None:
-            self.font = pygame.font.Font(getPath(f"assets/{fontFamily}"), fontSize)  
+            self.font = pygame.font.Font(getPath(f"assets/fonts/{fontFamily}"), fontSize)  
         else:
-            self.font = pygame.font.Font(getPath(f"assets/Papernotes.ttf"), fontSize)  
+            self.font = pygame.font.Font(getPath(f"assets/fonts/Papernotes.ttf"), fontSize)  
 
         self.image = self.font.render(self.text, True, self.color)
         self.rect = self.image.get_rect()

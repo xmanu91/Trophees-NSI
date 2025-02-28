@@ -22,7 +22,7 @@ class PaintingScene(Scene):
         super().__init__()
         print('Initialisation de Painting Scene')
         screenWidth, screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
-        self.background = Image("assets/background_theme.png", pygame.Rect(0,0, screenWidth, screenHeight))
+        self.background = Image("assets/backgrounds/background_theme.png", pygame.Rect(0,0, screenWidth, screenHeight))
         self.roomManager = roomManager
         self.sceneManager = sceneManager
         self.gameManager = gameManager

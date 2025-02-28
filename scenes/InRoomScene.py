@@ -28,7 +28,7 @@ class InRoomScene(Scene):
         self.roomManager.setRoundsNumber(1)
         print('In RoomId:', self.roomManager.currentRoomID)
 
-        self.background = Image('assets/paperBackground_2.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
+        self.background = Image('assets/backgrounds/paperBackground_2.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.roomNameText = Text(roomManager.getCurrentRoomName(), 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), (0,0,0), isCentered=False)
         self.idDisplay = Text("ID: " + str(self.roomManager.currentRoomID), 15, (self.screenWidth*0.05, self.screenHeight*0.12), (0,0,0), isCentered=False)
         self.subHeadText = Text(f'Utilisateurs connectés ({str(len(self.roomManager.getUsersInCurrentRoom()))}):', 15, (self.screenWidth*0.05, self.screenHeight*0.16), (0,0,0), isCentered=False)
@@ -81,7 +81,8 @@ class InRoomScene(Scene):
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
 
     def startGame(self):
-        if len(self.connectedUsers) < 2:
+        self.dev = True
+        if len(self.connectedUsers) < 2 and self.dev == False:
             raiseAnError("Vous devez être plusieurs pour pouvoir jouer")
             self.updateConnectedUsers()
         else:
