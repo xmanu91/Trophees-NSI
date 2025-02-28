@@ -37,7 +37,8 @@ class Button(pygame.sprite.Sprite):
             self.imageCoordinates = pygame.Rect(imageCoordinates, self.image.get_size())
         else:
             self.image = pygame.Surface(buttonRect.size) 
-            self.rect = buttonRect  
+        
+        self.rect = buttonRect  
 
         #Button text
         self.font = pygame.font.Font(getPath("assets/Papernotes.ttf"), fontSize)

@@ -23,13 +23,6 @@ class RoomManager:
         rooms = [row for row in response]
         return rooms
 
-    def getAllConnectedUsers(self):
-        response = self.SQLProvider.get("SELECT * FROM connected_users")
-        if response is None:
-            return []
-        users = [row for row in response]
-        return users
-
     def getConnectedUsersNumberInRoom(self, roomId: int):
         response = self.SQLProvider.get("SELECT count(username) FROM connected_users WHERE room_id=%s", (str(roomId),))
         return response[0][0]

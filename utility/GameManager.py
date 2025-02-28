@@ -32,7 +32,7 @@ class GameManager:
     def sendDrawing(self, path):
         try:
             self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, decode(%s, 'hex'), %s)", 
-                                   (self.username, self.get_binary_array(path), self.roomId))
+                                   (self.username, self.getBinaryArray(path), self.roomId))
         except sqlError as err:
             print(err)
 
@@ -48,7 +48,7 @@ class GameManager:
             themes = [line.strip() for line in file]
         return themes
 
-    def get_binary_array(self, path):
+    def getBinaryArray(self, path):
         with open(path, "rb") as image:
             f = image.read()
             b = bytes(f).hex()
