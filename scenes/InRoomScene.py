@@ -82,6 +82,7 @@ class InRoomScene(Scene):
 
     def startGame(self):
         self.dev = True
+        self.playButton.disable()
         if len(self.connectedUsers) < 2 and self.dev == False:
             raiseAnError("Vous devez être plusieurs pour pouvoir jouer")
             self.updateConnectedUsers()

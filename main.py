@@ -1,13 +1,13 @@
-from utility.RoomManager import RoomManager
 from utility.ErrorHandler import ErrorHandlerUi, errorEventType
+from utility.RoomManager import RoomManager
 from ui.SceneManager import SceneManager
 from scenes.HomeScene import HomeScene
 import utility.gameInitialisation
+from utility.tools import getPath
 from dotenv import load_dotenv
+from utility import consolLog
 from ui.Button import Button
 import utility.eventManager
-from utility.tools import getPath
-from utility import consolLog
 import pygame
 import sys
 import os
@@ -20,7 +20,7 @@ else:
 load_dotenv(dotenv_path=dotenv_path)
 
 pygame.init()
-pygame.display.set_caption("Inkspired v1.?  (Pre-release)")
+pygame.display.set_caption("Inkspired v1.? (Pre-release)")
 pygame.display.set_icon(pygame.image.load(getPath("assets/icons/Inkspired.png")))
 
 WIDTH, HEIGHT = 900, 500
@@ -28,7 +28,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 errorHandler = ErrorHandlerUi()
 utility.eventManager.addEventHandler(errorEventType, errorHandler.raiseError)
 
-sceneManager = SceneManager(screen) 
+sceneManager = SceneManager(screen)
 Button.sceneManager = sceneManager
 
 roomManager = RoomManager(utility.gameInitialisation.sqlProvider, '')

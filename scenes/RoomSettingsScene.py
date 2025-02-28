@@ -1,16 +1,12 @@
-from ui.Scene import Scene
-from ui.Button import Button 
-from ui.SceneManager import SceneManager
-from ui.Image import Image
-from ui.TextInput import TextInput
-from utility.RoomManager import RoomManager
 from utility.ErrorHandler import raiseAnError
-from ui.Text import Text
 from utility.GameManager import GameManager
-import json
-import tempfile
-import os
-
+from utility.RoomManager import RoomManager
+from ui.SceneManager import SceneManager
+from ui.TextInput import TextInput
+from ui.Button import Button 
+from ui.Scene import Scene
+from ui.Image import Image
+from ui.Text import Text
 import pygame
 
 class RoomSettingsScene(Scene):

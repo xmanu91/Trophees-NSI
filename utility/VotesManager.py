@@ -1,11 +1,9 @@
-import utility.tools
-
 from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 from utility import consolLog
-
-import os
+import utility.tools
 import tempfile
+import os
 
 class VotesManager:
     def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory):
@@ -88,6 +86,20 @@ class VotesManager:
         
         return winners
 
+    def getPodium(self):
+        votes = self.getVotes()
+        if votes is None:
+            return None
+        
+        scores = {}
+        for vote in votes:
+            scores[vote[1]] = scores.get(vote[1], 0) + vote[2]  # type: ignore
+        
+        sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        
+        podium = [user for user, score in sorted_scores[:3]]
+        return podium
+        
     def saveDrawing(self, binary, name):
         out = None
   
@@ -104,4 +116,3 @@ class VotesManager:
         # closing output file object 
         finally: 
             out.close()
-

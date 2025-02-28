@@ -1,7 +1,6 @@
+from utility.tools import getPath
 from typing import Callable
 import pygame
-from utility.tools import getPath
-from ui.SceneManager import SceneManager
 
 class Button(pygame.sprite.Sprite):
 
@@ -54,6 +53,12 @@ class Button(pygame.sprite.Sprite):
             for sprite in group:
                 if type(sprite) == type(self):
                     sprite.disabled = True
+    
+    def disable(self):
+        self.disabled = True
+
+    def enable(self):
+        self.disabled = False
 
     def kill(self):
         group = self.sceneManager.getSpriteGroup()

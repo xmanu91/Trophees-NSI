@@ -1,11 +1,14 @@
-from ui.Scene import Scene
-from ui.Text import Text 
-from ui.SceneManager import SceneManager
-from ui.Image import Image
-import pygame
 from utility.VotesManager import VotesManager
 from utility.GameManager import GameManager
+from utility.RoomManager import RoomManager
+from ui.SceneManager import SceneManager
+from scenes import HomeScene
+from ui.Button import Button
 from ui.Shape import Shape
+from ui.Image import Image
+from ui.Scene import Scene
+from ui.Text import Text 
+import pygame
 
 """
     A modifier :
@@ -14,17 +17,20 @@ from ui.Shape import Shape
 """
 
 class PodiumScene(Scene):
-    def __init__(self, sceneManager: SceneManager, votesManager: VotesManager, gameManager: GameManager):
+    def __init__(self, sceneManager: SceneManager, votesManager: VotesManager, gameManager: GameManager, roomManager: RoomManager):
         super().__init__()
         self.sceneManager = sceneManager
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.votesManager = votesManager
         self.gameManager = gameManager
+        self.roomManager = roomManager
 
-        self.background = Image('assets/backgrounds/wallBackground_3.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
+        self.background = Image('assets/backgrounds/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.spriteGroup.add(self.background)
 
-        self.playersOnPodium = ["Azertyuiop", "Azer", "Azerty"] # self.votesManager.getWinners()
+        self.test = self.votesManager.getPodium()
+        print(self.test)
+        self.playersOnPodium = self.test 
 
         podium1 = Shape(pygame.Rect(self.screenWidth /2 - 75, 250, 150, 250), (255, 220, 48))
         podiumRank1 = Text("1", 62, (self.screenWidth /2, 350 - 62/2), (255,255,255), True)
@@ -55,5 +61,4 @@ class PodiumScene(Scene):
         self.roomManager.closeConnection()
         if len(self.connectedUsers)-1 <= 0 :
             self.roomManager.closeRoom(self.roomId)
-        pygame.time.set_timer(self.pygameEventSwitchDrawing, 0)
         self.sceneManager.setAsCurrentScene(HomeScene.HomeScene(self.sceneManager, self.roomManager))

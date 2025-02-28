@@ -1,8 +1,8 @@
 from mysql.connector import Error as sqlError
 from utility.SQLProvider import SQLProvider
 from utility.tools import getPath
+from utility import consolLog
 from random import choice
-import os
 import tempfile
 
 class GameManager:
@@ -20,28 +20,28 @@ class GameManager:
             self.sqlManager.insert("UPDATE rooms SET theme=%s WHERE room_id=%s", (theme, self.roomId))
             self.drawingTheme = theme
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     def getTheme(self):
         try: 
             result = self.sqlManager.get("SELECT theme FROM rooms WHERE room_id=%s", (str(self.roomId),))
             return result[0][0]
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     def sendDrawing(self, path):
         try:
             self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, decode(%s, 'hex'), %s)", 
                                    (self.username, self.getBinaryArray(path), self.roomId))
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     
     def deleteDrawings(self):
         try:
             self.sqlManager.executeSQL('DELETE FROM drawings WHERE room_id=%s', (str(self.roomId),))
         except sqlError as err:
-            print(err)
+            consolLog.error(err)
 
     def loadThemes(self):
         with open(getPath("assets/themes.txt"), "r", encoding="utf-8") as file:

@@ -1,14 +1,14 @@
+from scenes import HomeScene, PaintingScene, PodiumScene
 from utility.VotesManager import VotesManager
 import utility.eventManager as eventManager
 from utility.GameManager import GameManager
-from ui.SceneManager import SceneManager
 import utility.RoomManager as RoomManager
+from ui.SceneManager import SceneManager
 from utility import consolLog
-from scenes import HomeScene, PaintingScene, PodiumScene
+from ui.Button import Button
 from ui.Scene import Scene
 from ui.Image import Image
 from ui.Text import Text
-from ui.Button import Button
 import pygame
 import time
 import os
@@ -96,7 +96,7 @@ class WinnerScene(Scene):
         self.sceneManager.setAsCurrentScene(PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager))
 
     def podium(self):
-        self.sceneManager.setAsCurrentScene(PodiumScene.PodiumScene(self.sceneManager, self.roomManager, self.gameManager))
+        self.sceneManager.setAsCurrentScene(PodiumScene.PodiumScene(self.sceneManager, self.votesManager, self.gameManager, self.roomManager))
 
     def quit(self):
         self.tempdir = self.gameManager.getTempDir()
