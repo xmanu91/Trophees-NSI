@@ -49,7 +49,7 @@ class Button(pygame.sprite.Sprite):
         self.previousState = False
 
         if self.ErrorButton:
-            group = self.sceneManager.getSpriteGroup()
+            group = self.sceneManager.currentScene.spriteGroup
             for sprite in group:
                 if type(sprite) == type(self):
                     sprite.disabled = True
@@ -61,7 +61,7 @@ class Button(pygame.sprite.Sprite):
         self.disabled = False
 
     def kill(self):
-        group = self.sceneManager.getSpriteGroup()
+        group = self.sceneManager.currentScene.spriteGroup
         for sprite in group:
             if type(sprite) == type(self):
                 sprite.disabled = False

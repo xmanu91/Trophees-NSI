@@ -22,7 +22,7 @@ class JoinRoomScene(Scene):
         self.roomManager = roomManager
         self.roomManager.setUsername(username)
         self.sceneManager = sceneManager
-        self.rooms = self.roomManager.getAllRooms()
+        self.rooms = self.roomManager.getAllRooms(state="lobby")
         self.background = Image('assets/backgrounds/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.seekRoomNameInput = TextInput(pygame.rect.Rect(self.screenWidth*0.02, self.screenHeight * 0.08 - 25, self.screenWidth * 0.6525, 50), (0,0,0), (119,169,198), (255,255,255), (33,33,33, 50), placeholder="Entrez le nom de la room")
         self.GameInProgress = Text(f"Parties en cours : {len(self.roomManager.getAllRooms())}", 22, (self.screenWidth*0.02, self.screenHeight * 0.17), (0,0,0), False)
@@ -42,9 +42,9 @@ class JoinRoomScene(Scene):
                                           self.rooms[i][0], 
                                           self.roomManager,
                                           self.sceneManager))
-        self.rooms = self.roomManager.getAllRooms()
+        self.rooms = self.roomManager.getAllRooms(state="lobby")
 
-        self.GameInProgress.setText(f"Parties en cours : {len(self.roomManager.getAllRooms())}")
+        self.GameInProgress.setText(f"Parties en cours : {len(self.rooms)}")
     
     def joinRoom(self):
         if not self.roomManager.doesRoomExist(self.seekRoomNameInput.getText()):

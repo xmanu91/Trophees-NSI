@@ -10,8 +10,12 @@ class RoomManager:
         self.currentRoomID = None
         self.currentRound = 0
     
-    def getAllRooms(self):
-        response = self.SQLProvider.get("SELECT * FROM rooms")
+    def getAllRooms(self, state: str = None):
+        if state:
+            response = self.SQLProvider.get("SELECT * FROM rooms WHERE state=%s", (state,))
+        else:
+            response = self.SQLProvider.get("SELECT * FROM rooms")
+            
         if response is None:
             return []
         rooms = [row for row in response]
@@ -49,7 +53,7 @@ class RoomManager:
 
     def createRoom(self, roomName):
         try:
-            room = self.SQLProvider.insert("INSERT INTO rooms (room_id, creator, room_name, theme, state, rounds_number, round_time) VALUES (DEFAULT,%s, %s, %s, 'loby', 4, 60)", (self.username, roomName, 'DEFAULT'), returnedValue="room_id")
+            room = self.SQLProvider.insert("INSERT INTO rooms (room_id, creator, room_name, theme, state, rounds_number, round_time) VALUES (DEFAULT,%s, %s, %s, 'lobby', 4, 60)", (self.username, roomName, 'DEFAULT'), returnedValue="room_id")
         except sqlError as err:
             consolLog.error(err)
         self.createConnection(room)
