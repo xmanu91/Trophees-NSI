@@ -2,13 +2,13 @@ from utility.ErrorHandler import ErrorHandlerUi, errorEventType
 from utility.RoomManager import RoomManager
 from ui.SceneManager import SceneManager
 from scenes.HomeScene import HomeScene
-import utility.SQLProvider
 import utility.gameInitialisation
 from utility.tools import getPath
 from dotenv import load_dotenv
 from utility import consolLog
 from ui.Button import Button
 import utility.eventManager
+import utility.SQLProvider
 import pygame
 import sys
 import os
