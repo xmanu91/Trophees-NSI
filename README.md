@@ -2,7 +2,7 @@
  
 Mutiplayer game made for the french contest "Trophées NSI". This is a drawing contest game playable online.
 
-![image](https://github.com/user-attachments/assets/f1efa975-c68b-42c7-a7e5-c32936b214cb)
+![scène1](https://github.com/user-attachments/assets/9b400039-7dda-481e-af24-80e917349d20)
 
 ## Challenges
 
@@ -10,7 +10,7 @@ This game has been created with some challenges requested by the contest. For ex
 
 ## Installation
 
-You can download a .exe file on the releases tab and execute it !
+You can download a .exe file on the releases tab and execute it ! ([here](https://github.com/xmanu91/Trophees-NSI/releases))
 
 Or you can clone this repository.
 
