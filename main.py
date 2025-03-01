@@ -2,6 +2,7 @@ from utility.ErrorHandler import ErrorHandlerUi, errorEventType
 from utility.RoomManager import RoomManager
 from ui.SceneManager import SceneManager
 from scenes.HomeScene import HomeScene
+import utility.SQLProvider
 import utility.gameInitialisation
 from utility.tools import getPath
 from dotenv import load_dotenv
@@ -48,6 +49,7 @@ while True:
                 roomManager.closeConnection()
                 if roomManager.username == roomCreator:
                     roomManager.closeRoom(roomID)
+            utility.gameInitialisation.sqlProvider.closeConnection()
             pygame.quit()
             consolLog.info("Quit")
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
