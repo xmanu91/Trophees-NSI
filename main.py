@@ -1,17 +1,20 @@
-from utility.ErrorHandler import ErrorHandlerUi, errorEventType
-from utility.RoomManager import RoomManager
-from ui.SceneManager import SceneManager
-from scenes.HomeScene import HomeScene
-import utility.gameInitialisation
-from utility.tools import getPath
-from dotenv import load_dotenv
-from utility import consolLog
-from ui.Button import Button
-import utility.eventManager
-import utility.SQLProvider
 import pygame
 import sys
 import os
+import utility.gameInitialisation
+import utility.eventManager
+import utility.SQLProvider
+
+from utility.ErrorHandler import ErrorHandlerUi, errorEventType
+from utility.RoomManager import RoomManager
+from utility.tools import getPath
+from utility import consolLog
+
+from dotenv import load_dotenv
+from scenes.HomeScene import HomeScene
+
+from ui.SceneManager import SceneManager
+from ui.Button import Button
 
 if getattr(sys, 'frozen', False):
     dotenv_path = os.path.join(sys._MEIPASS, '.env')
