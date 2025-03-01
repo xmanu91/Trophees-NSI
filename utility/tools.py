@@ -1,9 +1,10 @@
 import pygame
-import os
 import shutil
+import sys
+import os
 
 def centerCoordinates(coordinates, gap):
-    return (coordinates[0]-gap, coordinates[1] - gap)
+    return (coordinates[0]-gap, coordinates[1]-gap)
 
 #Found on the internet
 def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=True):
@@ -56,3 +57,19 @@ def initialiseDirectory(path: str):
         shutil.rmtree(path)            
     if not os.path.exists(path):
         os.mkdir(path)
+
+def getPath(relativePath: str):
+    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    return os.path.join(base_path, relativePath)
+
+def removeAlpha(color: tuple):
+    return (color[0], color[1], color[2])
+
+def getScalingFactors(x, y, screenWidth, screenHeight): # Parce que j'ai la flemme de chercher le bon coef alors que je connais déjà les coords que je veux utiliser
+    return x*screenWidth/900, y*screenHeight/500
+
+def getScalingFactorsX(x, screenWidth):
+    return x*screenWidth/900
+
+def getScalingFactorsY(y, screenHeight):
+    return y*screenHeight/500
