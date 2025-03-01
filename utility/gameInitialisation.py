@@ -26,4 +26,4 @@ else:
 
 sqlProvider.executeSQL('CREATE TABLE IF NOT EXISTS connected_users (user_id SERIAL NOT NULL, username VARCHAR(255), room_id int, PRIMARY KEY(user_id), FOREIGN KEY (room_id) REFERENCES rooms(room_id))')
 
-sqlProvider.executeSQL('CREATE TABLE IF NOT EXISTS votes (voter VARCHAR(255), attributedVote TEXT, rating int, room_id int, FOREIGN KEY (room_id) REFERENCES rooms(room_id))')
+sqlProvider.executeSQL('CREATE TABLE IF NOT EXISTS votes (voter VARCHAR(255), attributedVote TEXT, rating int, round int, room_id int, FOREIGN KEY (room_id) REFERENCES rooms(room_id))')

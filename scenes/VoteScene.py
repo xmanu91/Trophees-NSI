@@ -11,16 +11,20 @@ from ui.Text import Text
 from utility.gameInitialisation import sqlProvider
 from utility.VotesManager import VotesManager
 from utility.RoomManager import RoomManager
+from utility.GameManager import GameManager
+from utility import consolLog
 
 from scenes.WinnerScene import WinnerScene
 from time import sleep
 import tempfile
 
 class VoteScene(Scene):
-    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, tempdir: tempfile.TemporaryDirectory):
+    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, gameManager: GameManager):
         super().__init__()
-        self.tempdir = tempdir
+        self.gameManager = gameManager
+        self.tempdir = self.gameManager.getTempDir()
         self.sceneManager = sceneManager
+        self.roomManager = roomManager
         self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir)
         sleep(2) # Waiting for data of all players
         self.votesManager.getDrawings()
@@ -31,7 +35,7 @@ class VoteScene(Scene):
             self.drawnList.append(drawn)
 
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
-        self.background = Image('assets/background.jpg', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
+        self.background = Image('assets/backgrounds/wallBackground_3.png', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
         
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
         self.drawing = Image(os.path.join(self.tempdir.name, self.drawnList[self.index]), self.drawRect)
@@ -67,8 +71,8 @@ class VoteScene(Scene):
                 button.defaultColor = (255, 255, 255)
 
     def nextDrawing(self, note: int):
-        print(self.votesManager.participants, self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
-        self.votesManager.vote(self.votesManager.participants[self.index], note)
+        consolLog.info(self.votesManager.participants, self.index+1, note) # Debug (self.index+1 est l'index de l'image note, note ...)
+        self.votesManager.vote(self.votesManager.participants[self.index], note, self.roomManager.currentRound)
 
         if self.index < len(self.votesManager.participants)-1:
             self.progressBar.run_start() # Re-start de la ProgressBar
@@ -84,5 +88,5 @@ class VoteScene(Scene):
             self.spriteGroup.add(self.drawing)
             pygame.display.flip()
         else:
-            print(self.votesManager.getWinners())
-            self.sceneManager.setAsCurrentScene(WinnerScene(self.sceneManager, self.votesManager))
+            consolLog.info(self.votesManager.getWinners())
+            self.sceneManager.setAsCurrentScene(WinnerScene(self.sceneManager, self.votesManager, self.gameManager, self.roomManager))

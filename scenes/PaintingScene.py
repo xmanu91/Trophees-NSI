@@ -11,24 +11,28 @@ from ui.Text import Text
 from scenes.PaintingSceneComponent.ToolBar import ToolBar
 from scenes.VoteScene import VoteScene
 
-from utility.gameInitialisation import sqlProvider
+
 from utility.GameManager import GameManager
 from utility.RoomManager import RoomManager
+from utility import consolLog
 
-import tempfile
+import time
 import os
 
+
 class PaintingScene(Scene):
-    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager):
+    def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, gameManager: GameManager):
         super().__init__()
-        print('Initialisation de Painting Scene')
+        consolLog.info('Initialisation de Painting Scene')
         screenWidth, screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
-        self.background = Image("assets/background_theme.png", pygame.Rect(0,0, screenWidth, screenHeight))
+        self.background = Image("assets/backgrounds/background_theme.png", pygame.Rect(0,0, screenWidth, screenHeight))
         self.roomManager = roomManager
         self.sceneManager = sceneManager
-        self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
+        self.gameManager = gameManager
+        
         if self.roomManager.username == roomManager.getRoomCreator():
             self.gameManager.drawTheme()
+            self.gameManager.deleteDrawings()
             self.theme = self.gameManager.drawingTheme
         else:
             self.theme = self.gameManager.getTheme()
@@ -36,7 +40,7 @@ class PaintingScene(Scene):
         self.textTheme = Text(self.theme, 32, (450, 250-16), (255,255,255), True)
 
         themeTimerDuration = 5
-        gameTimerDuration = 20
+        gameTimerDuration = self.roomManager.getRoundTime()
         self.textThemeTimer = Text(str(themeTimerDuration), 32, (450, 250+16), (255,255,255), True)
         self.gameProgressBar = ProgressBar(pygame.Rect(200, 0, screenWidth-200, 10), (0, 255, 0), gameTimerDuration, self.endDrawing)
         self.themeTimer = Timer(themeTimerDuration, self.textThemeTimer, self.setCanva)
@@ -45,7 +49,12 @@ class PaintingScene(Scene):
         self.spriteGroup.add(self.background, self.textThemeTimer, self.textTheme)
 
         self.themeTimer.startTimer()
-        self.tempdir = tempfile.TemporaryDirectory()
+        self.gameManager.resetTempDir()
+        self.tempdir = self.gameManager.getTempDir()
+
+        self.roomManager.currentRound += 1
+        consolLog.info("Rounds number : ", self.roomManager.currentRound)
+        consolLog.info("Total of rounds : ", self.roomManager.getRoundsNumber())
 
     def setCanva(self):
         self.spriteGroup.empty()
@@ -54,13 +63,13 @@ class PaintingScene(Scene):
         self.gameProgressBar.run_start()
 
     def endDrawing(self):
-        print("Fin de la scene de dessin")
+        consolLog.info("Fin de la scene de dessin")
 
         self.canva.save(self.tempdir.name)
         self.gameManager.sendDrawing(os.path.join(self.tempdir.name, self.roomManager.username.strip() + "_drawing.png"))
 
         self.roomManager.setRoomState('voting')
-        self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.tempdir))
+        self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.gameManager))
 
     def update(self):
         if self.toolBar != None:
