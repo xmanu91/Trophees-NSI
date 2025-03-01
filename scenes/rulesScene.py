@@ -7,7 +7,7 @@ from ui.Image import Image
 from ui.Text import Text
 import pygame
 
-class rulesScene(Scene):
+class RulesScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager, previousScene):
         super().__init__()
         self.sceneManager = sceneManager
@@ -20,10 +20,10 @@ class rulesScene(Scene):
         self.text = Text("Comment jouer ?", 40, (self.screenWidth/2, self.screenHeight*0.1), (0,0,0), True)
         
         self.one = Text("1. Choisissez un pseudo", 20, getScalingFactors(135, 200, self.screenWidth, self.screenHeight), (0,0,0), True)
-        self.two = Text("2. Créer/Rejoingner une room", 20, getScalingFactors(450, 250, self.screenWidth, self.screenHeight), (0,0,0), True)
+        self.two = Text("2. Créez/Rejoingnez une room", 20, getScalingFactors(450, 250, self.screenWidth, self.screenHeight), (0,0,0), True)
         self.three = Text("3. Dessinez", 20, getScalingFactors(750, 220, self.screenWidth, self.screenHeight), (0,0,0), True)
         self.four = Text("4. Votez", 20, getScalingFactors(230, 450, self.screenWidth, self.screenHeight), (0,0,0), True)
-        self.five = Text("5. Gagner !", 20, getScalingFactors(560, 460, self.screenWidth, self.screenHeight), (0,0,0), True)
+        self.five = Text("5. Gagnez !", 20, getScalingFactors(560, 460, self.screenWidth, self.screenHeight), (0,0,0), True)
 
         self.image1 = Image("assets/images/help1.png", pygame.Rect(getScalingFactorsX(20, self.screenWidth), getScalingFactorsY(75, self.screenHeight), 250*1.2, 90*1.2))
         self.image2 = Image("assets/images/help2.png", pygame.Rect(getScalingFactorsX(340, self.screenWidth), getScalingFactorsY(100, self.screenHeight), 200*1.2, 110*1.2))

@@ -6,7 +6,7 @@ from ui.SceneManager import SceneManager
 from ui.Image import Image
 from ui.TextInput import TextInput
 from scenes.JoinRoomScene import JoinRoomScene
-from scenes.rulesScene import rulesScene
+from scenes.RulesScene import RulesScene
 from utility.RoomManager import RoomManager
 from utility.ErrorHandler import raiseAnError
 import pygame
@@ -40,4 +40,4 @@ class HomeScene(Scene):
             self.sceneManager.setAsCurrentScene(JoinRoomScene(self.sceneManager, self.usernameInput.getText(), self.roomManager))
 
     def rules(self):
-        self.sceneManager.setAsCurrentScene(rulesScene(self.sceneManager, self.roomManager, self), False)
+        self.sceneManager.setAsCurrentScene(RulesScene(self.sceneManager, self.roomManager, self), False)
