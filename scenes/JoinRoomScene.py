@@ -36,13 +36,13 @@ class JoinRoomScene(Scene):
     def updateRooms(self, e=None): # e parameters is due to eventHandler contraints
         self.spriteGroup.empty()
         self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton, self.GameInProgress)
+        self.rooms = self.roomManager.getAllRooms(state="lobby")
         for i in range(min(5, len(self.rooms))):
             self.spriteGroup.add(RoomCard(pygame.Rect(self.screenWidth*0.02, self.screenHeight*0.25 + 70*i , self.screenWidth * 0.96, 60), 
                                           self.rooms[i][2], 
                                           self.rooms[i][0], 
                                           self.roomManager,
                                           self.sceneManager))
-        self.rooms = self.roomManager.getAllRooms(state="lobby")
 
         self.GameInProgress.setText(f"Parties en cours : {len(self.rooms)}")
     
