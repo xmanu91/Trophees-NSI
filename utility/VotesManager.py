@@ -1,14 +1,17 @@
-from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
+from utility.SQLProvider import SQLProvider
+from utility.RoomManager import RoomManager
 from utility import consolLog
 import utility.tools
 import tempfile
+import time
 import os
 
 class VotesManager:
-    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory):
+    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory, roomManager: RoomManager):
         self.tempdir = tempdir
         self.sqlManager = sqlManager
+        self.roomManager = roomManager
         self.roomId = roomId
         self.username = username
         self.drawings = []
@@ -57,16 +60,34 @@ class VotesManager:
                 response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
             else:
                 response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId),))
-            
+            consolLog.vinfo("response :", response)
             if response is None:
                 return None
             votes = [vote for vote in response]
+            consolLog.vinfo("Votes :", votes)
             return votes
         except sqlError as err:
             consolLog.error(err)
 
     def getWinners(self, round: int = None):
         votes = self.getVotes(round)
+
+        consolLog.vinfo("Votes dans getwinners:", votes)
+        consolLog.vinfo("Participants :", self.participants)
+
+        while len(votes[0]) != self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID)*2-1:
+            time.sleep(2)
+            consolLog.warn("Tous les votes n'ont pas encore ete recup")
+            self.getDrawings()
+            self.drawnList = []
+
+            for drawn in os.listdir(self.tempdir.name):
+                self.drawnList.append(drawn)
+
+            consolLog.vinfo(self.drawnList)
+
+        consolLog.vinfo("Tous les dessins sont recup.")
+        
         if votes is None:
             return None
 

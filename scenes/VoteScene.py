@@ -25,7 +25,7 @@ class VoteScene(Scene):
         self.tempdir = self.gameManager.getTempDir()
         self.sceneManager = sceneManager
         self.roomManager = roomManager
-        self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir)
+        self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir, self.roomManager)
         self.drawnList = []
         self.index = 0
 
@@ -37,9 +37,9 @@ class VoteScene(Scene):
             for drawn in os.listdir(self.tempdir.name):
                 self.drawnList.append(drawn)
 
-            consolLog.vinfo(self.drawnList)
+            consolLog.info(self.drawnList)
 
-        consolLog.vinfo("Tous les dessins sont recup.")
+        consolLog.info("Tous les dessins sont recup.")
 
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.background = Image('assets/backgrounds/wallBackground_3.png', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))

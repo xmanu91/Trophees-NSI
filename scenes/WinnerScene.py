@@ -70,6 +70,8 @@ class WinnerScene(Scene):
         for winner in self.winners:
             self.winnersDrawings.append(Image(os.path.join(self.tempdir.name, winner.strip() + ".png"), self.drawRect))
 
+        consolLog.vinfo(self.winnersDrawings)
+
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)
 
