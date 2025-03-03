@@ -65,6 +65,7 @@ class PaintingScene(Scene):
     def endDrawing(self):
         consolLog.info("Fin de la scene de dessin")
 
+        self.spriteGroup.empty()
         self.canva.save(self.tempdir.name)
         self.gameManager.sendDrawing(os.path.join(self.tempdir.name, self.roomManager.username.strip() + "_drawing.png"))
 
