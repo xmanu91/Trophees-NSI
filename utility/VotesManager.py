@@ -73,18 +73,14 @@ class VotesManager:
         while len(votes) != self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID):
             votes = self.getVotes(round)
             time.sleep(2)
-            consolLog.warn("Tous les votes n'ont pas encore ete recup")
+            consolLog.warn("En attente des votes...")
             self.getDrawings()
             self.drawnList = []
 
             for drawn in os.listdir(self.tempdir.name):
                 self.drawnList.append(drawn)
 
-            consolLog.vinfo("drawnList", self.drawnList)
-            consolLog.vinfo("Votes dans getwinners:", votes)
-            consolLog.vinfo("Participants :", self.participants)
-
-        consolLog.vinfo("Tous les dessins sont recup.")
+        consolLog.info("Tous les votes ont été recupérés.")
         
         if votes is None:
             return None
