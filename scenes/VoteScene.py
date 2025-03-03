@@ -30,7 +30,8 @@ class VoteScene(Scene):
         self.index = 0
 
         while len(self.drawnList) != self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID)-1:
-            sleep(2)
+            sleep(0.5)
+            pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_WAITARROW))
             self.votesManager.getDrawings()
             self.drawnList = []
 
@@ -39,7 +40,8 @@ class VoteScene(Scene):
 
             consolLog.info(self.drawnList)
 
-        consolLog.info("Tous les dessins sont recup.")
+        pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_ARROW))
+        consolLog.info("Tous les dessins sont recupérés.")
 
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.background = Image('assets/backgrounds/wallBackground_3.png', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
