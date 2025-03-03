@@ -31,8 +31,9 @@ class WinnerScene(Scene):
         self.votesManager = votesManager
         self.tempdir = self.gameManager.getTempDir()
         self.sceneDuration = sceneDuration
-        time.sleep(2) # Waiting for data of all users
+        pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_WAITARROW))
         self.winners =  self.votesManager.getWinners(self.roomManager.currentRound)
+        pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_ARROW))
         consolLog.info(f"self.winners: {self.winners}")
 
         if self.roomManager.currentRound == self.roomManager.getRoundsNumber() and self.roomManager.getRoundsNumber() != 1:
@@ -69,6 +70,8 @@ class WinnerScene(Scene):
         self.winnersDrawings = []
         for winner in self.winners:
             self.winnersDrawings.append(Image(os.path.join(self.tempdir.name, winner.strip() + ".png"), self.drawRect))
+
+        consolLog.vinfo(self.winnersDrawings)
 
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)

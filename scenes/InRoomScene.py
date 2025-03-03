@@ -58,6 +58,8 @@ class InRoomScene(Scene):
         self.updateStateEventType = pygame.event.custom_type()
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 1000)
         eventManager.addEventHandler(self.updateStateEventType, self.checkGameState)
+
+        self.gameLaunched = False
         
     def updateConnectedUsers(self, e=None): # e parameters is due to eventHandler contraints
         consolLog.info('Actualisation...')
@@ -81,8 +83,15 @@ class InRoomScene(Scene):
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
 
     def startGame(self):
+        if self.gameLaunched == True:
+            consolLog.warn("La partie est deja en cours")
+            return
+        else:
+            self.gameLaunched = True
+
         self.dev = True
-        self.playButton.disable()
+        
+        consolLog.warn("Debut de la partie...")
         if len(self.connectedUsers) < 2 and self.dev == False:
             raiseAnError("Vous devez être plusieurs pour pouvoir jouer")
             self.updateConnectedUsers()
@@ -90,11 +99,11 @@ class InRoomScene(Scene):
             if self.isUserRoomCreator:
                 self.roomManager.setRoomState('playing')
             else:
-                time.sleep(2)
+                time.sleep(0.75)
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
             paintingScene = scenes.PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)
-            
+        
     def quitGame(self):
         consolLog.info("Room quitter")
         if self.isUserRoomCreator:

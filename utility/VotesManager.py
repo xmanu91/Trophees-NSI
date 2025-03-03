@@ -1,14 +1,17 @@
-from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
+from utility.SQLProvider import SQLProvider
+from utility.RoomManager import RoomManager
 from utility import consolLog
 import utility.tools
 import tempfile
+import time
 import os
 
 class VotesManager:
-    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory):
+    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory, roomManager: RoomManager):
         self.tempdir = tempdir
         self.sqlManager = sqlManager
+        self.roomManager = roomManager
         self.roomId = roomId
         self.username = username
         self.drawings = []
@@ -57,7 +60,6 @@ class VotesManager:
                 response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
             else:
                 response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId),))
-            
             if response is None:
                 return None
             votes = [vote for vote in response]
@@ -67,6 +69,19 @@ class VotesManager:
 
     def getWinners(self, round: int = None):
         votes = self.getVotes(round)
+
+        while len(votes) != self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID):
+            votes = self.getVotes(round)
+            time.sleep(2)
+            consolLog.warn("En attente des votes...")
+            self.getDrawings()
+            self.drawnList = []
+
+            for drawn in os.listdir(self.tempdir.name):
+                self.drawnList.append(drawn)
+
+        consolLog.info("Tous les votes ont été recupérés.")
+        
         if votes is None:
             return None
 
