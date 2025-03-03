@@ -103,7 +103,7 @@ class InRoomScene(Scene):
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
             paintingScene = scenes.PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)
-
+        
     def quitGame(self):
         consolLog.info("Room quitter")
         if self.isUserRoomCreator:
