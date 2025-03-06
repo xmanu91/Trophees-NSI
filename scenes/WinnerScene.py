@@ -31,9 +31,12 @@ class WinnerScene(Scene):
         self.votesManager = votesManager
         self.tempdir = self.gameManager.getTempDir()
         self.sceneDuration = sceneDuration
+        
+        self.winners = []
         pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_WAITARROW))
-        self.winners =  self.votesManager.getWinners(self.roomManager.currentRound)
+        self.winners = self.votesManager.getWinners(self.roomManager.currentRound)
         pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_ARROW))
+
         consolLog.info(f"self.winners: {self.winners}")
 
         if self.roomManager.currentRound == self.roomManager.getRoundsNumber() and self.roomManager.getRoundsNumber() != 1:
