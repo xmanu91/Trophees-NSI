@@ -1,3 +1,4 @@
+import codecs
 from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 from utility import consolLog
@@ -104,14 +105,20 @@ class VotesManager:
         out = None
   
         try: 
-            # creating files in output folder for writing in binary mode 
-            out = open(os.path.join(self.tempdir.name, name.strip() + '.png'), 'wb') 
-            
-            # writing image data 
-            out.write(binary) 
+            if self.sqlManager.connectionType == 'local':
+                binary_data = bytes.fromhex(binary)
+            else:
+                binary_data = binary
+
+            # Construction du chemin de fichier
+            filepath = os.path.join(self.tempdir.name, name.strip() + '.png')
+
+            # Écriture correcte des données binaires
+            with open(filepath, 'wb') as out:
+                out.write(binary_data)
 
         except Exception as err:
-            consolLog.error(err)
+            print(err)
             
         # closing output file object 
         finally: 
