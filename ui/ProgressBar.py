@@ -1,7 +1,5 @@
 import pygame
 import time
-import threading
-import utility.eventManager as eventManager
 
 class ProgressBar(pygame.sprite.Sprite):
     def __init__(self, rect: pygame.Rect, color: pygame.Color, durationInSeconds: int, endAction):
@@ -12,22 +10,19 @@ class ProgressBar(pygame.sprite.Sprite):
         self.image = pygame.Surface((self.rect.width, self.rect.height))
         self.image.fill(self.color)
         self.endAction = endAction
+        self.value = 0  
+        self.startTime = None  
 
-    def __start(self):
-        timer = time.time()
-        while self.value < self.duration:
-
-            for event in pygame.event.get():    # Detection de la fermeture pygame afin de stopper la thread
-                if event.type == pygame.QUIT:   # A changer
-                    return
-
-            self.value = float(time.time() - timer)
-            self.image = pygame.Surface((self.rect.width * (self.value / self.duration), self.rect.height))
-            self.image.fill(self.color)
-        
-        self.endAction()
+    def update(self):
+        if self.startTime is not None:
+            elapsedTime = time.time() - self.startTime
+            if self.value < self.duration:
+                self.value = elapsedTime
+                self.image = pygame.Surface((self.rect.width * (self.value / self.duration), self.rect.height))
+                self.image.fill(self.color)
+            else:
+                self.endAction()
 
     def run_start(self):
-        self.value = 0
-        thread = threading.Thread(target=self.__start)
-        thread.start()
+        self.value = 0 
+        self.startTime = time.time()
