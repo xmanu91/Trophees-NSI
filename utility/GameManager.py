@@ -30,8 +30,13 @@ class GameManager:
             consolLog.error(err)
 
     def sendDrawing(self, path):
+        print(self.getBinaryArray(path))
         try:
-            self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, decode(%s, 'hex'), %s)", 
+            if self.sqlManager.connectionType == 'local':
+                self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, %s, %s)", 
+                                   (self.username, self.getBinaryArray(path), self.roomId))
+            else:
+                self.sqlManager.insert("INSERT INTO drawings (creator, image, room_id) VALUES (%s, decode(%s, 'hex'), %s)", 
                                    (self.username, self.getBinaryArray(path), self.roomId))
         except sqlError as err:
             consolLog.error(err)

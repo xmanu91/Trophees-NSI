@@ -79,6 +79,7 @@ class InRoomScene(Scene):
                 self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], False))
 
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
+        print(self.connectedUsers)
 
     def startGame(self):
         self.dev = True
