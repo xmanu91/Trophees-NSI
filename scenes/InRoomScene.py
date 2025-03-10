@@ -79,6 +79,7 @@ class InRoomScene(Scene):
                 self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], False))
 
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
+        print(self.connectedUsers)
 
     def startGame(self):
         self.dev = True
@@ -90,7 +91,7 @@ class InRoomScene(Scene):
             if self.isUserRoomCreator:
                 self.roomManager.setRoomState('playing')
             else:
-                time.sleep(0.2)
+                time.sleep(1)
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
             paintingScene = scenes.PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)

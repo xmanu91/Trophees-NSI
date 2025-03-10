@@ -100,7 +100,7 @@ class VotesManager:
         podium = [user for user, score in sorted_scores[:3]]
         return podium
         
-    def saveDrawing(self, binary, name):
+    def saveDrawing(self, binary: str, name: str):
         out = None
   
         try: 

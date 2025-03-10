@@ -23,6 +23,7 @@ class VoteScene(Scene):
         super().__init__()
         self.gameManager = gameManager
         self.tempdir = self.gameManager.getTempDir()
+        print(self.tempdir)
         self.sceneManager = sceneManager
         self.roomManager = roomManager
         self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir)
@@ -38,6 +39,7 @@ class VoteScene(Scene):
         self.background = Image('assets/backgrounds/wallBackground_3.png', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
         
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
+        print(self.tempdir.name)
         self.drawing = Image(os.path.join(self.tempdir.name, self.drawnList[self.index]), self.drawRect)
 
         self.note = 1

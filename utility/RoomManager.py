@@ -15,6 +15,8 @@ class RoomManager:
             response = self.SQLProvider.get("SELECT * FROM rooms WHERE state=%s", (state,))
         else:
             response = self.SQLProvider.get("SELECT * FROM rooms")
+        
+        print(response)
             
         if response is None:
             return []
