@@ -47,13 +47,13 @@ class JoinRoomScene(Scene):
         self.GameInProgress.setText(f"Parties en cours : {len(self.rooms)}")
     
     def joinRoom(self):
-        if not self.roomManager.doesRoomExist(self.seekRoomNameInput.getText()):
+        if not self.roomManager.doesRoomExist(int(self.seekRoomNameInput.getText())):
             raiseAnError("Aucune room avec cette ID n'existe")
             self.seekRoomNameInput.setPlaceholder("Veuillez entrer un id de room valide")
             self.seekRoomNameInput.setText("")
         else:
             try:
-                self.roomManager.createConnection(self.seekRoomNameInput.getText())
+                self.roomManager.createConnection(int(self.seekRoomNameInput.getText()))
                 self.sceneManager.setAsCurrentScene(scenes.InRoomScene.InRoomScene(self.sceneManager, self.roomManager, False))
             except:
                 raiseAnError("Une erreur est survenue")
@@ -86,9 +86,9 @@ class RoomCard(pygame.sprite.Sprite):
         self.numberPlayerText = Text((str(self.numberPlayer) + " joueurs connectés"), 17, (self.rect.width /1.4, self.rect.y + 19) , (0,0,0), False)
         self.button = Button(
             pygame.rect.Rect(self.rect.width - 100, self.rect.y + self.rect.height/2 - 20 , 100, 40), 
-            self.onButtonPressed, None, None, None, "Rejoindre", defaultColor=(100, 100, 100), hoverColor=(85, 85, 85),textColor=(0,0,0), fontSize= 20)
+            self.onButtonPressed, None, None, None, "Rejoindre", defaultColor=pygame.Color(100, 100, 100), hoverColor=(85, 85, 85),textColor=(0,0,0), fontSize= 20)
         
-        self.text = Text(roomName , 30, (self.rect.x + 10, self.rect.y + 15), (0,0,0), False )
+        self.text = Text(roomName , 30, (self.rect.x + 10, self.rect.y + 15), pygame.Color(0,0,0), False )
 
         self.image.blit(self.text.image, (self.text.rect.x - self.rect.x, self.text.rect.y - self.rect.y))
         self.image.blit(self.numberPlayerText.image, (self.numberPlayerText.rect.x - self.rect.x, self.numberPlayerText.rect.y - self.rect.y))

@@ -13,11 +13,11 @@ class PickPalette():
         self.colorPalette = Image("assets/images/palette.png", pygame.Rect(5, 290, 378*0.5, 261*0.5))
         self.colorPaletteImage = self.colorPalette.image
 
-        self.colorShapes = {"blue": Shape(pygame.Rect(42, 317, 41, 39), (0,0,0,0)),
-                            "green": Shape(pygame.Rect(42, 365, 41, 39), (0,0,0,0)),
-                            "red": Shape(pygame.Rect(90, 365, 41, 39), (0,0,0,0)),
-                            "black": Shape(pygame.Rect(89, 317, 41, 39), (0,0,0,0)),
-                            "white": Shape(pygame.Rect(138, 317, 41, 39), (0,0,0,0))}
+        self.colorShapes = {"blue": Shape(pygame.Rect(42, 317, 41, 39), pygame.Color(0,0,0,0)),
+                            "green": Shape(pygame.Rect(42, 365, 41, 39), pygame.Color(0,0,0,0)),
+                            "red": Shape(pygame.Rect(90, 365, 41, 39), pygame.Color(0,0,0,0)),
+                            "black": Shape(pygame.Rect(89, 317, 41, 39), pygame.Color(0,0,0,0)),
+                            "white": Shape(pygame.Rect(138, 317, 41, 39), pygame.Color(0,0,0,0))}
         
         self.mix = Circle(pygame.Rect(138, 364, 42, 42), self.canva.getBrushColor())
         self.colors = {"blue": (0,0,40), "red": (40,0,0), "green": (0, 40, 0), "black": (-20, -20, -20), "white": (20,20,20)}
@@ -52,8 +52,8 @@ class PickPalette():
                                 newColor = [abs(_) for _ in self.colors[color]]
                             else:
                                 newColor = self.multiply(actualColor, self.colors[color])
-                            self.canva.setBrushColor(newColor)
-                            self.canva.setSelectedColor(newColor)
+                            self.canva.setBrushColor(pygame.Color(newColor))
+                            self.canva.setSelectedColor(pygame.Color(newColor))
                     else:
                         self.clicked = False
         else:   

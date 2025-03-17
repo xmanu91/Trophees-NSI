@@ -5,6 +5,8 @@ from ui.Button import Button
 from ui.Text import Text
 from ui.Canva import Canva
 
+from utility.tools import toolType
+
 from scenes.PaintingSceneComponent.PickPalette import PickPalette
 
 class ToolBar():
@@ -33,13 +35,13 @@ class ToolBar():
 
         self.pickPalette = PickPalette(self.canva, self.spriteGroup)
 
-        self.theme = Text(self.theme, 16, (2 + 391*0.5/2, 10+ 124*0.5 /2), (0 ,0, 0), True)
+        self.theme = Text(self.theme, 16, (int(2 + 391*0.5/2), int(10+ 124*0.5 /2)), pygame.Color(0 ,0, 0), True)
 
         self.previousColor = self.canva.getBrushColor()  
 
         self.spriteGroup.add(postIt, self.theme, self.eraser, self.brush, self.colorPicker, self.bucket)       
         
-    def changeTool(self, tool: str):
+    def changeTool(self, tool: toolType):
         if tool == self.canva.selectedTool:
             return
         buttons = {"eraser": self.eraser, "brush": self.brush, "colorpicker": self.colorPicker, "bucket": self.bucket}

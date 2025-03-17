@@ -7,7 +7,6 @@ sqlProvider = SQLProvider()
 
 def show_tables():
     try:
-        # Exécutez une requête pour obtenir les noms des tables
         tables = sqlProvider.get("SELECT table_name FROM information_schema.tables WHERE table_schema='public';")
         
         if tables:
@@ -16,12 +15,11 @@ def show_tables():
                 table_name = table[0]
                 print(f"\nTable: {table_name}")
                 
-                # Obtenir les colonnes de la table
                 columns = sqlProvider.get(f"SELECT column_name FROM information_schema.columns WHERE table_name = '{table_name}';")
                 if columns:
                     print("Colonnes :")
                     for column in columns:
-                        print(f" - {column[0]}")  # Chaque colonne est un tuple, donc on accède au premier élément
+                        print(f" - {column[0]}")
                 else:
                     print("Aucune colonne trouvée dans cette table.")
         else:

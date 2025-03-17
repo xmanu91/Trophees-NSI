@@ -1,5 +1,3 @@
-import copy
-
 eventHandlers = {}
 
 def addEventHandler(event, action):

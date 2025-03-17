@@ -1,7 +1,10 @@
+from typing import Literal
 import pygame
 import shutil
 import sys
 import os
+
+type toolType = Literal["brush"] | Literal["bucket"] | Literal["colorpicker"] | Literal["eraser"]
 
 def centerCoordinates(coordinates, gap):
     return (coordinates[0]-gap, coordinates[1]-gap)
@@ -62,7 +65,7 @@ def getPath(relativePath: str):
     base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
     return os.path.join(base_path, relativePath)
 
-def removeAlpha(color: tuple):
+def removeAlpha(color: pygame.Color):
     return (color[0], color[1], color[2])
 
 def getScalingFactors(x, y, screenWidth, screenHeight): # Parce que j'ai la flemme de chercher le bon coef alors que je connais déjà les coords que je veux utiliser

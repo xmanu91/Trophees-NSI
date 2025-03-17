@@ -10,7 +10,7 @@ class RoomManager:
         self.currentRoomID = None
         self.currentRound = 0
     
-    def getAllRooms(self, state: str = None):
+    def getAllRooms(self, state: str | None = None):
         if state:
             response = self.SQLProvider.get("SELECT * FROM rooms WHERE state=%s", (state,))
         else:
@@ -32,7 +32,9 @@ class RoomManager:
 
     def getConnectedUsersNumberInRoom(self, roomId: int):
         response = self.SQLProvider.get("SELECT count(username) FROM connected_users WHERE room_id=%s", (str(roomId),))
-        return response[0][0]
+        if response:
+            return response[0][0]
+        else: return False
     
     def getCurrentRoomName(self):
         try:
@@ -47,19 +49,21 @@ class RoomManager:
         consolLog.info("RoomId :", roomId)
         try:
             response = self.SQLProvider.insert("INSERT INTO connected_users (username, room_id) VALUES (%s, %s)", (self.username, roomId), returnedValue='user_id')
+            if response:
+                self.userId = response
+                consolLog.info('UserId :', self.userId)
+                self.currentRoomID = roomId
         except sqlError as err:
             consolLog.error(err)
-        self.userId = response
-        consolLog.info('UserId :', self.userId)
-        self.currentRoomID = roomId
 
-    def createRoom(self, roomName):
+    def createRoom(self, roomName: str):
         try:
             room = self.SQLProvider.insert("INSERT INTO rooms (room_id, creator, room_name, theme, state, rounds_number, round_time) VALUES (DEFAULT,%s, %s, %s, 'lobby', 4, 60)", (self.username, roomName, 'DEFAULT'), returnedValue="room_id")
+            if room:
+                self.createConnection(room)
         except sqlError as err:
             consolLog.error(err)
-        self.createConnection(room)
-
+        
     def closeRoom(self, roomId):
         try:
             self.SQLProvider.executeSQL("DELETE FROM drawings WHERE room_id=%s", (str(roomId),))
@@ -109,48 +113,62 @@ class RoomManager:
     def getRoundsNumber(self):
         try:
             response = self.SQLProvider.get('SELECT rounds_number FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
-            return response[0][0]
+            if response:
+                return response[0][0]
+            else: return None
         except sqlError as err:
             consolLog.error(err)
 
     def getRoundTime(self):
         try:
             response = self.SQLProvider.get('SELECT round_time FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
-            return response[0][0]
+            if response:
+                return response[0][0]
+            else: return None
         except sqlError as err:
             consolLog.error(err)
 
     def getRoomState(self):
         try:
             response = self.SQLProvider.get('SELECT state FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
-            return response[0][0]
+            if response:
+                return response[0][0]
+            else: return None
         except sqlError as err:
             consolLog.error(err)
 
     def getRoomCreator(self):
         try:
             response = self.SQLProvider.get('SELECT creator FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
-            return response[0][0]
+            if response:
+                return response[0][0]
+            else: return None
         except sqlError as err:
             consolLog.error(err)
 
     def setUsername(self, newUsername: str):
         self.username = newUsername
 
-    def doesRoomExist(self, roomId: id) -> bool:
+    def doesRoomExist(self, roomId: str) -> bool:
         if not roomId.isdigit():
             return False
         try:
             response = self.SQLProvider.get('SELECT room_name FROM rooms WHERE room_id=%s', (str(roomId),))
             consolLog.info(response)
-            return len(response) > 0
+            if response:
+                return len(response) > 0
+            else: return False
         except sqlError as err:
             consolLog.error(err)
+            return False
 
-    def doesUserConnectedInRoom(self, roomId: id, username: str) -> bool:
+    def doesUserConnectedInRoom(self, roomId: int, username: str) -> bool:
         try:
             response = self.SQLProvider.get('SELECT username FROM connected_users WHERE room_id=%s and username=%s', (str(roomId), username))
-            return len(response) > 0
+            if response:
+                return len(response) > 0
+            else: return False
         except sqlError as err:
             consolLog.error(err)
+            return False
         

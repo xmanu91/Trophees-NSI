@@ -1,7 +1,6 @@
-from typing import Literal
-from utility.tools import centerCoordinates
 import utility.eventManager as eventManager
 from collections import deque
+from utility.tools import toolType
 import pygame
 import os
 
@@ -43,7 +42,7 @@ class Canva(pygame.sprite.Sprite):
                     case "bucket":
                         self.holyBucket(mousePosition[0], mousePosition[1], self.drawColor, self.image)
                     case "eraser":
-                        self.setBrushColor((255, 255, 255))
+                        self.setBrushColor(pygame.Color(255, 255, 255))
                         self.__circleBrushSize = int((self.brushSize/2)-1)
                         if self.__previousPoint:
                             pygame.draw.circle(self.image, self.drawColor, self.__previousPoint, self.__circleBrushSize)
@@ -56,8 +55,7 @@ class Canva(pygame.sprite.Sprite):
                     case "colorpicker":
                         print(self.rect, pygame.mouse.get_pos())
                         try:
-                            color = self.image.get_at(mousePosition)[0:3]
-                            print(color)
+                            color = pygame.Color(self.image.get_at(mousePosition)[0:3])
                             self.setBrushColor(color)
                             self.setSelectedColor(color)
                         except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
@@ -93,7 +91,7 @@ class Canva(pygame.sprite.Sprite):
     def setBrushColor(self, color: pygame.Color):
         self.drawColor = color
     
-    def setSelectedTool(self, tool: Literal["brush"] | Literal["bucket"] | Literal["colorpicker"] | Literal["eraser"]):
+    def setSelectedTool(self, tool: toolType):
         self.selectedTool = tool
 
     def setSelectedColor(self, color: pygame.Color):
@@ -111,7 +109,7 @@ class Canva(pygame.sprite.Sprite):
             self.darknessValue = 100
 
         color = self.getSelectedColor()
-        self.setBrushColor((color[0] * self.darknessValue//100, 
+        self.setBrushColor(pygame.Color(color[0] * self.darknessValue//100, 
                             color[1] * self.darknessValue//100, 
                             color[2] * self.darknessValue//100))  
 

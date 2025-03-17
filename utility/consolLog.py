@@ -1,5 +1,6 @@
 import datetime
 import inspect
+from typing import Any
 
 ORANGE = "\033[33m"
 RED = "\033[31m"
@@ -17,17 +18,17 @@ def getFileName(inspectStackFilename):
     templist.reverse()
     return "".join(templist)
 
-def info(*text: str | int | float | bool):
+def info(*text: Any):
     if debug:
         message = " ".join(map(str, text)) 
         print(f"{str(datetime.datetime.now())[:19]} - INFO - {getFileName(inspect.stack()[1].filename)} - {message}")
 
-def warn(*text: str | int | float | bool):
+def warn(*text: Any):
     if debug:
         message = " ".join(map(str, text))
         print(f"{ORANGE}{str(datetime.datetime.now())[:19]} - WARN - {getFileName(inspect.stack()[1].filename)} - {message}{END}")
 
-def error(*text: str | int | float | bool):
+def error(*text: Any):
     if debug:
         message = " ".join(map(str, text))
         print(f"{RED}{str(datetime.datetime.now())[:19]} - ERROR - {getFileName(inspect.stack()[1].filename)} - {message}{END}")

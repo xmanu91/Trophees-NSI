@@ -6,8 +6,8 @@ class Text(pygame.sprite.Sprite):
         self, 
         text: str, 
         fontSize: int,
-        textCoordinates: tuple[int, int],
-        color: tuple[int, int, int],
+        textCoordinates: tuple[float, float],
+        color: pygame.Color,
         isCentered: bool = True,
         fontFamily: str | None = None,
         ): 

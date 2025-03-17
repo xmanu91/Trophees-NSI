@@ -6,7 +6,7 @@ class Timer():
     def __init__(self, timerDuration: int, textTimer, action: Callable):
         self.timerDuration = timerDuration
         self.textTimer = textTimer
-        self.action = action
+        self.action: Callable = action
     
     def startTimer(self):
         threading.Thread(target=self.timer, daemon=True).start()

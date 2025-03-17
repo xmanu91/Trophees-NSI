@@ -25,7 +25,10 @@ class GameManager:
     def getTheme(self):
         try: 
             result = self.sqlManager.get("SELECT theme FROM rooms WHERE room_id=%s", (str(self.roomId),))
-            return result[0][0]
+            if result:
+                return result[0][0]
+            else: return None
+        
         except sqlError as err:
             consolLog.error(err)
 

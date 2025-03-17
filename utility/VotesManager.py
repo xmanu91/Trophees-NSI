@@ -1,4 +1,3 @@
-import codecs
 from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
 from utility import consolLog
@@ -52,7 +51,7 @@ class VotesManager:
         except sqlError as err:
             consolLog.error(err)
 
-    def getVotes(self, round: int = None):
+    def getVotes(self, round: int | None = None):
         try:
             if round:
                 response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
@@ -66,7 +65,7 @@ class VotesManager:
         except sqlError as err:
             consolLog.error(err)
 
-    def getWinners(self, round: int = None):
+    def getWinners(self, round: int | None = None):
         votes = self.getVotes(round)
         if votes is None:
             return None
@@ -103,7 +102,7 @@ class VotesManager:
         
     def saveDrawing(self, binary: str, name: str):
         out = None
-  
+
         try: 
             if self.sqlManager.connectionType == 'local':
                 binary_data = bytes.fromhex(binary)
@@ -115,11 +114,12 @@ class VotesManager:
 
             # Écriture correcte des données binaires
             with open(filepath, 'wb') as out:
-                out.write(binary_data)
+                out.write(binary_data) # type: ignore
 
         except Exception as err:
             print(err)
             
         # closing output file object 
-        finally: 
-            out.close()
+        finally:
+            if out: 
+                out.close() 
