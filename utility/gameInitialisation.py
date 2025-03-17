@@ -5,7 +5,7 @@ import os
 from utility.SQLProvider import SQLProvider
 
 if getattr(sys, 'frozen', False):
-    dotenv_path = os.path.join(sys._MEIPASS, '.env')
+    dotenv_path = os.path.join(sys._MEIPASS, '.env') # type: ignore
 else:
     dotenv_path = '.env'
 
