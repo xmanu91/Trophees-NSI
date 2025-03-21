@@ -19,15 +19,15 @@ class RoomSettingsScene(Scene):
         self.gameManager = gameManager
         background = Image('assets/backgrounds/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
 
-        self.Text = Text("Paramètres", 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), (0,0,0), isCentered=False)
-        self.textNbRound = Text("Nombre de tours : ", 22, (self.screenWidth*0.1, self.screenHeight*0.15), (0,0,0), isCentered=False)
-        self.textDurationRound = Text("Duree de la partie (en sec): ", 22, (self.screenWidth*0.1, self.screenHeight*0.25), (0,0,0), isCentered=False)
+        self.Text = Text("Paramètres", 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), pygame.Color(0,0,0), isCentered=False)
+        self.textNbRound = Text("Nombre de tours : ", 22, (self.screenWidth*0.1, self.screenHeight*0.15), pygame.Color(0,0,0), isCentered=False)
+        self.textDurationRound = Text("Duree de la partie (en sec): ", 22, (self.screenWidth*0.1, self.screenHeight*0.25), pygame.Color(0,0,0), isCentered=False)
 
-        self.textInputNbRound = TextInput(pygame.Rect(self.screenWidth*0.38, self.screenHeight*0.15 - 5, 100, 30), (0,0,0), (119,169,198), (255,255,255), (33,33,33, 50), placeholder=str(self.roomManager.getRoundsNumber()), fontSize=22)
-        self.textInputDurationRound = TextInput(pygame.Rect(self.screenWidth*0.38, self.screenHeight*0.25 - 5, 100, 30), (0,0,0), (119,169,198), (255,255,255), (33,33,33, 50), placeholder=str(self.roomManager.getRoundTime()), fontSize=22)
+        self.textInputNbRound = TextInput(pygame.Rect(self.screenWidth*0.38, self.screenHeight*0.15 - 5, 100, 30), pygame.Color(0,0,0), pygame.Color(119,169,198), pygame.Color(255,255,255), pygame.Color(33,33,33, 50), placeholder=str(self.roomManager.getRoundsNumber()), fontSize=22)
+        self.textInputDurationRound = TextInput(pygame.Rect(self.screenWidth*0.38, self.screenHeight*0.25 - 5, 100, 30), pygame.Color(0,0,0), pygame.Color(119,169,198), pygame.Color(255,255,255), pygame.Color(33,33,33, 50), placeholder=str(self.roomManager.getRoundTime()), fontSize=22)
 
-        self.buttonBack = Button(pygame.Rect(self.screenWidth*0.02, self.screenHeight*0.95-30, 100, 30), self.back, None, None, None, "Annuler", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize=15)
-        self.buttonSave = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.save, None, None, None, "Appliquer", defaultColor=(255,255,255),  hoverColor=(119,169,198),textColor=(0,0,0), fontSize=15)
+        self.buttonBack = Button(pygame.Rect(self.screenWidth*0.02, self.screenHeight*0.95-30, 100, 30), self.back, None, None, None, "Annuler", defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198),textColor=pygame.Color(0,0,0), fontSize=15)
+        self.buttonSave = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.save, None, None, None, "Appliquer", defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198),textColor=pygame.Color(0,0,0), fontSize=15)
 
         self.spriteGroup.add(background, self.Text, self.textNbRound, self.textDurationRound, self.textInputNbRound, self.textInputDurationRound, self.buttonBack, self.buttonSave)
 

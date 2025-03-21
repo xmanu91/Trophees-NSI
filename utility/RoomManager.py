@@ -8,7 +8,7 @@ class RoomManager:
         self.SQLProvider = SQLProvider
         self.username = username
         self.userId= None
-        self.currentRoomID = None
+        self.currentRoomID = -1
         self.currentRound = 0
     
     def getAllRooms(self, state: str | None = None):
@@ -54,7 +54,7 @@ class RoomManager:
             if response:
                 self.userId = response
                 consolLog.info('UserId :', self.userId)
-                self.currentRoomID = roomId
+                self.currentRoomID = -1
         except sqlError as err:
             consolLog.error(err)
 
@@ -74,7 +74,7 @@ class RoomManager:
             self.SQLProvider.executeSQL("DELETE FROM rooms WHERE room_id=%s", (str(roomId),))
         except sqlError as err:
             consolLog.error(err)
-        self.currentRoomID = None
+        self.currentRoomID = -1
 
     def closeConnection(self):
         try:
@@ -82,7 +82,7 @@ class RoomManager:
             self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE user_id=%s", (str(self.userId),))
         except sqlError as err:
             consolLog.error(err)
-        self.currentRoomID = None
+        self.currentRoomID = -1
 
     def setRoomState(self, state: str):
         try:
@@ -114,14 +114,16 @@ class RoomManager:
             consolLog.error(err)
             return []
 
-    def getRoundsNumber(self):
+    def getRoundsNumber(self) -> int:
         try:
             response = self.SQLProvider.get('SELECT rounds_number FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
                 return response[0][0]
-            else: return None
+            else: return -1
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
+            return -1
 
     def getRoundTime(self) -> int:
         try:

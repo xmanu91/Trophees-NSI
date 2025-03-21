@@ -15,7 +15,7 @@ class Button(pygame.sprite.Sprite):
             imageCoordinates: tuple[int, int] | None, 
             text: str, 
             fontSize: int = 14,
-            textColor: pygame.Color = (0,0,0),
+            textColor: pygame.Color = pygame.Color(0,0,0),
             textCoordinates: tuple[int, int] | None = None, 
             defaultColor: pygame.Color | None = None, 
             hoverColor: pygame.Color | None = None, 
@@ -29,7 +29,7 @@ class Button(pygame.sprite.Sprite):
         self.ErrorButton = ErrorButton
 
         # Surface definition
-        if image!= None:
+        if image!= None and hoverImage and imageCoordinates:
             self.spriteImage = pygame.transform.scale(image, buttonRect.size).convert_alpha()
             self.hoverImage = pygame.transform.scale(hoverImage, buttonRect.size).convert_alpha()
             self.image = pygame.transform.scale(image, buttonRect.size).convert_alpha()
@@ -48,7 +48,7 @@ class Button(pygame.sprite.Sprite):
         self.disabled = False
         self.previousState = False
 
-        if self.ErrorButton:
+        if self.ErrorButton and self.sceneManager:
             group = self.sceneManager.currentScene.spriteGroup
             for sprite in group:
                 if type(sprite) == type(self):
@@ -61,11 +61,12 @@ class Button(pygame.sprite.Sprite):
         self.disabled = False
 
     def kill(self):
-        group = self.sceneManager.currentScene.spriteGroup
-        for sprite in group:
-            if type(sprite) == type(self):
-                sprite.disabled = False
-        super().kill()
+        if self.sceneManager:
+            group = self.sceneManager.currentScene.spriteGroup
+            for sprite in group:
+                if type(sprite) == type(self):
+                    sprite.disabled = False
+            super().kill()
 
     def update(self):
         mousePosition = pygame.mouse.get_pos()

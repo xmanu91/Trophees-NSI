@@ -2,7 +2,7 @@ from scenes import HomeScene, PaintingScene, PodiumScene
 from utility.VotesManager import VotesManager
 import utility.eventManager as eventManager
 from utility.GameManager import GameManager
-import utility.RoomManager as RoomManager
+from utility.RoomManager import RoomManager
 from ui.SceneManager import SceneManager
 from utility import consolLog
 from ui.Button import Button
@@ -36,13 +36,13 @@ class WinnerScene(Scene):
         consolLog.info(f"self.winners: {self.winners}")
 
         if self.roomManager.currentRound == self.roomManager.getRoundsNumber() and self.roomManager.getRoundsNumber() != 1:
-            self.podiumButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.podium, None, None, None, "Podium", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+            self.podiumButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.podium, None, None, None, "Podium", 13, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))
             self.spriteGroup.add(self.podiumButton)
         elif self.roomManager.currentRound == self.roomManager.getRoundsNumber() and self.roomManager.getRoundsNumber() == 1:
-            self.quitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "Quitter", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+            self.quitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "Quitter", 13, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))
             self.spriteGroup.add(self.quitButton)
         elif self.roomManager.currentRound < self.roomManager.getRoundsNumber() and self.roomManager.username == self.roomManager.getRoomCreator():
-            self.nextRoundButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.nextRound, None, None, None, "Prochain tour", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+            self.nextRoundButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.nextRound, None, None, None, "Prochain tour", 13, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))
             self.spriteGroup.add(self.nextRoundButton)
         else:
             self.updateStateEventType = pygame.event.custom_type()
@@ -50,25 +50,27 @@ class WinnerScene(Scene):
             eventManager.addEventHandler(self.updateStateEventType, self.checkGameState)
 
         self.text = ""
-        if len(self.winners) == 1:
+        if self.winners and len(self.winners) == 1:
             self.text = "Le gagnant est : "
         else:
             self.text = "Les gagnants sont : "
-        for winner in self.winners:
-            self.text += winner + ", "
-        self.text = self.text[:-2]
+        
+        if self.winners:
+            for winner in self.winners:
+                self.text += winner + ", "
+            self.text = self.text[:-2]
 
-        self.textLabel = Text(self.text, 32, (450, 450), (255,255,255), True)
-        self.spriteGroup.add(self.textLabel)    
+            self.textLabel = Text(self.text, 32, (450, 450), pygame.Color(255,255,255), True)
+            self.spriteGroup.add(self.textLabel)    
 
-        self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
+            self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
 
-        for winner in self.winners:
-            self.votesManager.getDrawing(winner)
+            for winner in self.winners:
+                self.votesManager.getDrawing(winner)
 
-        self.winnersDrawings = []
-        for winner in self.winners:
-            self.winnersDrawings.append(Image(os.path.join(self.tempdir.name, winner.strip() + ".png"), self.drawRect))
+            self.winnersDrawings = []
+            for winner in self.winners:
+                self.winnersDrawings.append(Image(os.path.join(self.tempdir.name, winner.strip() + ".png"), self.drawRect))
 
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)

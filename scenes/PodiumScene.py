@@ -37,21 +37,19 @@ class PodiumScene(Scene):
         podium2 = Shape(pygame.Rect(self.screenWidth /2 - 75 - 150, 300, 150, 200), pygame.Color(128, 128, 128))
         podiumRank2 = Text("2", 62, (self.screenWidth /2 - 150, 400 - 62/2), pygame.Color(255,255,255), True)
 
-        if len(self.playersOnPodium) > 2:
-            podium3 = Shape(pygame.Rect(self.screenWidth /2 - 75 + 150, 350, 150, 150), pygame.Color(127, 65, 24))
-            podiumRank3 = Text("3", 62, (self.screenWidth /2 + 150, 450 - 62/2), pygame.Color(255,255,255), True)
+        if self.playersOnPodium:
+            playerFontSize = [int((13 / len(player))*18) for player in self.playersOnPodium]
+            playerOnPodium1 = Text(self.playersOnPodium[0], playerFontSize[0], (self.screenWidth /2, 250 - playerFontSize[0]/2), pygame.Color(255,255,255), True)
+            playerOnPodium2 = Text(self.playersOnPodium[1], playerFontSize[1], (self.screenWidth /2 - 150, 300 - playerFontSize[1]/2), pygame.Color(255,255,255), True)
+            
+            if len(self.playersOnPodium) > 2:
+                playerOnPodium3 = Text(self.playersOnPodium[2], playerFontSize[2], (self.screenWidth /2 + 150, 350 - playerFontSize[2]/2), pygame.Color(255,255,255), True)
+                podium3 = Shape(pygame.Rect(self.screenWidth /2 - 75 + 150, 350, 150, 150), pygame.Color(127, 65, 24))
+                podiumRank3 = Text("3", 62, (self.screenWidth /2 + 150, 450 - 62/2), pygame.Color(255,255,255), True)
+                self.spriteGroup.add(playerOnPodium3, podiumRank3, podium3)
 
-        playerFontSize = [int((13 / len(player))*18) for player in self.playersOnPodium]
-        playerOnPodium1 = Text(self.playersOnPodium[0], playerFontSize[0], (self.screenWidth /2, 250 - playerFontSize[0]/2), (255,255,255), True)
-        playerOnPodium2 = Text(self.playersOnPodium[1], playerFontSize[1], (self.screenWidth /2 - 150, 300 - playerFontSize[1]/2), (255,255,255), True)
-        
-        if len(self.playersOnPodium) > 2:
-            playerOnPodium3 = Text(self.playersOnPodium[2], playerFontSize[2], (self.screenWidth /2 + 150, 350 - playerFontSize[2]/2), (255,255,255), True)
-            self.spriteGroup.add(playerOnPodium3, podiumRank3, podium3)
-
-        self.quitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "Quitter", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
-        
-        self.spriteGroup.add(podium1, podium2, playerOnPodium1, playerOnPodium2, podiumRank1, podiumRank2, self.quitButton)
+            self.quitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "Quitter", 13, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))
+            self.spriteGroup.add(podium1, podium2, playerOnPodium1, playerOnPodium2, podiumRank1, podiumRank2, self.quitButton)
 
     def quit(self):
         self.tempdir = self.gameManager.getTempDir()

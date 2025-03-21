@@ -25,9 +25,9 @@ class Text(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         if isCentered :
-            self.rect.center =  textCoordinates
+            self.rect.center = (int(textCoordinates[0]), int(textCoordinates[1]))
         else : 
-            self.rect.topleft = textCoordinates
+            self.rect.topleft = (int(textCoordinates[0]), int(textCoordinates[1]))
 
     def setText(self, text: str):
         self.text = text

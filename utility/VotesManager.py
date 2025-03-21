@@ -6,7 +6,7 @@ import tempfile
 import os
 
 class VotesManager:
-    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory):
+    def __init__(self, sqlManager: SQLProvider, roomId: int, username: str, tempdir: tempfile.TemporaryDirectory):
         self.tempdir = tempdir
         self.sqlManager = sqlManager
         self.roomId = roomId
