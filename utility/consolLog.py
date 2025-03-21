@@ -31,3 +31,8 @@ def error(*text: str | int | float | bool):
     if debug:
         message = " ".join(map(str, text))
         print(f"{RED}{str(datetime.datetime.now())[:19]} - ERROR - {getFileName(inspect.stack()[1].filename)} - {message}{END}")
+
+def vinfo(*text: str | int | float | bool):
+    if debug:
+        message = " ".join(map(str, text))
+        print(f"\033[34m{str(datetime.datetime.now())[:19]} - INFO - {getFileName(inspect.stack()[1].filename)} - {message}\033[0m")
