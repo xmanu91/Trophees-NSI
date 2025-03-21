@@ -37,14 +37,14 @@ class PaintingScene(Scene):
         else:
             self.theme = self.gameManager.getTheme()
 
-        self.textTheme = Text(self.theme, 32, (450, 250-16), (255,255,255), True)
+        self.textTheme = Text(self.theme, 32, (450, 250-16), pygame.Color(255,255,255), True)
 
         themeTimerDuration = 5
         gameTimerDuration = self.roomManager.getRoundTime()
-        self.textThemeTimer = Text(str(themeTimerDuration), 32, (450, 250+16), (255,255,255), True)
-        self.gameProgressBar = ProgressBar(pygame.Rect(200, 0, screenWidth-200, 10), (0, 255, 0), gameTimerDuration, self.endDrawing)
+        self.textThemeTimer = Text(str(themeTimerDuration), 32, (450, 250+16), pygame.Color(255,255,255), True)
+        self.gameProgressBar = ProgressBar(pygame.Rect(200, 0, screenWidth-200, 10), pygame.Color(0, 255, 0), gameTimerDuration, self.endDrawing)
         self.themeTimer = Timer(themeTimerDuration, self.textThemeTimer, self.setCanva)
-        self.canva = Canva(pygame.Rect(200, 0, 700, 500), (255, 255, 255), (0, 0, 0), roomManager.username)
+        self.canva = Canva(pygame.Rect(200, 0, 700, 500), pygame.Color(255, 255, 255), pygame.Color(0, 0, 0), roomManager.username)
         self.toolBar = None
         self.spriteGroup.add(self.background, self.textThemeTimer, self.textTheme)
 

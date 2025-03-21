@@ -32,14 +32,14 @@ class PodiumScene(Scene):
         print(self.test)
         self.playersOnPodium = self.test 
 
-        podium1 = Shape(pygame.Rect(self.screenWidth /2 - 75, 250, 150, 250), (255, 220, 48))
-        podiumRank1 = Text("1", 62, (self.screenWidth /2, 350 - 62/2), (255,255,255), True)
-        podium2 = Shape(pygame.Rect(self.screenWidth /2 - 75 - 150, 300, 150, 200), (128, 128, 128))
-        podiumRank2 = Text("2", 62, (self.screenWidth /2 - 150, 400 - 62/2), (255,255,255), True)
+        podium1 = Shape(pygame.Rect(self.screenWidth /2 - 75, 250, 150, 250), pygame.Color(255, 220, 48))
+        podiumRank1 = Text("1", 62, (self.screenWidth /2, 350 - 62/2), pygame.Color(255,255,255), True)
+        podium2 = Shape(pygame.Rect(self.screenWidth /2 - 75 - 150, 300, 150, 200), pygame.Color(128, 128, 128))
+        podiumRank2 = Text("2", 62, (self.screenWidth /2 - 150, 400 - 62/2), pygame.Color(255,255,255), True)
 
         if len(self.playersOnPodium) > 2:
-            podium3 = Shape(pygame.Rect(self.screenWidth /2 - 75 + 150, 350, 150, 150), (127, 65, 24))
-            podiumRank3 = Text("3", 62, (self.screenWidth /2 + 150, 450 - 62/2), (255,255,255), True)
+            podium3 = Shape(pygame.Rect(self.screenWidth /2 - 75 + 150, 350, 150, 150), pygame.Color(127, 65, 24))
+            podiumRank3 = Text("3", 62, (self.screenWidth /2 + 150, 450 - 62/2), pygame.Color(255,255,255), True)
 
         playerFontSize = [int((13 / len(player))*18) for player in self.playersOnPodium]
         playerOnPodium1 = Text(self.playersOnPodium[0], playerFontSize[0], (self.screenWidth /2, 250 - playerFontSize[0]/2), (255,255,255), True)

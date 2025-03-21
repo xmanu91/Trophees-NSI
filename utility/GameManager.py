@@ -1,5 +1,6 @@
 from mysql.connector import Error as sqlError
 from utility.SQLProvider import SQLProvider
+from utility.ErrorHandler import raiseAnError
 from utility.tools import getPath
 from utility import consolLog
 from random import choice
@@ -22,15 +23,19 @@ class GameManager:
         except sqlError as err:
             consolLog.error(err)
 
-    def getTheme(self):
+    def getTheme(self) -> str:
         try: 
             result = self.sqlManager.get("SELECT theme FROM rooms WHERE room_id=%s", (str(self.roomId),))
             if result:
                 return result[0][0]
-            else: return None
-        
+            else: 
+                consolLog.error("Récupération du theme impossible")
+                raiseAnError("Récupération du theme impossible")
+                return "ERR"
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
+            return "ERR"
 
     def sendDrawing(self, path):
         print(self.getBinaryArray(path))

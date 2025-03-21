@@ -1,4 +1,5 @@
 from utility.SQLProvider import SQLProvider
+from utility.ErrorHandler import raiseAnError
 from mysql.connector import Error as sqlError
 from utility import consolLog
 
@@ -36,14 +37,15 @@ class RoomManager:
             return response[0][0]
         else: return False
     
-    def getCurrentRoomName(self):
+    def getCurrentRoomName(self) -> str:
         try:
             response = self.SQLProvider.get("SELECT room_name FROM rooms WHERE room_id=%s", (str(self.currentRoomID),))
             if response is None:
-                return None
+                return "Unknown room"
             return response[0][0]
         except sqlError as err:
-            consolLog.error(err)
+            raiseAnError(err)
+            return ""
     
     def createConnection(self, roomId: int):
         consolLog.info("RoomId :", roomId)
@@ -100,7 +102,7 @@ class RoomManager:
         except sqlError as err:
             consolLog.error(err) 
     
-    def getUsersInCurrentRoom(self) -> list[str] | None:
+    def getUsersInCurrentRoom(self) -> list[str]:
         try:
             response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (str(self.currentRoomID),))
             if response is None:
@@ -108,7 +110,9 @@ class RoomManager:
             users = [user[0] for user in response]  # type: ignore
             return users
         except sqlError as err:
+            raiseAnError(err)
             consolLog.error(err)
+            return []
 
     def getRoundsNumber(self):
         try:
@@ -119,14 +123,19 @@ class RoomManager:
         except sqlError as err:
             consolLog.error(err)
 
-    def getRoundTime(self):
+    def getRoundTime(self) -> int:
         try:
             response = self.SQLProvider.get('SELECT round_time FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
                 return response[0][0]
-            else: return None
+            else: 
+                raiseAnError("Récupéation du timer impossible")
+                consolLog.error("Récupéation du timer impossible")
+                return 60
         except sqlError as err:
+            raiseAnError(err)
             consolLog.error(err)
+            return 60
 
     def getRoomState(self):
         try:

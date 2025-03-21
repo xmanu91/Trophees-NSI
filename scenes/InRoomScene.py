@@ -4,6 +4,7 @@ import time
 
 import scenes.PaintingScene
 import scenes.RoomSettingsScene
+import scenes.JoinRoomScene
 from ui.Scene import Scene
 from ui.SceneManager import SceneManager
 from ui.Image import Image
@@ -25,14 +26,16 @@ class InRoomScene(Scene):
         self.sceneManager = sceneManager
         self.isUserRoomCreator = isUserRoomCreator
         self.connected_users = self.roomManager.getUsersInCurrentRoom()
-        self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
+        if roomManager.currentRoomID:
+            self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
         self.roomManager.setRoundsNumber(1)
         consolLog.info('In RoomId:', self.roomManager.currentRoomID)
 
         self.background = Image('assets/backgrounds/paperBackground_2.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
-        self.roomNameText = Text(roomManager.getCurrentRoomName(), 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), (0,0,0), isCentered=False)
-        self.idDisplay = Text("ID: " + str(self.roomManager.currentRoomID), 15, (self.screenWidth*0.05, self.screenHeight*0.12), (0,0,0), isCentered=False)
-        self.subHeadText = Text(f'Utilisateurs connectés ({str(len(self.roomManager.getUsersInCurrentRoom()))}):', 15, (self.screenWidth*0.05, self.screenHeight*0.16), (0,0,0), isCentered=False)
+    
+        self.roomNameText = Text(roomManager.getCurrentRoomName(), 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), pygame.Color(0,0,0), isCentered=False)
+        self.idDisplay = Text("ID: " + str(self.roomManager.currentRoomID), 15, (self.screenWidth*0.05, self.screenHeight*0.12), pygame.Color(0,0,0), isCentered=False)
+        self.subHeadText = Text(f'Utilisateurs connectés ({str(len(self.roomManager.getUsersInCurrentRoom()))}):', 15, (self.screenWidth*0.05, self.screenHeight*0.16), pygame.Color(0,0,0), isCentered=False)
         
         if self.isUserRoomCreator:
             updateButtonRect = pygame.Rect(self.screenWidth*0.60, self.screenHeight*0.95-30, 100, 30)
@@ -40,10 +43,10 @@ class InRoomScene(Scene):
             updateButtonRect = pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30)
             
 
-        self.quitButton = Button(pygame.Rect(self.screenWidth*0.02, self.screenHeight*0.95-30, 100, 30), self.quitGame, None, None, None, "Quitter", 15, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
-        self.updateRoomsButton = Button(updateButtonRect, self.updateConnectedUsers, None, None, None, "Actualiser", 15, (0,0,0), defaultColor=(255,255,255), hoverColor=(119,169,198))        
-        self.roomSettings = Button(pygame.Rect(self.screenWidth*0.73, self.screenHeight*0.95-30, 100, 30), self.openRoomSettings, None, None, None, "Paramètres", 15, (0,0,0), defaultColor=(255,255,255), hoverColor=(119,169,198))
-        self.playButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.startGame, None, None, None, "Jouer", 15, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
+        self.quitButton = Button(pygame.Rect(self.screenWidth*0.02, self.screenHeight*0.95-30, 100, 30), self.quitGame, None, None, None, "Quitter", 15, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))
+        self.updateRoomsButton = Button(updateButtonRect, self.updateConnectedUsers, None, None, None, "Actualiser", 15, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255), hoverColor=pygame.Color(119,169,198))        
+        self.roomSettings = Button(pygame.Rect(self.screenWidth*0.73, self.screenHeight*0.95-30, 100, 30), self.openRoomSettings, None, None, None, "Paramètres", 15, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255), hoverColor=pygame.Color(119,169,198))
+        self.playButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.startGame, None, None, None, "Jouer", 15, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))
 
         self.spriteGroup.add(
             self.background, self.roomNameText, self.subHeadText , self.quitButton, self.updateRoomsButton, 
@@ -72,11 +75,12 @@ class InRoomScene(Scene):
         if self.isUserRoomCreator:
             self.spriteGroup.add(self.playButton, self.roomSettings)
 
-        for i in range(len(self.connectedUsers)): # Mettre la couronne 
-            if self.connectedUsers[i] == self.roomManager.getRoomCreator():
-                self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], True))
-            else:
-                self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], False))
+        if self.connectedUsers:
+            for i in range(len(self.connectedUsers)): # Mettre la couronne 
+                if self.connectedUsers[i] == self.roomManager.getRoomCreator():
+                    self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], True))
+                else:
+                    self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], False))
 
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
         print(self.connectedUsers)
@@ -84,7 +88,7 @@ class InRoomScene(Scene):
     def startGame(self):
         self.dev = True
         self.playButton.disable()
-        if len(self.connectedUsers) < 2 and self.dev == False:
+        if self.connectedUsers and len(self.connectedUsers) < 2 and self.dev == False:
             raiseAnError("Vous devez être plusieurs pour pouvoir jouer")
             self.updateConnectedUsers()
         else:
@@ -103,8 +107,8 @@ class InRoomScene(Scene):
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.roomManager.closeConnection()
         self.sceneManager.setAsCurrentScene(scenes.JoinRoomScene.JoinRoomScene(self.sceneManager, self.roomManager.username, self.roomManager)) 
-        if len(self.connectedUsers) == 0 :
-            self.roomManager.closeRoom(self.roomId)
+        if self.connectedUsers and len(self.connectedUsers) == 0 :
+            self.roomManager.closeRoom(self.roomManager.currentRoomID)
 
     def checkGameState(self, e=None): # e is due to the event manager requirements
         if self.roomManager.getRoomState() == 'playing':
@@ -118,10 +122,10 @@ class UserCard(pygame.sprite.Sprite):
         super().__init__()
         self.rect = rect
 
-        self.text = Text(username, 20, (self.rect.w/2, self.rect.h/2), (255,255,255), isCentered=True)
+        self.text = Text(username, 20, (self.rect.w/2, self.rect.h/2), pygame.Color(255,255,255), isCentered=True)
 
         if isCreator:
-            self.emoji = Text("👑", 20, (self.rect.w/2 + self.text.rect.w/2 + 16, self.rect.h/2 - 1), (255,255,255), isCentered=True, fontFamily="FirefoxEmoji.ttf")
+            self.emoji = Text("👑", 20, (self.rect.w/2 + self.text.rect.w/2 + 16, self.rect.h/2 - 1), pygame.Color(255,255,255), isCentered=True, fontFamily="FirefoxEmoji.ttf")
 
         self.image = pygame.Surface(self.rect.size)
         self.image.fill((50, 50, 50))
