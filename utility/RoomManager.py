@@ -1,41 +1,40 @@
+from nt import strerror
 from utility.SQLProvider import SQLProvider
 from utility.ErrorHandler import raiseAnError
 from mysql.connector import Error as sqlError
 from utility import consolLog
 
 class RoomManager:
-    def __init__(self, SQLProvider: SQLProvider, username: str):
+    def __init__(self, SQLProvider: SQLProvider, username: str) -> None:
         self.SQLProvider = SQLProvider
         self.username = username
         self.userId= None
         self.currentRoomID = -1
         self.currentRound = 0
     
-    def getAllRooms(self, state: str | None = None):
+    def getAllRooms(self, state: str | None = None) -> list[tuple]:
         if state:
             response = self.SQLProvider.get("SELECT * FROM rooms WHERE state=%s", (state,))
         else:
             response = self.SQLProvider.get("SELECT * FROM rooms")
-        
-        print(response)
             
         if response is None:
             return []
         rooms = [row for row in response]
         return rooms
 
-    def getAllRoomsIds(self):
+    def getAllRoomsIds(self) -> list[int]:
         response = self.SQLProvider.get("SELECT room_id FROM rooms")
         if response is None:
             return []
         rooms = [row for row in response]
         return rooms
 
-    def getConnectedUsersNumberInRoom(self, roomId: int):
+    def getNumberOfConnectedUsersInRoom(self, roomId: int) -> int:
         response = self.SQLProvider.get("SELECT count(username) FROM connected_users WHERE room_id=%s", (str(roomId),))
         if response:
             return response[0][0]
-        else: return False
+        else: return -1
     
     def getCurrentRoomName(self) -> str:
         try:
@@ -47,7 +46,7 @@ class RoomManager:
             raiseAnError(err)
             return ""
     
-    def createConnection(self, roomId: int):
+    def createConnection(self, roomId: int) -> None:
         consolLog.info("RoomId :", roomId)
         try:
             response = self.SQLProvider.insert("INSERT INTO connected_users (username, room_id) VALUES (%s, %s)", (self.username, roomId), returnedValue='user_id')
@@ -58,7 +57,7 @@ class RoomManager:
         except sqlError as err:
             consolLog.error(err)
 
-    def createRoom(self, roomName: str):
+    def createRoom(self, roomName: str) -> None:
         try:
             room = self.SQLProvider.insert("INSERT INTO rooms (room_id, creator, room_name, theme, state, rounds_number, round_time) VALUES (DEFAULT,%s, %s, %s, 'lobby', 4, 60)", (self.username, roomName, 'DEFAULT'), returnedValue="room_id")
             if room:
@@ -66,7 +65,7 @@ class RoomManager:
         except sqlError as err:
             consolLog.error(err)
         
-    def closeRoom(self, roomId):
+    def closeRoom(self, roomId: int) -> None:
         try:
             self.SQLProvider.executeSQL("DELETE FROM drawings WHERE room_id=%s", (str(roomId),))
             self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE room_id=%s", (str(roomId),))
@@ -76,7 +75,7 @@ class RoomManager:
             consolLog.error(err)
         self.currentRoomID = -1
 
-    def closeConnection(self):
+    def closeConnection(self) -> None:
         try:
             consolLog.info("Fermeture de la connexion de : ", self.username)
             self.SQLProvider.executeSQL("DELETE FROM connected_users WHERE user_id=%s", (str(self.userId),))
@@ -84,19 +83,19 @@ class RoomManager:
             consolLog.error(err)
         self.currentRoomID = -1
 
-    def setRoomState(self, state: str):
+    def setRoomState(self, state: str) -> None:
         try:
             self.SQLProvider.executeSQL("UPDATE rooms SET state=%s WHERE room_id=%s", (state, str(self.currentRoomID)))
         except sqlError as err:
             consolLog.error(err) 
     
-    def setRoundsNumber(self, number: int):
+    def setRoundsNumber(self, number: int) -> None:
         try:
             self.SQLProvider.executeSQL("UPDATE rooms SET rounds_number=%s WHERE room_id=%s", (number, self.currentRoomID))
         except sqlError as err:
             consolLog.error(err) 
 
-    def setRoundTime(self, time: int):
+    def setRoundTime(self, time: int) -> None:
         try:
             self.SQLProvider.executeSQL("UPDATE rooms SET round_time=%s WHERE room_id=%s", (time, self.currentRoomID))
         except sqlError as err:
@@ -139,25 +138,29 @@ class RoomManager:
             consolLog.error(err)
             return 60
 
-    def getRoomState(self):
+    def getRoomState(self) -> str:
         try:
             response = self.SQLProvider.get('SELECT state FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
                 return response[0][0]
-            else: return None
+            else: return "None"
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
+            return "None"
 
-    def getRoomCreator(self):
+    def getRoomCreator(self) -> str:
         try:
             response = self.SQLProvider.get('SELECT creator FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
                 return response[0][0]
-            else: return None
+            else: return "None"
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
+            return "None"
 
-    def setUsername(self, newUsername: str):
+    def setUsername(self, newUsername: str) -> None:
         self.username = newUsername
 
     def doesRoomExist(self, roomId: str) -> bool:
@@ -181,5 +184,6 @@ class RoomManager:
             else: return False
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
             return False
         

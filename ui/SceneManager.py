@@ -17,11 +17,11 @@ class SceneManager:
         self.currentScene = scene
         self.draw()
 
-    def draw(self):
+    def draw(self) -> None:
         if self.currentScene:
             self.currentScene.spriteGroup.draw(self.surface)
     
-    def update(self):
+    def update(self) -> None:
         if self.currentScene:
             self.currentScene.spriteGroup.update()
             self.currentScene.update()

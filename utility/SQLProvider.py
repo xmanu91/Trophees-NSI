@@ -11,27 +11,31 @@ class SQLProvider:
                 self.cnx = psycopg2.connect(user=env('SQL_USERNAME'), password=env('SQL_PASSWORD'), host=env('SQL_HOST'), port=env('SQL_PORT'), dbname="postgres")
             except psycopg2.Error as err:
                 consolLog.error(err)
+                raiseAnError(err)
         else: 
             try:
                 self.cnx = mysql.connector.connect(user=env('SQL_USERNAME'), password=env('SQL_PASSWORD'), host=env('SQL_HOST'))
                 self.cnx.autocommit = True # type: ignore
             except mysql.connector.Error as err:
                 consolLog.error(err)
+                raiseAnError(err)
 
         self.cursor = self.cnx.cursor()
 
-    def createDatabase(self, dbName: str):
+    def createDatabase(self, dbName: str) -> None:
         try:
             self.cursor.execute(
                 "CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET 'utf8'".format(dbName))
         except mysql.connector.Error as err:
             consolLog.error("Failed creating database: {}".format(err))
+            raiseAnError(err)
     
-    def useDatabase(self, dbName: str):
+    def useDatabase(self, dbName: str) -> None:
         try:
             self.cursor.execute("USE {}".format(dbName))
-        except mysql.connector.Error:
+        except mysql.connector.Error as err:
             consolLog.error("Database {} does not exists.".format(dbName))
+            raiseAnError(err)
 
     def insert(self, prompt: str, parameters: tuple | None = None, returnedValue: str | None = None) -> int | None:
         """Permits to execute INSERT and UPDATE statements"""
@@ -43,8 +47,9 @@ class SQLProvider:
             return self.cursor.lastrowid
         except mysql.connector.Error as err:
             consolLog.error(err)
+            raiseAnError(err)
 
-    def get(self, prompt: str, parameters: tuple | None = None):
+    def get(self, prompt: str, parameters: tuple | None = None) -> list[tuple] | None:
         """Permits to execute SELECT statements"""
         try:
             self.cursor.execute(prompt, parameters)
@@ -52,14 +57,16 @@ class SQLProvider:
             return response
         except mysql.connector.Error as err:
             consolLog.error(err)
+            raiseAnError(err)
 
-    def executeSQL(self, prompt: str, parameters: tuple | None = None):
+    def executeSQL(self, prompt: str, parameters: tuple | None = None) -> None:
         try:
             self.cursor.execute(prompt, parameters)
             self.cnx.commit()
         except mysql.connector.Error as err:
             consolLog.error(err)
+            raiseAnError(err)
 
-    def closeConnection(self):
+    def closeConnection(self) -> None:
         self.cnx.close()
         self.cursor.close()

@@ -1,5 +1,6 @@
 from utility.SQLProvider import SQLProvider
 from mysql.connector import Error as sqlError
+from utility.ErrorHandler import raiseAnError
 from utility import consolLog
 import utility.tools
 import tempfile
@@ -14,7 +15,7 @@ class VotesManager:
         self.drawings = []
         self.participants = []
 
-    def getDrawings(self):
+    def getDrawings(self) -> list[tuple[str, str]] | None:
         try: 
             utility.tools.initialiseDirectory(self.tempdir.name)
             consolLog.info("RoomId : ", self.roomId)
@@ -30,8 +31,9 @@ class VotesManager:
             return self.drawings
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
 
-    def getDrawing(self, username: str):
+    def getDrawing(self, username: str) -> tuple[str, str] | None:
         try: 
             consolLog.info("RoomId : ", self.roomId)
             # Utilisation de paramètres dans la requête SELECT
@@ -42,16 +44,31 @@ class VotesManager:
             return (response[0][1], response[0][0])
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
 
-    def vote(self, attributedVote, rating: int, round: int):
+    def vote(self, attributedVote, rating: int, round: int) -> None:
         try:
             # Utilisation de paramètres dans la requête INSERT
             self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, round, room_id) VALUES (%s, %s, %s, %s, %s)", 
                                    (self.username, attributedVote, rating, str(round),  str(self.roomId)))
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
 
-    def getVotes(self, round: int | None = None):
+    def getVotes(self, round: int | None = None) -> list[tuple] | None:
+        try:
+            if round:
+                response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
+            else:
+                response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId),))
+            if response is None:
+                return None
+            return [vote for vote in response]
+        except sqlError as err:
+            consolLog.error(err)
+            raiseAnError(err)
+
+    def getVotes(self, round: int | None = None) -> list[tuple] | None:
         try:
             if round:
                 response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
@@ -64,8 +81,9 @@ class VotesManager:
             return votes
         except sqlError as err:
             consolLog.error(err)
+            raiseAnError(err)
 
-    def getWinners(self, round: int | None = None):
+    def getWinners(self, round: int | None = None) -> list[str] | None:
         votes = self.getVotes(round)
         if votes is None:
             return None
@@ -86,7 +104,7 @@ class VotesManager:
         
         return winners
 
-    def getPodium(self):
+    def getPodium(self) -> list[str] | None:
         votes = self.getVotes()
         if votes is None:
             return None
@@ -97,7 +115,7 @@ class VotesManager:
         
         sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         
-        podium = [user for user, score in sorted_scores[:3]]
+        podium = [user for user, _ in sorted_scores[:3]]
         return podium
         
     def saveDrawing(self, binary: str, name: str):

@@ -41,7 +41,7 @@ class ToolBar():
 
         self.spriteGroup.add(postIt, self.theme, self.eraser, self.brush, self.colorPicker, self.bucket)       
         
-    def changeTool(self, tool: toolType):
+    def changeTool(self, tool: toolType) -> None:
         if tool == self.canva.selectedTool:
             return
         buttons = {"eraser": self.eraser, "brush": self.brush, "colorpicker": self.colorPicker, "bucket": self.bucket}
@@ -58,10 +58,3 @@ class ToolBar():
                     buttons[button].imageCoordinates.x = -50
             
         self.canva.setSelectedTool(tool)
-
-    def update(self):
-        self.pickPalette.update()
-        # Dev tool
-        mousePosition = pygame.mouse.get_pos()
-        if pygame.mouse.get_pressed(5)[4]:
-            print(mousePosition)

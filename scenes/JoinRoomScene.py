@@ -35,7 +35,7 @@ class JoinRoomScene(Scene):
         self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton, self.GameInProgress)
         self.updateRooms()
        
-    def updateRooms(self, e=None): # e parameters is due to eventHandler contraints
+    def updateRooms(self, event=None) -> None: # e parameters is due to eventHandler contraints
         self.spriteGroup.empty()
         self.spriteGroup.add(self.background, self.seekRoomNameInput, self.createRoomButton, self.joinRoomButton, self.updateRoomsButton, self.GameInProgress)
         for i in range(min(5, len(self.rooms))):
@@ -48,7 +48,7 @@ class JoinRoomScene(Scene):
 
         self.GameInProgress.setText(f"Parties en cours : {len(self.rooms)}")
     
-    def joinRoom(self):
+    def joinRoom(self) -> None:
         if not self.roomManager.doesRoomExist((str(int(self.seekRoomNameInput.getText())))):
             raiseAnError("Aucune room avec cette ID n'existe")
             self.seekRoomNameInput.setPlaceholder("Veuillez entrer un id de room valide")
@@ -61,7 +61,7 @@ class JoinRoomScene(Scene):
                 raiseAnError("Une erreur est survenue")
 
     
-    def createRoom(self):
+    def createRoom(self) -> None:
         name = self.seekRoomNameInput.getText()
         if name == "" or name == "Entrez le nom de la room":
             raiseAnError("Veuillez entrer un nom de room valide")
@@ -84,7 +84,7 @@ class RoomCard(pygame.sprite.Sprite):
         self.image.fill(self.color)
 
         #instance des cards :
-        self.numberPlayer = roomManager.getConnectedUsersNumberInRoom(roomID)
+        self.numberPlayer = roomManager.getNumberOfConnectedUsersInRoom(roomID)
         self.numberPlayerText = Text((str(self.numberPlayer) + " joueurs connectés"), 17, (self.rect.width /1.4, self.rect.y + 19) , pygame.Color(0,0,0), False)
         self.button = Button(
             pygame.rect.Rect(self.rect.width - 100, self.rect.y + self.rect.height/2 - 20 , 100, 40), 
@@ -95,7 +95,7 @@ class RoomCard(pygame.sprite.Sprite):
         self.image.blit(self.text.image, (self.text.rect.x - self.rect.x, self.text.rect.y - self.rect.y))
         self.image.blit(self.numberPlayerText.image, (self.numberPlayerText.rect.x - self.rect.x, self.numberPlayerText.rect.y - self.rect.y))
 
-    def onButtonPressed(self):
+    def onButtonPressed(self) -> None:
         if self.roomManager.doesUserConnectedInRoom(self.roomID, self.roomManager.username):
             raiseAnError("Ce pseudonyme est déjà utilisé dans cette room")
             self.sceneManager.setAsCurrentScene(scenes.HomeScene.HomeScene(self.sceneManager, self.roomManager))
@@ -103,6 +103,6 @@ class RoomCard(pygame.sprite.Sprite):
             self.roomManager.createConnection(self.roomID)
             self.sceneManager.setAsCurrentScene(scenes.InRoomScene.InRoomScene(self.sceneManager, self.roomManager, False))
 
-    def update(self):
+    def update(self) -> None:
         self.button.update()
         self.image.blit(self.button.image, (self.button.rect.x - self.rect.x, self.button.rect.y - self.rect.y))

@@ -29,7 +29,6 @@ class PodiumScene(Scene):
         self.spriteGroup.add(self.background)
 
         self.test = self.votesManager.getPodium()
-        print(self.test)
         self.playersOnPodium = self.test 
 
         podium1 = Shape(pygame.Rect(self.screenWidth /2 - 75, 250, 150, 250), pygame.Color(255, 220, 48))
@@ -51,7 +50,7 @@ class PodiumScene(Scene):
             self.quitButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.quit, None, None, None, "Quitter", 13, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))
             self.spriteGroup.add(podium1, podium2, playerOnPodium1, playerOnPodium2, podiumRank1, podiumRank2, self.quitButton)
 
-    def quit(self):
+    def quit(self) -> None:
         self.tempdir = self.gameManager.getTempDir()
         self.tempdir.cleanup()
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()

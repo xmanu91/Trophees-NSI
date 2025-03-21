@@ -8,14 +8,14 @@ import tempfile
 
 class GameManager:
 
-    def __init__(self, sqlManager: SQLProvider, username: str, roomId: int):
+    def __init__(self, sqlManager: SQLProvider, username: str, roomId: int) -> None:
         self.sqlManager = sqlManager
         self.username = username
         self.roomId = roomId
         self.drawingTheme = ""
         self.tempdir = tempfile.TemporaryDirectory()
 
-    def drawTheme(self):
+    def drawTheme(self) -> None:
         theme = choice(self.loadThemes())
         try: 
             self.sqlManager.insert("UPDATE rooms SET theme=%s WHERE room_id=%s", (theme, self.roomId))
@@ -37,7 +37,7 @@ class GameManager:
             raiseAnError(err)
             return "ERR"
 
-    def sendDrawing(self, path):
+    def sendDrawing(self, path: str) -> None:
         print(self.getBinaryArray(path))
         try:
             if self.sqlManager.connectionType == 'local':
@@ -50,26 +50,26 @@ class GameManager:
             consolLog.error(err)
 
     
-    def deleteDrawings(self):
+    def deleteDrawings(self) -> None:
         try:
             self.sqlManager.executeSQL('DELETE FROM drawings WHERE room_id=%s', (str(self.roomId),))
         except sqlError as err:
             consolLog.error(err)
 
-    def loadThemes(self):
+    def loadThemes(self) -> list[str]:
         with open(getPath("assets/themes.txt"), "r", encoding="utf-8") as file:
             themes = [line.strip() for line in file]
         return themes
 
-    def getBinaryArray(self, path):
+    def getBinaryArray(self, path: str) -> str:
         with open(path, "rb") as image:
             f = image.read()
             b = bytes(f).hex()
             return b
 
-    def getTempDir(self):
+    def getTempDir(self) -> tempfile.TemporaryDirectory:
         return self.tempdir
 
-    def resetTempDir(self):
+    def resetTempDir(self) -> None:
         self.tempdir.cleanup()
         self.tempdir = tempfile.TemporaryDirectory()

@@ -31,11 +31,11 @@ class RoomSettingsScene(Scene):
 
         self.spriteGroup.add(background, self.Text, self.textNbRound, self.textDurationRound, self.textInputNbRound, self.textInputDurationRound, self.buttonBack, self.buttonSave)
 
-    def back(self):
+    def back(self) -> None:
         self.sceneManager.setAsCurrentScene(self.previousScene)
         self.previousScene.update()
         
-    def save(self):
+    def save(self) -> None:
         try:
             self.roomManager.setRoundsNumber(int(self.textInputNbRound.getText()))
             self.roomManager.setRoundTime(int(self.textInputDurationRound.getText()))

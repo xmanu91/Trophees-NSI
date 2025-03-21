@@ -25,7 +25,7 @@ class PickPalette():
 
         self.clicked = False
     
-    def multiply(self, matrix_a,matrix_b):
+    def multiply(self, matrix_a: list, matrix_b: list) -> list:
         print(matrix_a, matrix_b)
         result = [0 for _ in matrix_a]
 
@@ -35,7 +35,7 @@ class PickPalette():
 
         return result
 
-    def update(self):
+    def update(self) -> None:
         self.mix.changeColor(self.canva.getBrushColor())
 
         mousePositionX, mousePositionY = pygame.mouse.get_pos()

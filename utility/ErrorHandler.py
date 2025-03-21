@@ -7,7 +7,7 @@ from ui.Button import Button
 import utility.consolLog as consolLog
 errorEventType = pygame.event.custom_type()
 
-def raiseAnError(error, action=None):
+def raiseAnError(error, action=None) -> None:
     pygame.event.post(pygame.event.Event(errorEventType, error=error, action=action))
     consolLog.warn(error)
 
@@ -15,16 +15,16 @@ class ErrorHandlerUi:
     def __init__(self):
         self.spriteGroup = pygame.sprite.Group()  
 
-    def raiseError(self, e):
+    def raiseError(self, event: pygame.event.Event) -> None:
         self.spriteGroup.add(Shape(pygame.Rect(0,0, pygame.display.get_window_size()[0],  pygame.display.get_window_size()[1]), pygame.Color(0,0,0, int(255*0.40))))
-        if e.action == None:
-            self.errorWindow = ErrorWindow(e.error, self.closeError)
+        if event.action == None:
+            self.errorWindow = ErrorWindow(event.error, self.closeError)
             self.spriteGroup.add(self.errorWindow)
         else:
-            self.errorWindow = ErrorWindow(e.error, lambda: (self.closeError(), e.action()))
+            self.errorWindow = ErrorWindow(event.error, lambda: (self.closeError(), event.action()))
             self.spriteGroup.add(self.errorWindow)
     
-    def closeError(self):
+    def closeError(self) -> None:
         self.spriteGroup.empty()
         self.errorWindow.kill()
         
@@ -47,9 +47,9 @@ class ErrorWindow(pygame.sprite.Sprite):
 
         self.image.blit(self.errorText.image, self.errorText.rect)
 
-    def update(self):
+    def update(self) -> None:
         self.button.update()
         self.image.blit(self.button.image, (self.rect.width/2 - 50, self.rect.height - 75, 100, 50))
 
-    def kill(self):
+    def kill(self) -> None:
         self.button.kill()

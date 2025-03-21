@@ -62,7 +62,7 @@ class InRoomScene(Scene):
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 1000)
         eventManager.addEventHandler(self.updateStateEventType, self.checkGameState)
         
-    def updateConnectedUsers(self, e=None): # e parameters is due to eventHandler contraints
+    def updateConnectedUsers(self, e=None) -> None: # e parameters is due to eventHandler contraints
         consolLog.info('Actualisation...')
         self.spriteGroup.empty()
 
@@ -85,7 +85,7 @@ class InRoomScene(Scene):
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
         print(self.connectedUsers)
 
-    def startGame(self):
+    def startGame(self) -> None:
         self.dev = True
         self.playButton.disable()
         if self.connectedUsers and len(self.connectedUsers) < 2 and self.dev == False:
@@ -100,7 +100,7 @@ class InRoomScene(Scene):
             paintingScene = scenes.PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager)
             self.sceneManager.setAsCurrentScene(paintingScene)
             
-    def quitGame(self):
+    def quitGame(self) -> None:
         consolLog.info("Room quitter")
         if self.isUserRoomCreator:
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
@@ -110,11 +110,11 @@ class InRoomScene(Scene):
         if self.connectedUsers and len(self.connectedUsers) == 0 :
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
 
-    def checkGameState(self, e=None): # e is due to the event manager requirements
+    def checkGameState(self, event=None) -> None: # e is due to the event manager requirements
         if self.roomManager.getRoomState() == 'playing':
             self.startGame()
 
-    def openRoomSettings(self):
+    def openRoomSettings(self) -> None:
         self.sceneManager.setAsCurrentScene(scenes.RoomSettingsScene.RoomSettingsScene(self.sceneManager, self.roomManager, self, self.gameManager), False)
 
 class UserCard(pygame.sprite.Sprite):

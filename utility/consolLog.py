@@ -8,7 +8,7 @@ END = "\033[0m"
 
 debug = True
 
-def getFileName(inspectStackFilename):
+def getFileName(inspectStackFilename) -> str:
     templist = []
     for letter in reversed(inspectStackFilename):
         if letter != "\\" and letter != "/":
@@ -18,17 +18,17 @@ def getFileName(inspectStackFilename):
     templist.reverse()
     return "".join(templist)
 
-def info(*text: Any):
+def info(*text: Any) -> None:
     if debug:
         message = " ".join(map(str, text)) 
         print(f"{str(datetime.datetime.now())[:19]} - INFO - {getFileName(inspect.stack()[1].filename)} - {message}")
 
-def warn(*text: Any):
+def warn(*text: Any) -> None:
     if debug:
         message = " ".join(map(str, text))
         print(f"{ORANGE}{str(datetime.datetime.now())[:19]} - WARN - {getFileName(inspect.stack()[1].filename)} - {message}{END}")
 
-def error(*text: Any):
+def error(*text: Any) -> None:
     if debug:
         message = " ".join(map(str, text))
         print(f"{RED}{str(datetime.datetime.now())[:19]} - ERROR - {getFileName(inspect.stack()[1].filename)} - {message}{END}")

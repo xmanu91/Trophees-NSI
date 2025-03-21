@@ -80,27 +80,27 @@ class WinnerScene(Scene):
             pygame.time.set_timer(self.pygameEventSwitchDrawing, int(self.sceneDuration/2)*1000)
             eventManager.addEventHandler(self.pygameEventSwitchDrawing, self.switchDrawing)
 
-    def switchDrawing(self, event):  # Event
+    def switchDrawing(self, event=None) -> None: # Event is due to the event manager requirements
         self.spriteGroup.remove(self.displayedDrawing)
         self.displayedDrawing = self.winnersDrawings[(self.winnersDrawings.index(self.displayedDrawing) + 1) % len(self.winnersDrawings)]
         self.spriteGroup.add(self.displayedDrawing)
 
-    def checkGameState(self, e=None): # e is due to the event manager requirements
+    def checkGameState(self, event=None) -> None: # Event is due to the event manager requirements
         if self.roomManager.getRoomState() == 'playing':
             consolLog.info("Début d'un nouveau tour")
             self.nextRound()
 
-    def nextRound(self):
+    def nextRound(self) -> None:
         if self.roomManager.username == self.roomManager.getRoomCreator():
             self.roomManager.setRoomState('playing')
         else:
             pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.sceneManager.setAsCurrentScene(PaintingScene.PaintingScene(self.sceneManager, self.roomManager, self.gameManager))
 
-    def podium(self):
+    def podium(self) -> None:
         self.sceneManager.setAsCurrentScene(PodiumScene.PodiumScene(self.sceneManager, self.votesManager, self.gameManager, self.roomManager))
 
-    def quit(self):
+    def quit(self) -> None:
         self.tempdir = self.gameManager.getTempDir()
         self.tempdir.cleanup()
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()

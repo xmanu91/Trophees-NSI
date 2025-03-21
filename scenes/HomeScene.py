@@ -25,7 +25,7 @@ class HomeScene(Scene):
         settingsButton = Button(pygame.rect.Rect(screenWidth / 2 - 200, screenHeight * 0.8 - 37.5 , 400,75), self.rules, None, None, None, "REGLES ", defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198),textColor=pygame.Color(0,0,0), fontSize= 25)
         self.spriteGroup.add(background, playButton, settingsButton, self.usernameInput, self.title)
 
-    def joinRoom(self):
+    def joinRoom(self) -> None:
         if self.usernameInput.getText() == self.usernameInput.placeHolder or self.usernameInput.getText() == "":
             raiseAnError("Veuillez entrer un pseudonyme") 
         elif not self.usernameInput.getText().isalnum():
@@ -39,5 +39,5 @@ class HomeScene(Scene):
         else:
             self.sceneManager.setAsCurrentScene(JoinRoomScene(self.sceneManager, self.usernameInput.getText(), self.roomManager))
 
-    def rules(self):
+    def rules(self) -> None:
         self.sceneManager.setAsCurrentScene(RulesScene(self.sceneManager, self.roomManager, self), False)

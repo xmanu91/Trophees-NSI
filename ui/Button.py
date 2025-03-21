@@ -54,13 +54,13 @@ class Button(pygame.sprite.Sprite):
                 if type(sprite) == type(self):
                     sprite.disabled = True
     
-    def disable(self):
+    def disable(self) -> None:
         self.disabled = True
 
-    def enable(self):
+    def enable(self) -> None:
         self.disabled = False
 
-    def kill(self):
+    def kill(self) -> None:
         if self.sceneManager:
             group = self.sceneManager.currentScene.spriteGroup
             for sprite in group:
@@ -68,7 +68,7 @@ class Button(pygame.sprite.Sprite):
                     sprite.disabled = False
             super().kill()
 
-    def update(self):
+    def update(self) -> None:
         mousePosition = pygame.mouse.get_pos()
         isMousePressed = pygame.mouse.get_pressed()[0]
 

@@ -8,10 +8,10 @@ class Timer():
         self.textTimer = textTimer
         self.action: Callable = action
     
-    def startTimer(self):
+    def startTimer(self) -> None:
         threading.Thread(target=self.timer, daemon=True).start()
     
-    def timer(self):
+    def timer(self) -> None:
         timer = 0
         while timer < self.timerDuration:
             time.sleep(1)

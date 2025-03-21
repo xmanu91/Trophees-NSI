@@ -56,13 +56,13 @@ class PaintingScene(Scene):
         consolLog.info("Rounds number : ", self.roomManager.currentRound)
         consolLog.info("Total of rounds : ", self.roomManager.getRoundsNumber())
 
-    def setCanva(self):
+    def setCanva(self) -> None:
         self.spriteGroup.empty()
         self.toolBar = ToolBar(self.canva, self.spriteGroup, self.theme)
         self.spriteGroup.add(self.canva, self.gameProgressBar)
         self.gameProgressBar.run_start()
 
-    def endDrawing(self):
+    def endDrawing(self) -> None:
         consolLog.info("Fin de la scene de dessin")
 
         self.canva.save(self.tempdir.name)
@@ -71,6 +71,6 @@ class PaintingScene(Scene):
         self.roomManager.setRoomState('voting')
         self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.gameManager))
 
-    def update(self):
+    def update(self) -> None:
         if self.toolBar != None:
             self.toolBar.update()

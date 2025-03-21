@@ -21,7 +21,7 @@ class Canva(pygame.sprite.Sprite):
         self.selectedTool = "brush"
         eventManager.addEventHandler(pygame.MOUSEWHEEL, self.onMouseWheel)
 
-    def update(self):
+    def update(self) -> None:
         mousePositionX, mousePositionY = pygame.mouse.get_pos()
         mousePosition = (mousePositionX - self.rect.x, mousePositionY - self.rect.y) # Correction des coordonnes + centrage
         
@@ -78,30 +78,30 @@ class Canva(pygame.sprite.Sprite):
                 except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
                     print(Error)
 
-    def onMouseWheel(self, e):
-        if e.y > 0:
+    def onMouseWheel(self, event: pygame.event.Event) -> None:
+        if event.y > 0:
             self.brushSize += 1
         else:
             if self.brushSize != 1:
                 self.brushSize -= 1
 
-    def setBrushSize(self, size: int):
+    def setBrushSize(self, size: int) -> None:
         self.brushSize = size
 
-    def setBrushColor(self, color: pygame.Color):
+    def setBrushColor(self, color: pygame.Color) -> None:
         self.drawColor = color
     
-    def setSelectedTool(self, tool: toolType):
+    def setSelectedTool(self, tool: toolType) -> None:
         self.selectedTool = tool
 
-    def setSelectedColor(self, color: pygame.Color):
+    def setSelectedColor(self, color: pygame.Color) -> None:
         self.selectedColor = color
         self.darknessValue = 100
 
     def getSelectedColor(self) -> pygame.Color:
         return self.selectedColor
 
-    def changeDarkness(self, value: int):
+    def changeDarkness(self, value: int) -> None:
         self.darknessValue += value
         if self.darknessValue < 0:
             self.darknessValue = 0
@@ -116,19 +116,19 @@ class Canva(pygame.sprite.Sprite):
     def getBrushColor(self) -> pygame.Color:
         return self.drawColor
     
-    def setBackgroundColor(self, color: pygame.Color):
+    def setBackgroundColor(self, color: pygame.Color) -> None:
         self.backgroundColor = color
         self.image.fill(color)
 
-    def save(self, path: str):
+    def save(self, path: str) -> None:
         imagePath = os.path.join(path, self.username.strip() + "_drawing.png")
         pygame.image.save(self.image, imagePath)
 
-    def load(self, path: str):
+    def load(self, path: str) -> None:
         self.image = pygame.image.load(path).convert_alpha()
         self.rect = self.image.get_rect()
 
-    def holyBucket(self, x, y, color, toile):
+    def holyBucket(self, x: int, y: int, color: pygame.Color, toile: pygame.Surface) -> None:
         baseColor = toile.get_at((x, y))
         if baseColor == color:
             return

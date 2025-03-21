@@ -1,8 +1,9 @@
 import pygame
 import time
+from typing import Callable
 
 class ProgressBar(pygame.sprite.Sprite):
-    def __init__(self, rect: pygame.Rect, color: pygame.Color, durationInSeconds: int, endAction):
+    def __init__(self, rect: pygame.Rect, color: pygame.Color, durationInSeconds: int, endAction: Callable):
         super().__init__()
         self.rect = rect
         self.color = color
@@ -13,7 +14,7 @@ class ProgressBar(pygame.sprite.Sprite):
         self.value = 0  
         self.startTime = None  
 
-    def update(self):
+    def update(self) -> None:
         if self.startTime is not None:
             elapsedTime = time.time() - self.startTime
             if self.value < self.duration:
@@ -23,6 +24,6 @@ class ProgressBar(pygame.sprite.Sprite):
             else:
                 self.endAction()
 
-    def run_start(self):
+    def run_start(self) -> None:
         self.value = 0 
         self.startTime = time.time()

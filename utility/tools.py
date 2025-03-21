@@ -6,11 +6,11 @@ import os
 
 type toolType = Literal["brush"] | Literal["bucket"] | Literal["colorpicker"] | Literal["eraser"]
 
-def centerCoordinates(coordinates, gap):
+def centerCoordinates(coordinates, gap) -> tuple[int, int]:
     return (coordinates[0]-gap, coordinates[1]-gap)
 
 #Found on the internet
-def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=True):
+def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=True) -> None:
     """fill a surface with a gradient pattern
     Parameters:
     color -> starting color
@@ -51,28 +51,28 @@ def fill_gradient(surface, color, gradient, rect=None, vertical=True, forward=Tr
             )
             fn_line(surface, color, (col,y1), (col,y2))
 
-def createDirectory(path: str):
+def createDirectory(path: str) -> None:
     if not os.path.exists(path):
         os.mkdir(path) 
 
-def initialiseDirectory(path: str):
+def initialiseDirectory(path: str) -> None:
     if os.path.isdir(path):
         shutil.rmtree(path)            
     if not os.path.exists(path):
         os.mkdir(path)
 
-def getPath(relativePath: str):
+def getPath(relativePath: str) -> str:
     base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
     return os.path.join(base_path, relativePath)
 
-def removeAlpha(color: pygame.Color):
-    return (color[0], color[1], color[2])
+def removeAlpha(color: pygame.Color) -> pygame.Color:
+    return pygame.Color(color[0], color[1], color[2])
 
-def getScalingFactors(x, y, screenWidth, screenHeight): # Parce que j'ai la flemme de chercher le bon coef alors que je connais déjà les coords que je veux utiliser
+def getScalingFactors(x: int, y: int, screenWidth: int, screenHeight: int) -> tuple[int, int]:
     return x*screenWidth/900, y*screenHeight/500
 
-def getScalingFactorsX(x, screenWidth):
+def getScalingFactorsX(x: int, screenWidth: int) -> int:
     return x*screenWidth/900
 
-def getScalingFactorsY(y, screenHeight):
+def getScalingFactorsY(y: int, screenHeight: int) -> int:
     return y*screenHeight/500

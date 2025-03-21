@@ -29,7 +29,7 @@ class Text(pygame.sprite.Sprite):
         else : 
             self.rect.topleft = (int(textCoordinates[0]), int(textCoordinates[1]))
 
-    def setText(self, text: str):
+    def setText(self, text: str) -> None:
         self.text = text
         self.image = self.font.render(self.text, True, self.color)
             

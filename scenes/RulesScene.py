@@ -34,10 +34,10 @@ class RulesScene(Scene):
         self.backButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.back, None, None, None, "Retour", 25, pygame.Color(0,0,0), defaultColor=pygame.Color(255,255,255),  hoverColor=pygame.Color(119,169,198))        
         self.spriteGroup.add(self.background, self.text, self.one, self.two, self.three, self.four, self.five, self.backButton, self.image1, self.image2, self.image3, self.image4, self.image5)
 
-    def back(self):
+    def back(self) -> None:
         self.sceneManager.setAsCurrentScene(self.previousScene)
 
-    def update(self):
+    def update(self) -> None:
         if pygame.mouse.get_pressed(5)[4]:
             if self.previousState == False:
                 consolLog.warn(pygame.mouse.get_pos())
