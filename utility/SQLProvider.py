@@ -14,6 +14,7 @@ class SQLProvider:
         else: 
             try:
                 self.cnx = mysql.connector.connect(user=env('SQL_USERNAME'), password=env('SQL_PASSWORD'), host=env('SQL_HOST'))
+                self.cnx.autocommit = True
             except mysql.connector.Error as err:
                 consolLog.error(err)
 
@@ -35,7 +36,7 @@ class SQLProvider:
     def insert(self, prompt: str, parameters: tuple | None = None, returnedValue: str | None = None) -> int | None:
         """Permits to execute INSERT and UPDATE statements"""
         try:
-            self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue) if returnedValue else ""), parameters)
+            self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue) if returnedValue and self.connectionType == "online" else ""), parameters)
             self.cnx.commit()
             if self.connectionType == 'online' and returnedValue:
                 return self.cursor.fetchone()[0]
