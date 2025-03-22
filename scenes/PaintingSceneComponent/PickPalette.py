@@ -25,13 +25,13 @@ class PickPalette():
 
         self.clicked = False
     
-    def multiply(self, matrix_a: list, matrix_b: list) -> list:
+    def multiply(self, matrix_a: list[float], matrix_b: tuple[int, ...],) -> list[int]:
         print(matrix_a, matrix_b)
         result = [0 for _ in matrix_a]
 
         # Perform matrix multiplication
         for i in range(len(matrix_a)):
-            result[i] = max(0, min(matrix_a[i]+matrix_b[i], 255))
+            result[i] = int(max(0, min(matrix_a[i]+matrix_b[i], 255)))
 
         return result
 

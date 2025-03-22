@@ -24,11 +24,13 @@ class VoteScene(Scene):
         print(self.tempdir)
         self.sceneManager = sceneManager
         self.roomManager = roomManager
-        self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir, self.roomManager)
+        if not self.roomManager.currentRoomID:
+            return
+        self.votesManager = VotesManager(sqlProvider, self.roomManager.currentRoomID, self.roomManager.username, self.tempdir, self.roomManager)
         self.drawnList = []
         self.index = 0
 
-        while len(self.drawnList) != self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID)-1:
+        while len(self.drawnList) != self.roomManager.getNumberOfConnectedUsersInRoom(self.roomManager.currentRoomID)-1:
             sleep(0.5)
             pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_WAITARROW))
             self.votesManager.getDrawings()
@@ -59,9 +61,9 @@ class VoteScene(Scene):
                 lambda note=i: self.setNote(note),  # Fonction de rappel avec la note
                 None, None, None,  # Autres paramètres inutilisés
                 str(i),  # Texte du bouton
-                defaultColor=(255, 255, 255),  # Couleur par défaut
-                hoverColor=(119, 169, 198),  # Couleur au survol
-                textColor=(0, 0, 0),  # Couleur du texte
+                defaultColor=pygame.Color(255, 255, 255),  # Couleur par défaut
+                hoverColor=pygame.Color(119, 169, 198),  # Couleur au survol
+                textColor=pygame.Color(0, 0, 0),  # Couleur du texte
                 fontSize=25  # Taille de la police
             )
             self.vote_buttons.append(button)  # Ajouter le bouton à la liste

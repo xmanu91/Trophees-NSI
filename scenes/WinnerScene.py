@@ -76,8 +76,6 @@ class WinnerScene(Scene):
             for winner in self.winners:
                 self.winnersDrawings.append(Image(os.path.join(self.tempdir.name, winner.strip() + ".png"), self.drawRect))
 
-        consolLog.vinfo(self.winnersDrawings)
-
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)
 
@@ -112,7 +110,7 @@ class WinnerScene(Scene):
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
         self.roomId = self.roomManager.currentRoomID
         self.roomManager.closeConnection()
-        if len(self.connectedUsers)-1 <= 0 :
+        if len(self.connectedUsers)-1 <= 0 and self.roomId:
             self.roomManager.closeRoom(self.roomId)
         pygame.time.set_timer(self.pygameEventSwitchDrawing, 0)
         self.sceneManager.setAsCurrentScene(HomeScene.HomeScene(self.sceneManager, self.roomManager))

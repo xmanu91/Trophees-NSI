@@ -70,7 +70,3 @@ class PaintingScene(Scene):
 
         self.roomManager.setRoomState('voting')
         self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.gameManager))
-
-    def update(self) -> None:
-        if self.toolBar != None:
-            self.toolBar.update()

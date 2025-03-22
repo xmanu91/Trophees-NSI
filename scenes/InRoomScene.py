@@ -103,12 +103,12 @@ class InRoomScene(Scene):
             self.sceneManager.setAsCurrentScene(paintingScene)
     def quitGame(self) -> None:
         consolLog.info("Room quitter")
-        if self.isUserRoomCreator:
+        if self.isUserRoomCreator and self.roomManager.currentRoomID:
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)
         self.roomManager.closeConnection()
         self.sceneManager.setAsCurrentScene(scenes.JoinRoomScene.JoinRoomScene(self.sceneManager, self.roomManager.username, self.roomManager)) 
-        if self.connectedUsers and len(self.connectedUsers) == 0 :
+        if self.connectedUsers and self.roomManager.currentRoomID and len(self.connectedUsers) == 0 :
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
 
     def checkGameState(self, event=None) -> None: # e is due to the event manager requirements

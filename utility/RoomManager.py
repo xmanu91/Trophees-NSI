@@ -1,18 +1,20 @@
-from nt import strerror
+from ast import List
+from typing import Any, Sequence
 from utility.SQLProvider import SQLProvider
 from utility.ErrorHandler import raiseAnError
 from mysql.connector import Error as sqlError
 from utility import consolLog
+from mysql.connector.types import RowItemType
 
 class RoomManager:
     def __init__(self, SQLProvider: SQLProvider, username: str) -> None:
         self.SQLProvider = SQLProvider
         self.username = username
         self.userId= None
-        self.currentRoomID = -1
+        self.currentRoomID = None
         self.currentRound = 0
     
-    def getAllRooms(self, state: str | None = None) -> list[tuple]:
+    def getAllRooms(self, state: str | None = None) -> list[Any]:
         if state:
             response = self.SQLProvider.get("SELECT * FROM rooms WHERE state=%s", (state,))
         else:
@@ -24,16 +26,16 @@ class RoomManager:
         return rooms
 
     def getAllRoomsIds(self) -> list[int]:
-        response = self.SQLProvider.get("SELECT room_id FROM rooms")
+        response= self.SQLProvider.get("SELECT room_id FROM rooms")
         if response is None:
             return []
-        rooms = [row for row in response]
+        rooms = [int(str(row)) for row in response]
         return rooms
 
     def getNumberOfConnectedUsersInRoom(self, roomId: int) -> int:
         response = self.SQLProvider.get("SELECT count(username) FROM connected_users WHERE room_id=%s", (str(roomId),))
         if response:
-            return response[0][0]
+            return response[0][0] # type: ignore # Due to the abscence of SQL requests typing
         else: return -1
     
     def getCurrentRoomName(self) -> str:
@@ -41,7 +43,7 @@ class RoomManager:
             response = self.SQLProvider.get("SELECT room_name FROM rooms WHERE room_id=%s", (str(self.currentRoomID),))
             if response is None:
                 return "Unknown room"
-            return response[0][0]
+            return response[0][0] # type: ignore # Due to the abscence of SQL requests typing
         except sqlError as err:
             raiseAnError(err)
             return ""
@@ -106,7 +108,7 @@ class RoomManager:
             response = self.SQLProvider.get("SELECT username FROM connected_users WHERE room_id=%s", (str(self.currentRoomID),))
             if response is None:
                 return []
-            users = [user[0] for user in response]  # type: ignore
+            users = [str(user[0]) for user in response]  # type: ignore
             return users
         except sqlError as err:
             raiseAnError(err)
@@ -117,7 +119,7 @@ class RoomManager:
         try:
             response = self.SQLProvider.get('SELECT rounds_number FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
-                return response[0][0]
+                return response[0][0] # type: ignore # Due to the abscence of SQL requests typing
             else: return -1
         except sqlError as err:
             consolLog.error(err)
@@ -128,7 +130,7 @@ class RoomManager:
         try:
             response = self.SQLProvider.get('SELECT round_time FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
-                return response[0][0]
+                return response[0][0] # type: ignore # Due to the abscence of SQL requests typing
             else: 
                 raiseAnError("Récupéation du timer impossible")
                 consolLog.error("Récupéation du timer impossible")
@@ -142,7 +144,7 @@ class RoomManager:
         try:
             response = self.SQLProvider.get('SELECT state FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
-                return response[0][0]
+                return response[0][0]# type: ignore # Due to the abscence of SQL requests typing
             else: return "None"
         except sqlError as err:
             consolLog.error(err)
@@ -153,7 +155,7 @@ class RoomManager:
         try:
             response = self.SQLProvider.get('SELECT creator FROM rooms WHERE room_id=%s', (str(self.currentRoomID),))
             if response:
-                return response[0][0]
+                return response[0][0]# type: ignore # Due to the abscence of SQL requests typing
             else: return "None"
         except sqlError as err:
             consolLog.error(err)

@@ -1,7 +1,10 @@
+from typing import Sequence
 import mysql.connector
 from os import getenv as env
 import psycopg2
 from utility import consolLog
+from utility.ErrorHandler import raiseAnError
+from mysql.connector.types import MySQLConvertibleType, RowType
 
 class SQLProvider:
     def __init__(self):
@@ -37,31 +40,45 @@ class SQLProvider:
             consolLog.error("Database {} does not exists.".format(dbName))
             raiseAnError(err)
 
-    def insert(self, prompt: str, parameters: tuple | None = None, returnedValue: str | None = None) -> int | None:
+    def insert(self, prompt: str, parameters: Sequence[MySQLConvertibleType] | None = None, returnedValue: str | None = None) -> int | None:
         """Permits to execute INSERT and UPDATE statements"""
         try:
-            self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue) if returnedValue and self.connectionType == "online" else ""), parameters)
+            if parameters:
+                if returnedValue and self.connectionType == "online":
+                    self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue)), parameters)
+                    self.cnx.commit()
+                    return int(self.cursor.fetchone()) # type: ignore
+                else:
+                    self.cursor.execute(prompt, parameters)
+            else:
+                self.cursor.execute(prompt)
+    
             self.cnx.commit()
-            if self.connectionType == 'online' and returnedValue:
-                return self.cursor.fetchone()[0] # type: ignore
             return self.cursor.lastrowid
+      
         except mysql.connector.Error as err:
             consolLog.error(err)
             raiseAnError(err)
 
-    def get(self, prompt: str, parameters: tuple | None = None) -> list[tuple] | None:
+    def get(self, prompt: str, parameters: Sequence[MySQLConvertibleType] | None = None):
         """Permits to execute SELECT statements"""
         try:
-            self.cursor.execute(prompt, parameters)
+            if parameters:
+                self.cursor.execute(prompt, parameters)
+            else:
+                self.cursor.execute(prompt) 
             response = self.cursor.fetchall()
             return response
         except mysql.connector.Error as err:
             consolLog.error(err)
             raiseAnError(err)
 
-    def executeSQL(self, prompt: str, parameters: tuple | None = None) -> None:
+    def executeSQL(self, prompt: str, parameters: Sequence[MySQLConvertibleType] | None = None) -> None:
         try:
-            self.cursor.execute(prompt, parameters)
+            if parameters:
+                self.cursor.execute(prompt, parameters)
+            else:
+                self.cursor.execute(prompt) 
             self.cnx.commit()
         except mysql.connector.Error as err:
             consolLog.error(err)

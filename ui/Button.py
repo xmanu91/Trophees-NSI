@@ -1,10 +1,11 @@
+from ui.SceneManager import SceneManager
 from utility.tools import getPath
 from typing import Callable
 import pygame
 
 class Button(pygame.sprite.Sprite):
 
-    sceneManager = None
+    sceneManager : None | SceneManager = None
 
     def __init__(
             self, 
@@ -48,7 +49,7 @@ class Button(pygame.sprite.Sprite):
         self.disabled = False
         self.previousState = False
 
-        if self.ErrorButton and self.sceneManager:
+        if self.ErrorButton and self.sceneManager and self.sceneManager.currentScene:
             group = self.sceneManager.currentScene.spriteGroup
             for sprite in group:
                 if type(sprite) == type(self):
@@ -61,7 +62,7 @@ class Button(pygame.sprite.Sprite):
         self.disabled = False
 
     def kill(self) -> None:
-        if self.sceneManager:
+        if self.sceneManager and self.sceneManager.currentScene:
             group = self.sceneManager.currentScene.spriteGroup
             for sprite in group:
                 if type(sprite) == type(self):

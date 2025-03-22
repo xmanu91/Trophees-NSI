@@ -68,11 +68,11 @@ def getPath(relativePath: str) -> str:
 def removeAlpha(color: pygame.Color) -> pygame.Color:
     return pygame.Color(color[0], color[1], color[2])
 
-def getScalingFactors(x: int, y: int, screenWidth: int, screenHeight: int) -> tuple[int, int]:
+def getScalingFactors(x: int, y: int, screenWidth: int, screenHeight: int) -> tuple[float, float]:
     return x*screenWidth/900, y*screenHeight/500
 
-def getScalingFactorsX(x: int, screenWidth: int) -> int:
+def getScalingFactorsX(x: int, screenWidth: int) -> float:
     return x*screenWidth/900
 
-def getScalingFactorsY(y: int, screenHeight: int) -> int:
+def getScalingFactorsY(y: int, screenHeight: int) -> float:
     return y*screenHeight/500

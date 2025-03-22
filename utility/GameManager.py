@@ -27,7 +27,7 @@ class GameManager:
         try: 
             result = self.sqlManager.get("SELECT theme FROM rooms WHERE room_id=%s", (str(self.roomId),))
             if result:
-                return result[0][0]
+                return result[0][0] # type: ignore # Due to the abscence of SQL requests typing 
             else: 
                 consolLog.error("Récupération du theme impossible")
                 raiseAnError("Récupération du theme impossible")

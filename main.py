@@ -17,7 +17,7 @@ from ui.SceneManager import SceneManager
 from ui.Button import Button
 
 if getattr(sys, 'frozen', False):
-    dotenv_path = os.path.join(sys._MEIPASS, '.env')
+    dotenv_path = os.path.join(sys._MEIPASS, '.env') # type: ignore
 else:
     dotenv_path = '.env'
 

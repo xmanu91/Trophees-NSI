@@ -1,4 +1,6 @@
 from mysql.connector import Error as sqlError
+from mysql.connector.types import RowItemType
+from utility.ErrorHandler import raiseAnError
 from utility.SQLProvider import SQLProvider
 from utility.RoomManager import RoomManager
 from utility import consolLog
@@ -8,7 +10,7 @@ import time
 import os
 
 class VotesManager:
-    def __init__(self, sqlManager: SQLProvider, roomId: str, username: str, tempdir: tempfile.TemporaryDirectory, roomManager: RoomManager):
+    def __init__(self, sqlManager: SQLProvider, roomId: int, username: str, tempdir: tempfile.TemporaryDirectory, roomManager: RoomManager):
         self.tempdir = tempdir
         self.sqlManager = sqlManager
         self.roomManager = roomManager
@@ -25,11 +27,11 @@ class VotesManager:
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator<>%s", (str(self.roomId), self.username))
             if response is None:
                 return None
-            self.drawings = [(drawing[0], drawing[1]) for drawing in response]  # type: ignore
+            self.drawings = [(str(drawing[0]), str(drawing[1])) for drawing in response]  # type: ignore
             self.participants = [drawing[0] for drawing in response]  # type: ignore
             consolLog.info("response" + str(response), "self.drawings:" + str(self.drawings), "self.participants: " + str(self.participants))
             for drawing in self.drawings:
-                self.saveDrawing(drawing[1], drawing[0])
+                self.saveDrawing(str(drawing[1]), str(drawing[0]))
             return self.drawings
         except sqlError as err:
             consolLog.error(err)
@@ -42,8 +44,8 @@ class VotesManager:
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator=%s", (str(self.roomId), username))
             if response is None:
                 return None
-            self.saveDrawing(response[0][1], response[0][0])
-            return (response[0][1], response[0][0])
+            self.saveDrawing(response[0][1], response[0][0]) # type: ignore # Due to the abscence of SQL requests typing
+            return (response[0][1], response[0][0]) # type: ignore # Due to the abscence of SQL requests typing
         except sqlError as err:
             consolLog.error(err)
             raiseAnError(err)
@@ -57,20 +59,7 @@ class VotesManager:
             consolLog.error(err)
             raiseAnError(err)
 
-    def getVotes(self, round: int | None = None) -> list[tuple] | None:
-        try:
-            if round:
-                response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
-            else:
-                response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s", (str(self.roomId),))
-            if response is None:
-                return None
-            return [vote for vote in response]
-        except sqlError as err:
-            consolLog.error(err)
-            raiseAnError(err)
-
-    def getVotes(self, round: int | None = None) -> list[tuple] | None:
+    def getVotes(self, round: int | None = None) -> list[RowItemType] | None:
         try:
             if round:
                 response = self.sqlManager.get("SELECT * FROM votes WHERE room_id=%s and round=%s", (str(self.roomId), str(round)))
@@ -79,7 +68,7 @@ class VotesManager:
             if response is None:
                 return None
             votes = [vote for vote in response]
-            return votes
+            return votes # type: ignore # Due to the abscence of SQL requests typing
         except sqlError as err:
             consolLog.error(err)
             raiseAnError(err)
@@ -87,7 +76,10 @@ class VotesManager:
     def getWinners(self, round: int | None = None) -> list[str] | None:
         votes = self.getVotes(round)
 
-        while len(votes) != self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID):
+        if not votes or not self.roomManager.currentRoomID:
+            return
+
+        while len(votes) != self.roomManager.getNumberOfConnectedUsersInRoom(self.roomManager.currentRoomID): # type: ignore
             votes = self.getVotes(round)
             time.sleep(2)
             consolLog.warn("En attente des votes...")

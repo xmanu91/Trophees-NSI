@@ -56,6 +56,6 @@ class PodiumScene(Scene):
         self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
         self.roomId = self.roomManager.currentRoomID
         self.roomManager.closeConnection()
-        if len(self.connectedUsers)-1 <= 0 :
+        if len(self.connectedUsers)-1 <= 0 and self.roomId:
             self.roomManager.closeRoom(self.roomId)
         self.sceneManager.setAsCurrentScene(HomeScene.HomeScene(self.sceneManager, self.roomManager))
