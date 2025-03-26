@@ -1,7 +1,8 @@
 from mysql.connector import Error as sqlError
+from utility.ErrorHandler import raiseAnError
 from utility.SQLProvider import SQLProvider
 from utility.RoomManager import RoomManager
-from utility import consolLog
+from utility import Logger
 import utility.tools
 import tempfile
 import time
@@ -20,23 +21,23 @@ class VotesManager:
     def getDrawings(self):
         try: 
             utility.tools.initialiseDirectory(self.tempdir.name)
-            consolLog.info("RoomId : ", self.roomId)
+            Logger.info("RoomId : ", self.roomId)
             # Utilisation de paramètres dans las requête SELECT
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator<>%s", (str(self.roomId), self.username))
             if response is None:
                 return None
             self.drawings = [(drawing[0], drawing[1]) for drawing in response]  # type: ignore
             self.participants = [drawing[0] for drawing in response]  # type: ignore
-            consolLog.info("response" + str(response), "self.drawings:" + str(self.drawings), "self.participants: " + str(self.participants))
+            Logger.info("response" + str(response), "self.drawings:" + str(self.drawings), "self.participants: " + str(self.participants))
             for drawing in self.drawings:
                 self.saveDrawing(drawing[1], drawing[0])
             return self.drawings
         except sqlError as err:
-            consolLog.error(err)
+            Logger.error(err)
 
     def getDrawing(self, username: str):
         try: 
-            consolLog.info("RoomId : ", self.roomId)
+            Logger.info("RoomId : ", self.roomId)
             # Utilisation de paramètres dans la requête SELECT
             response = self.sqlManager.get("SELECT creator, image FROM drawings WHERE room_id=%s and creator=%s", (str(self.roomId), username))
             if response is None:
@@ -44,7 +45,7 @@ class VotesManager:
             self.saveDrawing(response[0][1], response[0][0])
             return (response[0][1], response[0][0])
         except sqlError as err:
-            consolLog.error(err)
+            Logger.error(err)
 
     def vote(self, attributedVote, rating: int, round: int):
         try:
@@ -52,7 +53,7 @@ class VotesManager:
             self.sqlManager.insert("INSERT INTO votes (voter, attributed_vote, rating, round, room_id) VALUES (%s, %s, %s, %s, %s)", 
                                    (self.username, attributedVote, rating, str(round),  str(self.roomId)))
         except sqlError as err:
-            consolLog.error(err)
+            Logger.error(err)
 
     def getVotes(self, round: int = None):
         try:
@@ -65,22 +66,23 @@ class VotesManager:
             votes = [vote for vote in response]
             return votes
         except sqlError as err:
-            consolLog.error(err)
+            Logger.error(err)
 
     def getWinners(self, round: int = None):
         votes = self.getVotes(round)
-
-        while len(votes) != self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID):
+        connectedUsersNumberInRoom = self.roomManager.getConnectedUsersNumberInRoom(self.roomManager.currentRoomID)
+        print(connectedUsersNumberInRoom, votes)
+        while len(votes) != connectedUsersNumberInRoom * (connectedUsersNumberInRoom - 1):
             votes = self.getVotes(round)
             time.sleep(2)
-            consolLog.warn("En attente des votes...")
+            Logger.warn("En attente des votes...")
             self.getDrawings()
             self.drawnList = []
 
             for drawn in os.listdir(self.tempdir.name):
                 self.drawnList.append(drawn)
 
-        consolLog.info("Tous les votes ont été recupérés.")
+        Logger.info("Tous les votes ont été recupérés.")
         
         if votes is None:
             return None
@@ -132,7 +134,7 @@ class VotesManager:
                 out.write(binary_data)
 
         except Exception as err:
-            print(err)
+            raiseAnError(err)
             
         # closing output file object 
         finally: 
