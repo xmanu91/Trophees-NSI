@@ -74,13 +74,13 @@ class InRoomScene(Scene):
         if self.isUserRoomCreator:
             self.spriteGroup.add(self.playButton, self.roomSettings)
 
+        self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
         for i in range(len(self.connectedUsers)): # Mettre la couronne 
             if self.connectedUsers[i] == self.roomManager.getRoomCreator():
                 self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], True))
             else:
                 self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], False))
 
-        self.connectedUsers = self.roomManager.getUsersInCurrentRoom()
         print(self.connectedUsers)
 
     def startGame(self):
