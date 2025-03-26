@@ -49,7 +49,7 @@ class VotesManager:
     def vote(self, attributedVote, rating: int, round: int):
         try:
             # Utilisation de paramètres dans la requête INSERT
-            self.sqlManager.insert("INSERT INTO votes (voter, attributedVote, rating, round, room_id) VALUES (%s, %s, %s, %s, %s)", 
+            self.sqlManager.insert("INSERT INTO votes (voter, attributed_vote, rating, round, room_id) VALUES (%s, %s, %s, %s, %s)", 
                                    (self.username, attributedVote, rating, str(round),  str(self.roomId)))
         except sqlError as err:
             consolLog.error(err)

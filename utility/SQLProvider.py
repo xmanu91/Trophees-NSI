@@ -36,7 +36,16 @@ class SQLProvider:
     def insert(self, prompt: str, parameters: tuple | None = None, returnedValue: str | None = None) -> int | None:
         """Permits to execute INSERT and UPDATE statements"""
         try:
-            self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue) if returnedValue and self.connectionType == "online" else ""), parameters)
+            if parameters:
+                if returnedValue and self.connectionType == "online":
+                    self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue)), parameters)
+                    self.cnx.commit()
+                    return int(self.cursor.fetchone()[0]) # type: ignore
+                else:
+                    self.cursor.execute(prompt, parameters)
+            else:
+                self.cursor.execute(prompt)
+    
             self.cnx.commit()
             if self.connectionType == 'online' and returnedValue:
                 return self.cursor.fetchone()[0]
