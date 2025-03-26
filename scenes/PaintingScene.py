@@ -14,7 +14,7 @@ from scenes.VoteScene import VoteScene
 
 from utility.GameManager import GameManager
 from utility.RoomManager import RoomManager
-from utility import consolLog
+from utility import Logger
 
 import time
 import os
@@ -23,7 +23,7 @@ import os
 class PaintingScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, gameManager: GameManager):
         super().__init__()
-        consolLog.info('Initialisation de Painting Scene')
+        Logger.info('Initialisation de Painting Scene')
         screenWidth, screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.background = Image("assets/backgrounds/background_theme.png", pygame.Rect(0,0, screenWidth, screenHeight))
         self.roomManager = roomManager
@@ -53,8 +53,8 @@ class PaintingScene(Scene):
         self.tempdir = self.gameManager.getTempDir()
 
         self.roomManager.currentRound += 1
-        consolLog.info("Rounds number : ", self.roomManager.currentRound)
-        consolLog.info("Total of rounds : ", self.roomManager.getRoundsNumber())
+        Logger.info("Rounds number : ", self.roomManager.currentRound)
+        Logger.info("Total of rounds : ", self.roomManager.getRoundsNumber())
 
     def setCanva(self):
         self.spriteGroup.empty()
@@ -63,7 +63,7 @@ class PaintingScene(Scene):
         self.gameProgressBar.run_start()
 
     def endDrawing(self):
-        consolLog.info("Fin de la scene de dessin")
+        Logger.info("Fin de la scene de dessin")
 
         self.canva.save(self.tempdir.name)
         self.gameManager.sendDrawing(os.path.join(self.tempdir.name, self.roomManager.username.strip() + "_drawing.png"))

@@ -1,6 +1,6 @@
 from utility.tools import getScalingFactors, getScalingFactorsX, getScalingFactorsY
 from ui.SceneManager import SceneManager
-import utility.consolLog as consolLog
+import utility.Logger as Logger
 from ui.Button import Button 
 from ui.Scene import Scene
 from ui.Image import Image
@@ -40,7 +40,7 @@ class RulesScene(Scene):
     def update(self):
         if pygame.mouse.get_pressed(5)[4]:
             if self.previousState == False:
-                consolLog.warn(pygame.mouse.get_pos())
+                Logger.warn(pygame.mouse.get_pos())
             self.previousState = True
         else:
             self.previousState = False

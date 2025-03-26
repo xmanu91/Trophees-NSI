@@ -4,7 +4,7 @@ import utility.eventManager as eventManager
 from utility.GameManager import GameManager
 import utility.RoomManager as RoomManager
 from ui.SceneManager import SceneManager
-from utility import consolLog
+from utility import Logger
 from ui.Button import Button
 from ui.Scene import Scene
 from ui.Image import Image
@@ -37,7 +37,7 @@ class WinnerScene(Scene):
         self.winners = self.votesManager.getWinners(self.roomManager.currentRound)
         pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_ARROW))
 
-        consolLog.info(f"self.winners: {self.winners}")
+        Logger.info(f"self.winners: {self.winners}")
 
         if self.roomManager.currentRound == self.roomManager.getRoundsNumber() and self.roomManager.getRoundsNumber() != 1:
             self.podiumButton = Button(pygame.Rect(self.screenWidth*0.975 - 100, self.screenHeight*0.95-30, 100, 30), self.podium, None, None, None, "Podium", 13, (0,0,0), defaultColor=(255,255,255),  hoverColor=(119,169,198))
@@ -74,7 +74,7 @@ class WinnerScene(Scene):
         for winner in self.winners:
             self.winnersDrawings.append(Image(os.path.join(self.tempdir.name, winner.strip() + ".png"), self.drawRect))
 
-        consolLog.vinfo(self.winnersDrawings)
+        Logger.vinfo(self.winnersDrawings)
 
         self.displayedDrawing = self.winnersDrawings[-1]
         self.spriteGroup.add(self.displayedDrawing)
@@ -91,7 +91,7 @@ class WinnerScene(Scene):
 
     def checkGameState(self, e=None): # e is due to the event manager requirements
         if self.roomManager.getRoomState() == 'playing':
-            consolLog.info("Début d'un nouveau tour")
+            Logger.info("Début d'un nouveau tour")
             self.nextRound()
 
     def nextRound(self):

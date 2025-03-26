@@ -15,7 +15,7 @@ from utility.ErrorHandler import raiseAnError
 from utility.RoomManager import RoomManager
 from utility.GameManager import GameManager
 import utility.eventManager as eventManager
-import utility.consolLog as consolLog
+import utility.Logger as Logger
 
 class InRoomScene(Scene):
     def __init__(self, sceneManager: SceneManager, roomManager: RoomManager, isUserRoomCreator: bool):
@@ -27,7 +27,7 @@ class InRoomScene(Scene):
         self.connected_users = self.roomManager.getUsersInCurrentRoom()
         self.gameManager = GameManager(sqlProvider, roomManager.username, roomManager.currentRoomID)
         self.roomManager.setRoundsNumber(1)
-        consolLog.info('In RoomId:', self.roomManager.currentRoomID)
+        Logger.info('In RoomId:', self.roomManager.currentRoomID)
 
         self.background = Image('assets/backgrounds/paperBackground_2.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.roomNameText = Text(roomManager.getCurrentRoomName(), 30, (self.screenWidth*0.05, self.screenHeight * 0.1 - 25), (0,0,0), isCentered=False)
@@ -62,7 +62,7 @@ class InRoomScene(Scene):
         self.gameLaunched = False
         
     def updateConnectedUsers(self, e=None): # e parameters is due to eventHandler contraints
-        consolLog.info('Actualisation...')
+        Logger.info('Actualisation...')
         self.spriteGroup.empty()
 
         self.subHeadText.setText(f'Utilisateurs connectés ({str(len(self.roomManager.getUsersInCurrentRoom()))}):')
@@ -81,18 +81,16 @@ class InRoomScene(Scene):
             else:
                 self.spriteGroup.add(UserCard(pygame.Rect(self.screenWidth*0.06 + self.screenWidth * 0.295 * (i % 3), self.screenHeight*0.21 + 50*(i // 3), self.screenWidth * 0.285 , 40), self.connectedUsers[i], False))
 
-        print(self.connectedUsers)
-
     def startGame(self):
         if self.gameLaunched == True:
-            consolLog.warn("La partie est deja en cours")
+            Logger.warn("La partie est deja en cours")
             return
         else:
             self.gameLaunched = True
 
         self.dev = True
         
-        consolLog.warn("Debut de la partie...")
+        Logger.warn("Debut de la partie...")
         if len(self.connectedUsers) < 2 and self.dev == False:
             raiseAnError("Vous devez être plusieurs pour pouvoir jouer")
             self.updateConnectedUsers()
@@ -106,7 +104,7 @@ class InRoomScene(Scene):
             self.sceneManager.setAsCurrentScene(paintingScene)
         
     def quitGame(self):
-        consolLog.info("Room quitter")
+        Logger.info("Room quitter")
         if self.isUserRoomCreator:
             self.roomManager.closeRoom(self.roomManager.currentRoomID)
         pygame.time.set_timer(pygame.event.Event(self.updateStateEventType), 0)

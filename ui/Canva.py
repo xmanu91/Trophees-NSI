@@ -1,4 +1,5 @@
 from typing import Literal
+from utility.ErrorHandler import raiseAnError
 from utility.tools import centerCoordinates
 import utility.eventManager as eventManager
 from collections import deque
@@ -54,14 +55,12 @@ class Canva(pygame.sprite.Sprite):
                             pygame.draw.circle(self.image, self.drawColor, mousePosition, self.__circleBrushSize)
                             self.__previousPoint = mousePosition
                     case "colorpicker":
-                        print(self.rect, pygame.mouse.get_pos())
                         try:
                             color = self.image.get_at(mousePosition)[0:3]
-                            print(color)
                             self.setBrushColor(color)
                             self.setSelectedColor(color)
                         except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
-                            print(Error)
+                            raiseAnError(Error)
 
             else:
                 self.__previousPoint = None
@@ -70,7 +69,7 @@ class Canva(pygame.sprite.Sprite):
                 try:
                     self.holyBucket(mousePosition[0], mousePosition[1], self.drawColor, self.image)
                 except Exception as Error:
-                    print(Error)
+                    raiseAnError(Error)
 
         if pygame.mouse.get_pressed(3)[1]:
                 try:
@@ -78,7 +77,7 @@ class Canva(pygame.sprite.Sprite):
                     self.setBrushColor(color)
                     self.setSelectedColor(color)
                 except Exception as Error: # Dans le cas ou la souris n'est pas sur le canva
-                    print(Error)
+                    raiseAnError(Error)
 
     def onMouseWheel(self, e):
         if e.y > 0:

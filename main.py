@@ -8,7 +8,6 @@ import utility.SQLProvider
 from utility.ErrorHandler import ErrorHandlerUi, errorEventType
 from utility.RoomManager import RoomManager
 from utility.tools import getPath
-from utility import consolLog
 
 from dotenv import load_dotenv
 from scenes.HomeScene import HomeScene
@@ -54,7 +53,6 @@ while True:
                     roomManager.closeRoom(roomID)
             utility.gameInitialisation.sqlProvider.closeConnection()
             pygame.quit()
-            consolLog.info("Quit")
             sys.exit() # Si les erreurs n'apparaissent pas, supprimer cette ligne
          
     sceneManager.update()

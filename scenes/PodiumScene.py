@@ -28,9 +28,8 @@ class PodiumScene(Scene):
         self.background = Image('assets/backgrounds/paperBackground_1.png', pygame.Rect(0,0, self.screenWidth, self.screenHeight))
         self.spriteGroup.add(self.background)
 
-        self.test = self.votesManager.getPodium()
-        print(self.test)
-        self.playersOnPodium = self.test 
+        self.usersInPodium = self.votesManager.getPodium()
+        self.playersOnPodium = self.usersInPodium 
 
         podium1 = Shape(pygame.Rect(self.screenWidth /2 - 75, 250, 150, 250), (255, 220, 48))
         podiumRank1 = Text("1", 62, (self.screenWidth /2, 350 - 62/2), (255,255,255), True)

@@ -11,13 +11,13 @@ from ui.TextInput import TextInput
 
 from utility.ErrorHandler import raiseAnError
 from utility.RoomManager import RoomManager
-import utility.consolLog as consolLog
+import utility.Logger as Logger
 
 
 class JoinRoomScene(Scene):
     def __init__(self, sceneManager : SceneManager, username : str, roomManager: RoomManager):
         super().__init__()
-        consolLog.info("Initialisation de JoinRoomScene")
+        Logger.info("Initialisation de JoinRoomScene")
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.roomManager = roomManager
         self.roomManager.setUsername(username)

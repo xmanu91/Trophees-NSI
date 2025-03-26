@@ -4,12 +4,12 @@ from ui.Shape import Shape
 from ui.Text import Text
 from ui.Button import Button
 
-import utility.consolLog as consolLog
+import utility.Logger as Logger
 errorEventType = pygame.event.custom_type()
 
 def raiseAnError(error, action=None):
     pygame.event.post(pygame.event.Event(errorEventType, error=error, action=action))
-    consolLog.warn(error)
+    Logger.warn(error)
 
 class ErrorHandlerUi:
     def __init__(self):

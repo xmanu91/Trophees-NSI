@@ -25,8 +25,8 @@ class PickPalette():
 
         self.clicked = False
     
+    #Code inspired from the internet
     def multiply(self, matrix_a,matrix_b):
-        print(matrix_a, matrix_b)
         result = [0 for _ in matrix_a]
 
         # Perform matrix multiplication

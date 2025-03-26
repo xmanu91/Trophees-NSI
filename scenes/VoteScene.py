@@ -12,7 +12,7 @@ from utility.gameInitialisation import sqlProvider
 from utility.VotesManager import VotesManager
 from utility.RoomManager import RoomManager
 from utility.GameManager import GameManager
-from utility import consolLog
+from utility import Logger
 
 from scenes.WinnerScene import WinnerScene
 from time import sleep
@@ -23,7 +23,6 @@ class VoteScene(Scene):
         super().__init__()
         self.gameManager = gameManager
         self.tempdir = self.gameManager.getTempDir()
-        print(self.tempdir)
         self.sceneManager = sceneManager
         self.roomManager = roomManager
         self.votesManager = VotesManager(sqlProvider, roomManager.currentRoomID, roomManager.username, self.tempdir, self.roomManager)
@@ -39,16 +38,15 @@ class VoteScene(Scene):
             for drawn in os.listdir(self.tempdir.name):
                 self.drawnList.append(drawn)
 
-            consolLog.info(self.drawnList)
+            Logger.info(self.drawnList)
 
         pygame.mouse.set_cursor((pygame.SYSTEM_CURSOR_ARROW))
-        consolLog.info("Tous les dessins sont recupérés.")
+        Logger.info("Tous les dessins sont recupérés.")
 
         self.screenWidth, self.screenHeight = sceneManager.surface.get_width(), sceneManager.surface.get_height()
         self.background = Image('assets/backgrounds/wallBackground_3.png', pygame.Rect(0, 0, self.screenWidth, self.screenHeight))
         
         self.drawRect = pygame.Rect(self.screenWidth /2 - self.screenWidth*0.35, 40, self.screenWidth*0.7, self.screenHeight*0.7)
-        print(self.tempdir.name)
         self.drawing = Image(os.path.join(self.tempdir.name, self.drawnList[self.index]), self.drawRect)
 
         self.note = 1
@@ -86,7 +84,7 @@ class VoteScene(Scene):
                 button.defaultColor = (255, 255, 255)  # Couleur par défaut
 
     def nextDrawing(self, note: int):
-        consolLog.info(self.votesManager.participants, self.index+1, note)  # Debug
+        Logger.info(self.votesManager.participants, self.index+1, note)  # Debug
         self.votesManager.vote(self.votesManager.participants[self.index], note, self.roomManager.currentRound)
 
         if self.index < len(self.votesManager.participants)-1:

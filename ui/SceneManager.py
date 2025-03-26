@@ -1,6 +1,6 @@
 from ui.Scene import Scene
 import pygame
-from utility import consolLog
+from utility import Logger
 
 class SceneManager:
     def __init__(self, surface):
@@ -9,11 +9,11 @@ class SceneManager:
 
     def setAsCurrentScene(self, scene: type[Scene], deletePreviousScene: bool = True) -> None:
         if self.currentScene != None and deletePreviousScene:
-            consolLog.info('Changement de scene:', scene)
+            Logger.info('Changement de scene:', scene)
             self.currentScene.spriteGroup.empty()
             self.surface.fill((0,0,0))
         elif self.currentScene != None and deletePreviousScene == False:
-            consolLog.info('Changement de scene sans effacer la scene precedente', scene)
+            Logger.info('Changement de scene sans effacer la scene precedente', scene)
         self.currentScene = scene
         self.draw()
 
