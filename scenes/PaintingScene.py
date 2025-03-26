@@ -5,7 +5,7 @@ from ui.ProgressBar import ProgressBar
 from ui.Scene import Scene
 from ui.Image import Image
 from ui.Canva import Canva
-from ui.Timer import Timer
+from utility.Timer import Timer
 from ui.Text import Text
 
 from scenes.PaintingSceneComponent.ToolBar import ToolBar
@@ -48,7 +48,7 @@ class PaintingScene(Scene):
         self.toolBar = None
         self.spriteGroup.add(self.background, self.textThemeTimer, self.textTheme)
 
-        self.themeTimer.startTimer()
+        self.themeTimer.start()
         self.gameManager.resetTempDir()
         self.tempdir = self.gameManager.getTempDir()
 
@@ -72,5 +72,6 @@ class PaintingScene(Scene):
         self.sceneManager.setAsCurrentScene(VoteScene(self.sceneManager, self.roomManager, self.gameManager))
 
     def update(self):
-        if self.toolBar != None:
+        self.themeTimer.update()
+        if self.toolBar:
             self.toolBar.update()
