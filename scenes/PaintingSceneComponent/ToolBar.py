@@ -59,7 +59,3 @@ class ToolBar():
 
     def update(self):
         self.pickPalette.update()
-        # Dev tool
-        mousePosition = pygame.mouse.get_pos()
-        if pygame.mouse.get_pressed(5)[4]:
-            print(mousePosition)
