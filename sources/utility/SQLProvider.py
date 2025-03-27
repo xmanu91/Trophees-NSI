@@ -1,0 +1,74 @@
+import mysql.connector
+import psycopg2
+from os import getenv as env
+from utility import Logger
+
+class SQLProvider:
+    def __init__(self):
+        self.connectionType: str = env('SQL_CONNECTION_TYPE') or 'local'
+        if self.connectionType == 'online':
+            try:
+                self.cnx = psycopg2.connect(user=env('SQL_USERNAME'), password=env('SQL_PASSWORD'), host=env('SQL_HOST'), port=env('SQL_PORT'), dbname="postgres")
+            except psycopg2.Error as err:
+                Logger.error(err)
+        else: 
+            try:
+                self.cnx = mysql.connector.connect(user=env('SQL_USERNAME'), password=env('SQL_PASSWORD'), host=env('SQL_HOST'))
+                self.cnx.autocommit = True
+            except mysql.connector.Error as err:
+                Logger.error(err)
+
+        self.cursor = self.cnx.cursor()
+
+    def createDatabase(self, dbName: str):
+        try:
+            self.cursor.execute(
+                "CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET 'utf8'".format(dbName))
+        except mysql.connector.Error as err:
+            Logger.error("Failed creating database: {}".format(err))
+    
+    def useDatabase(self, dbName: str):
+        try:
+            self.cursor.execute("USE {}".format(dbName))
+        except mysql.connector.Error:
+            Logger.error("Database {} does not exists.".format(dbName))
+
+    def insert(self, prompt: str, parameters: tuple | None = None, returnedValue: str | None = None) -> int | None:
+        """Permits to execute INSERT and UPDATE statements"""
+        try:
+            if parameters:
+                if returnedValue and self.connectionType == "online":
+                    self.cursor.execute(prompt + ("RETURNING {}".format(returnedValue)), parameters)
+                    self.cnx.commit()
+                    return int(self.cursor.fetchone()[0]) # type: ignore
+                else:
+                    self.cursor.execute(prompt, parameters)
+            else:
+                self.cursor.execute(prompt)
+    
+            self.cnx.commit()
+            if self.connectionType == 'online' and returnedValue:
+                return self.cursor.fetchone()[0]
+            return self.cursor.lastrowid
+        except mysql.connector.Error as err:
+            Logger.error(err)
+
+    def get(self, prompt: str, parameters: tuple | None = None):
+        """Permits to execute SELECT statements"""
+        try:
+            self.cursor.execute(prompt, parameters)
+            response = self.cursor.fetchall()
+            return response
+        except mysql.connector.Error as err:
+            Logger.error(err)
+
+    def executeSQL(self, prompt: str, parameters: tuple | None = None):
+        try:
+            self.cursor.execute(prompt, parameters)
+            self.cnx.commit()
+        except mysql.connector.Error as err:
+            Logger.error(err)
+
+    def closeConnection(self):
+        self.cnx.close()
+        self.cursor.close()
